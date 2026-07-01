@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    /* ---- ANIMATIONS ---- */
+    @keyframes idleFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-13px); } }
+    @keyframes floatA{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(0,-11px); } }
+    @keyframes floatB{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(0,9px); } }
+    @keyframes floatC{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(5px,-7px); } }
+    @keyframes blink{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
+    @keyframes barLoad{ 0%,72%,100%{ background:rgba(255,255,255,.22); } 32%{ background:#E23B3E; } }
+    /* hero appearance: zoom-out reveal */
+    @keyframes heroIntro{ 0%{ transform:scale(1.4); opacity:.15; } 60%{ opacity:1; } 100%{ transform:scale(1.04); opacity:1; } }
+    @keyframes scrollDot{ 0%{ transform:translateY(0); opacity:0; } 25%{ opacity:1; } 75%{ opacity:1; } 100%{ transform:translateY(8px); opacity:0; } }
+
+    /* ---- BUTTONS: red corner brackets push OUTSIDE on hover ---- */
+    .alt-btn .corner{ transition:top .2s ease, left .2s ease, right .2s ease, bottom .2s ease; }
+    .alt-btn:hover .corner.tl{ top:-7px !important; left:-7px !important; }
+    .alt-btn:hover .corner.tr{ top:-7px !important; right:-7px !important; }
+    .alt-btn:hover .corner.bl{ bottom:-7px !important; left:-7px !important; }
+    .alt-btn:hover .corner.br{ bottom:-7px !important; right:-7px !important; }
+
+    /* ---- RESPONSIVE / MOBILE: stack everything into a column ---- */
+    @media (max-width:760px){
+      #alt-hero{ height:auto !important; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding-bottom:90px; }
+      #alt-hero nav{ position:static !important; order:1; width:100%; flex-wrap:wrap; justify-content:center; gap:14px; padding:22px 18px 8px; }
+      #alt-hero nav > div{ flex:0 0 auto !important; justify-content:center !important; gap:22px; }
+      #alt-figure-wrap{ position:static !important; order:2; transform:none !important; width:90% !important; height:auto !important; margin-top:6px; }
+      #alt-figure-wrap > div{ height:auto !important; }
+      #alt-figure{ height:auto !important; transform:none !important; }
+      #alt-figure img{ height:auto !important; transform:none !important; object-fit:contain !important; }
+      #alt-hero-video{ width:100% !important; height:auto !important; object-fit:contain !important; transform:none !important; }
+      #alt-left{ position:static !important; order:3; transform:none !important; width:88% !important; margin-top:20px; }
+      #alt-left .alt-btn{ flex:1; justify-content:center; }
+      #alt-right{ position:static !important; order:4; transform:none !important; width:88% !important; margin-top:34px; }
+      #alt-social{ position:static !important; order:5; margin-top:34px; left:auto; bottom:auto; }
+      #alt-artifacts{ display:none !important; }
+      #alt-scroll{ display:none !important; }
+      /* disable the pinned scrub on mobile */
+      #alt-pin-driver{ height:0 !important; }
+      #alt-hero{ position:relative !important; }
+      /* ESSENCE: full-bleed video bg, content stacks above it */
+      #alt-essence{ min-height:auto !important; align-items:flex-start !important; overflow:hidden !important; }
+      #alt-essence #essence-sticky{ position:relative !important; height:auto !important; display:block !important; }
+      #alt-essence #essence-outro{ display:none !important; }
+      #alt-essence #essence-image{ position:absolute !important; height:100% !important; }
+      #alt-essence #essence-content{ width:100% !important; padding:34vh 22px 56px !important; opacity:1 !important; }
+      #alt-essence #essence-values{ flex-wrap:wrap; row-gap:20px; }
+      #alt-essence #essence-values > div{ flex:0 0 50% !important; border-right:none !important; }
+      #alt-essence h2{ font-size:29px !important; }
+      #alt-essence .alt-btn{ width:100% !important; }
+      #essence-marker{ display:none !important; }
+      /* PLAYGROUND: stack model over controls */
+      #alt-playground{ padding:56px 18px 72px !important; }
+      #pg-marker{ display:none !important; }
+      #pg-artifacts{ display:none !important; }
+      #pg-grid{ display:flex !important; flex-direction:column !important; gap:22px !important; }
+      #pg-model{ margin-left:0 !important; }
+      #pg-model > div{ min-height:64vh !important; }
+      #pg-center{ padding-top:0 !important; }
+    }
+  </style>
+</helmet>
+
+<!-- ============ PIN WRAP :: hero stays pinned while the scroll scrubs the videos ============ -->
+<template id="__bundler_thumbnail" data-bg-color="#131315">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#131315"></rect>
+    <!-- pixel sparkle star -->
+    <g fill="#E23B3E">
+      <rect x="556" y="250" width="22" height="22"></rect>
+      <rect x="578" y="228" width="22" height="22"></rect><rect x="578" y="272" width="22" height="22"></rect>
+      <rect x="600" y="206" width="22" height="22"></rect><rect x="600" y="250" width="22" height="22"></rect><rect x="600" y="294" width="22" height="22"></rect>
+      <rect x="622" y="228" width="22" height="22"></rect><rect x="622" y="272" width="22" height="22"></rect>
+      <rect x="644" y="250" width="22" height="22"></rect>
+    </g>
+    <text x="600" y="470" font-family="monospace" font-size="92" font-weight="700" letter-spacing="18" fill="#FFFCFC" text-anchor="middle">ALTERA</text>
+    <text x="600" y="540" font-family="monospace" font-size="30" letter-spacing="10" fill="#9a9a9d" text-anchor="middle">EVERY VERSION OF YOU</text>
+  </svg>
+</template>
+<div id="alt-pin" style="position: relative; z-index: 1">
+
+<!-- ============ HERO ROOT ============ -->
+<div id="alt-hero" style="position:sticky; top:0; width:100%; height:100vh; min-height:600px; overflow:hidden; background:radial-gradient(120% 95% at 50% 42%, #cfcfd1 0%, #9a9a9d 26%, #545457 56%, #28282b 80%, #131315 100%); font-family:'Space Mono',monospace; color:#FFFCFC; -webkit-font-smoothing:antialiased;">
+
+  <!-- ============ CHARACTER IMAGE (idle float wrapper + parallax inner) ============ -->
+  <div id="alt-figure-wrap" style="position: absolute; left: 0; top: 0; transform: none; width: 100%; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden">
+    <div style="width:100%; height:100%; animation:idleFloat 9s ease-in-out infinite;">
+      <div id="alt-figure" style="width:100%; height:100%; will-change:transform;">
+        <video id="alt-hero-video" src="altera/hero-video.mp4" autoplay="" muted="" loop="" playsinline="" preload="auto" aria-label="ALTERA hero video" style="width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode:multiply; animation:heroIntro 1.8s cubic-bezier(.16,.7,.2,1) both; pointer-events:none;"></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- gradient / vignette OVER the video (video sits beneath all the effects; even darkening, no bright hotspot) -->
+  <div style="position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(118% 92% at 50% 42%, rgba(18,18,20,.34) 0%, rgba(30,30,33,.2) 38%, rgba(28,28,31,.5) 66%, rgba(15,15,17,.9) 100%);"></div>
+
+  <!-- ============ VIGNETTE / FISHEYE / SCANLINES (non-interactive) ============ -->
+  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(115% 100% at 50% 46%, transparent 52%, rgba(10,10,12,.55) 86%, rgba(6,6,8,.92) 100%);"></div>
+  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; mix-blend-mode:overlay; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);"></div>
+  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(60% 50% at 50% 44%, rgba(255,255,255,.10), transparent 70%);"></div>
+
+  <!-- ============ PIXEL ARTIFACTS ============ -->
+  <div id="alt-artifacts" style="position:absolute; inset:0; z-index:3; pointer-events:none;">
+    <sc-for list="{{ artifacts }}" as="a" hint-placeholder-count="24">
+      <div class="alt-art" style="{{ a.wrap }}">
+        <div style="{{ a.inner }}"></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- ============ TOP NAVIGATION ============ -->
+  <nav style="position:absolute; top:0; left:0; right:0; z-index:6; display:flex; align-items:center; justify-content:space-between; padding:30px 46px;">
+    <div style="display:flex; gap:34px; align-items:center; flex:1;">
+      <a href="#alt-essence" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">About</a>
+      <a href="#alt-playground" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Playground</a>
+    </div>
+    <a href="#" style="flex:0 0 auto; display:block;"><img src="altera/logo.svg" alt="ALTERA" style="height:34px; display:block; image-rendering:pixelated;"></a>
+    <div style="display:flex; gap:34px; align-items:center; justify-content:flex-end; flex:1;">
+      <a href="#" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Collection</a>
+      <a href="#" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Waitlist</a>
+    </div>
+  </nav>
+
+  <!-- ============ LEFT CONTENT BLOCK ============ -->
+  <div id="alt-left" class="alt-side" style="position:absolute; left:46px; top:112px; z-index:6; width:min(33vw,400px);">
+    <div>
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:18px;">
+      <span style="width:11px; height:11px; flex:0 0 auto; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
+      <span style="color:#E23B3E; font-size:13px; letter-spacing:.2em; text-transform:uppercase;">Dress Your Alter Ego</span>
+    </div>
+    <h1 style="font-size:clamp(28px,3.3vw,50px); line-height:1.05; font-weight:700; letter-spacing:.01em; text-transform:uppercase; text-shadow:0 2px 14px rgba(0,0,0,.45);">A Clothing<div>Brand for</div><div><span style="font-family: &quot;Pixelify Sans&quot;, monospace; font-weight: 600; letter-spacing: 0px; display: inline-block; line-height: 0.95; color:#E23B3E;">Every Version<br>Of You</span></div></h1>
+    <div style="width:230px; height:1px; background:linear-gradient(to right, rgba(255,255,255,.85), rgba(255,255,255,0)); margin:24px 0;"></div>
+    <p style="font-size:12px; line-height:1.4; color:#FFFCFC; max-width:340px;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
+
+    </div>
+
+    <!-- ---- BUTTONS ---- -->
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:32px;">
+      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.78); border:1px solid #FFFCFC; transition:.16s;" style-hover="background:rgba(0,0,0,.92); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+        Explore The Drop
+        <span style="width:11px; height:11px; flex:0 0 auto; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
+        <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner tr" style="position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      </a>
+      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.35); border:1px solid rgba(255,255,255,.55); transition:.16s;" style-hover="background:rgba(0,0,0,.7); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.4); text-shadow:1px 0 #E23B3E;">
+        Join Waitlist
+        <span style="width:11px; height:11px; flex:0 0 auto; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
+        <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner tr" style="position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ============ RIGHT CONTENT BLOCK ============ -->
+  <div id="alt-right" class="alt-side" style="position:absolute; right:46px; top:112px; z-index:6; width:min(26vw,300px);">
+    <!-- DROP CARD -->
+    <div class="alt-card" style="position:relative; border:1px solid rgba(255,255,255,.4); background:rgba(10,10,12,.4); backdrop-filter:blur(2px); padding:22px 22px 20px;">
+      <span style="position:absolute; top:-1px; left:-1px; width:12px; height:12px; border-top:1px solid #E23B3E; border-left:1px solid #E23B3E;"></span>
+      <span style="position:absolute; top:-1px; right:-1px; width:12px; height:12px; border-top:1px solid #E23B3E; border-right:1px solid #E23B3E;"></span>
+      <span style="position:absolute; bottom:-1px; left:-1px; width:12px; height:12px; border-bottom:1px solid #E23B3E; border-left:1px solid #E23B3E;"></span>
+      <span style="position:absolute; bottom:-1px; right:-1px; width:12px; height:12px; border-bottom:1px solid #E23B3E; border-right:1px solid #E23B3E;"></span>
+      <div style="font-size:14px; letter-spacing:.16em; margin-bottom:6px;">DROP 001</div>
+      <div style="font-size:18px; font-family:'Pixelify Sans',monospace; font-weight:600; letter-spacing:.04em; color:#E23B3E; margin-bottom:18px; min-height:22px;"><span id="alt-redsignal"></span><span style="display:inline-block; width:9px; height:16px; background:#E23B3E; margin-left:3px; vertical-align:-2px; animation:blink 1s step-end infinite;"></span></div>
+      <div style="height:1px; background:rgba(255,255,255,.22); margin-bottom:16px;"></div>
+      <div style="display:flex; align-items:center; justify-content:space-between; font-size:13px; letter-spacing:.12em;">EARLY ACCESS OPEN
+        <span style="width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
+      </div>
+    </div>
+
+    <!-- STATUS LINES -->
+    <div style="margin-top:30px; display:flex; flex-direction:column; gap:18px;">
+      <sc-for list="{{ status }}" as="s" hint-placeholder-count="3">
+        <div>
+          <div style="font-size:12px; letter-spacing:.16em; color:#e8e8ea;">+ {{ s.label }}</div>
+          <div style="display:flex; gap:3px; margin-top:7px;">
+            <sc-for list="{{ s.bars }}" as="b" hint-placeholder-count="7">
+              <span style="{{ b }}"></span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- DETAIL CARD -->
+    <div style="margin-top:30px;">
+      <div style="position:relative; height:130px; border:1px solid rgba(255,255,255,.32); overflow:hidden;">
+        <img src="altera/detail-sunglasses-sm.jpg" alt="ALTERA signature detail" style="width:100%; height:100%; object-fit:cover; object-position:50% 58%; display:block; filter:brightness(.95) contrast(1.1) saturate(0.92);">
+        <span style="position:absolute; top:5px; left:5px; width:10px; height:10px; border-top:1px solid #E23B3E; border-left:1px solid #E23B3E;"></span>
+        <span style="position:absolute; bottom:5px; right:5px; width:10px; height:10px; border-bottom:1px solid #E23B3E; border-right:1px solid #E23B3E;"></span>
+      </div>
+      <div style="margin-top:11px; font-size:12px; letter-spacing:.14em;">ALTERA SIGNATURE<br>DETAIL <span style="color:#E23B3E;">+</span></div>
+    </div>
+  </div>
+
+  <!-- ============ BOTTOM: SOCIALS + SCROLL ============ -->
+  <div id="alt-social" style="position:absolute; left:46px; bottom:30px; z-index:6; display:flex; gap:14px; align-items:center; font-size:12px; letter-spacing:.14em;">
+    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">INSTAGRAM</a>
+    <span style="color:rgba(255,255,255,.3);">|</span>
+    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">TIKTOK</a>
+    <span style="color:rgba(255,255,255,.3);">|</span>
+    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">PINTEREST</a>
+  </div>
+
+  <div id="alt-scroll" style="position:absolute; left:50%; bottom:26px; transform:translateX(-50%); z-index:6; display:flex; flex-direction:column; align-items:center; gap:11px;">
+    <div style="width:18px; height:28px; border:1.5px solid rgba(255,255,255,.7); border-radius:10px; display:flex; justify-content:center; padding-top:5px;">
+      <span style="width:3px; height:6px; border-radius:2px; background:#fff; animation:scrollDot 1.6s ease-in-out infinite;"></span>
+    </div>
+    <span style="font-size:12px; letter-spacing:.2em;">SCROLL TO EXPLORE</span>
+  </div>
+
+</div>
+  <!-- scroll driver: its height = how far you scroll while the hero is pinned (video scrub + transition) -->
+  <div id="alt-pin-driver" style="height:70vh; pointer-events:none;"></div>
+</div>
+
+
+<!-- ================================================================= -->
+<!-- ====== TRANSITION VIDEO :: hero -> essence (camera move) ========= -->
+<!-- Fixed full-viewport clip that fades in mid-scroll and scrubs with progress -->
+<div id="alt-transition" style="position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0; background:radial-gradient(120% 95% at 50% 42%, #cfcfd1 0%, #9a9a9d 26%, #545457 56%, #28282b 80%, #131315 100%);">
+  <video id="alt-transition-video" src="altera/transition.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA transition" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; filter: brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode: multiply"></video>
+  <!-- vignette + pixel branding kept ON over the transition so the treatment never drops out -->
+  <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%)"></div>
+  <div style="position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: .3; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px)"></div>
+  <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:80%; right:16%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:40%; left:6%; width:5px; height:5px; background:rgba(255,255,255,.6);"></span>
+  <span style="position:absolute; top:60%; right:7%; width:5px; height:5px; background:rgba(200,200,205,.6);"></span>
+  <span style="position:absolute; top:18%; left:46%; width:4px; height:4px; background:rgba(255,255,255,.5);"></span>
+</div>
+
+<!-- ================================================================= -->
+<!-- ============ SECTION 02 :: ESSENCE (layout) ===================== -->
+<!-- ================================================================= -->
+<section id="alt-essence" data-screen-label="Essence" style="position:relative; width:100%; min-height:104vh; overflow:hidden; background:linear-gradient(155deg,#0b0b0d 0%,#161618 52%,#0a0a0c 100%); font-family:'Space Mono',monospace; color:#FFFCFC; display:flex; align-items:center;">
+
+  <!-- texture: vignette + scanlines -->
+  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(120% 110% at 32% 46%, transparent 50%, rgba(0,0,0,.7) 100%);"></div>
+  <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay; opacity: .32; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px)"></div>
+
+  <!-- pixel artifacts (branding only) -->
+  <div id="ess-artifacts" style="position: absolute; inset: 0; z-index: 3; pointer-events: none">
+    <sc-for list="{{ essArtifacts }}" as="a" hint-placeholder-count="12">
+      <div class="ess-art" style="{{ a.wrap }}"><div style="{{ a.inner }}"></div></div>
+    </sc-for>
+  </div>
+
+  <!-- ============ FULL-SECTION BACKGROUND :: looping campaign video (no box) ============ -->
+  <div id="essence-image" style="position: absolute; inset: 0; z-index: 0; overflow: hidden; width: 100%; height: 100%; background:#0a0a0c; will-change:transform;">
+    <!-- full-bleed campaign video: covers the whole section edge-to-edge, adaptable to any screen -->
+    <video id="essence-blink-video" src="altera/about-blink.mp4" muted="" loop="" playsinline="" preload="auto" poster="altera/closeup-girl-sm.jpg" aria-label="ALTERA campaign loop" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:brightness(.95) contrast(1.1) saturate(0.92); display:block;"></video>
+  </div>
+  <!-- legibility + blend overlays — fade in AFTER the closeup has settled into place -->
+  <div id="essence-overlays" style="position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; will-change: opacity">
+    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,8,10,.98) 0%, rgba(8,8,10,.96) 30%, rgba(8,8,10,.72) 52%, rgba(8,8,10,.28) 74%, rgba(8,8,10,.05) 100%);"></div>
+    <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(8,8,10,.8) 0%, transparent 24%, transparent 76%, rgba(8,8,10,.92) 100%);"></div>
+  </div>
+
+  <!-- ============ LEFT-EDGE MARKER ============ -->
+  <div id="essence-marker" style="position: absolute; right: 30px; left: auto; top: 50%; transform: translateY(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 13px; font-size: 12px; letter-spacing: .22em; color: #FFFCFC">
+    <span style="color:#E23B3E;">002</span>
+    <span style="width:1px; height:16px; background:#E23B3E;"></span>
+    <span style="writing-mode:vertical-rl; letter-spacing:.3em;">ALTERA</span>
+    <span style="width:1px; height:16px; background:#E23B3E;"></span>
+    <span>24SS</span>
+  </div>
+
+  <!-- ============ RIGHT :: CONTENT ============ -->
+  <div id="essence-content" style="position:relative; z-index:4; width:min(46%,620px); display:flex; flex-direction:column; justify-content:center; padding:8vh 0 8vh 64px;">
+
+    <!-- label -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:22px;">
+      <span style="color:#E23B3E; font-size:13px; letter-spacing:.24em;">OUR ESSENCE</span>
+      <span style="width:26px; height:1px; background:#E23B3E;"></span>
+    </div>
+
+    <!-- headline -->
+    <h2 style="font-size:clamp(30px,3.4vw,52px); line-height:1.08; font-weight:700; letter-spacing:.01em; text-transform:uppercase; margin-bottom:30px; text-shadow:0 2px 16px rgba(0,0,0,.5);">Made To Express.<br>Made To Transform.</h2>
+
+    <!-- paragraphs -->
+    <p style="font-size:13px; line-height:1.7; color:#c9c9cd; max-width:520px; margin-bottom:16px;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.</p>
+    <p style="font-size:13px; line-height:1.7; color:#c9c9cd; max-width:520px; margin-bottom:22px;">Each piece is designed to move with you, adapt to your mood, and reveal a different version of you.</p>
+
+    <!-- closing -->
+    <div style="font-size:14px; line-height:1.55; color:#E23B3E; letter-spacing:.04em; margin-bottom:32px;">THIS IS NOT JUST CLOTHING.<br>THIS IS YOUR OTHER VERSION.</div>
+
+    <!-- divider -->
+    <div style="position:relative; height:1px; background:rgba(255,255,255,.18); max-width:560px; margin-bottom:28px;">
+      <span style="position:absolute; right:0; top:-4px; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+    </div>
+
+    <!-- values list -->
+    <div id="essence-values" style="display:flex; margin-bottom:38px; max-width:600px;">
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:9px; padding:0 6px; border-right:1px solid rgba(255,255,255,.14);">
+        <span style="width:13px; height:13px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 30% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/30% 100% no-repeat;"></span>
+        <span style="font-size:11px; letter-spacing:.1em; text-align:center; line-height:1.4;">Y2K<br>INFLUENCE</span>
+        <span style="width:13px; height:1px; background:#E23B3E;"></span>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:9px; padding:0 6px; border-right:1px solid rgba(255,255,255,.14);">
+        <span style="width:13px; height:13px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 30% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/30% 100% no-repeat;"></span>
+        <span style="font-size:11px; letter-spacing:.1em; text-align:center; line-height:1.4;">SHARP<br>SILHOUETTES</span>
+        <span style="width:13px; height:1px; background:#E23B3E;"></span>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:9px; padding:0 6px; border-right:1px solid rgba(255,255,255,.14);">
+        <span style="width:13px; height:13px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 30% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/30% 100% no-repeat;"></span>
+        <span style="font-size:11px; letter-spacing:.1em; text-align:center; line-height:1.4;">PREMIUM<br>FABRICS</span>
+        <span style="width:13px; height:1px; background:#E23B3E;"></span>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:9px; padding:0 6px;">
+        <span style="width:13px; height:13px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 30% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/30% 100% no-repeat;"></span>
+        <span style="font-size:11px; letter-spacing:.1em; text-align:center; line-height:1.4;">LIMITED<br>DROPS</span>
+        <span style="width:13px; height:1px; background:#E23B3E;"></span>
+      </div>
+    </div>
+
+    <!-- button (same language as hero) -->
+    <a href="#" class="alt-btn" style="position:relative; align-self:flex-start; display:flex; align-items:center; justify-content:space-between; gap:48px; width:min(100%,440px); padding:19px 28px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.5); border:1px solid rgba(255,255,255,.6); transition:.16s;" style-hover="background:rgba(0,0,0,.85); border:1px solid #E23B3E; box-shadow:0 0 20px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+      Discover Collection
+      <span style="font-size:17px; line-height:1;">→</span>
+      <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:10px; height:10px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+      <span class="corner tr" style="position:absolute; top:-1px; right:-1px; width:10px; height:10px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:10px; height:10px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+      <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+    </a>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ============ SECTION 03 :: PLAYGROUND (styling studio) ========== -->
+<!-- Light studio fitting room · 7-column grid (margin 60 / gutter 20)  -->
+<!-- ================================================================= -->
+<section id="alt-playground" data-screen-label="Playground" style="position:relative; width:100%; min-height:100vh; overflow:hidden; background:radial-gradient(130% 100% at 50% 0%, #f5f5f7 0%, #e8e8eb 46%, #dadade 100%); font-family:'Space Mono',monospace; color:#1a1a1c; padding:80px 60px; -webkit-font-smoothing:antialiased;">
+
+  <!-- subtle pixel artifacts (mostly around the edges) -->
+  <div id="pg-artifacts" style="position:absolute; inset:0; z-index:1; pointer-events:none;">
+    <sc-for list="{{ pgArtifacts }}" as="a" hint-placeholder-count="8">
+      <div class="pg-art" style="{{ a.wrap }}"><div style="{{ a.inner }}"></div></div>
+    </sc-for>
+  </div>
+
+  <!-- left-edge marker :: 003 / PLAYGROUND / 24SS  (+ DROP + drag hint) -->
+  <div id="pg-marker" style="position:absolute; left:34px; top:96px; z-index:5; display:flex; flex-direction:column; gap:14px; font-size:11px; letter-spacing:.24em; color:#6a6a6e;">
+    <span style="color:#E23B3E;">003</span>
+    <span style="width:22px; height:1px; background:#c3c3c7;"></span>
+    <span style="letter-spacing:.3em;">PLAYGROUND</span>
+    <span style="width:22px; height:1px; background:#c3c3c7;"></span>
+    <span>24SS</span>
+    <span style="margin-top:150px; color:#E23B3E; letter-spacing:.2em;">+ DROP 001</span>
+    <span style="color:#E23B3E; letter-spacing:.2em;">RED SIGNAL</span>
+  </div>
+
+  <!-- ============ 7-COLUMN GRID ============ -->
+  <div id="pg-grid" style="position:relative; z-index:3; display:grid; grid-template-columns:repeat(7,1fr); gap:24px; max-width:1500px; margin:0 auto; align-items:start;">
+
+    <!-- ===== MODEL RENDER :: columns 1-2 (live full-body preview) ===== -->
+    <div id="pg-model" style="grid-column:1 / span 2; position:relative; align-self:stretch; display:flex; flex-direction:column;">
+      <div style="position:relative; flex:1; overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:clamp(560px,84vh,880px);">
+        <!-- floor grid -->
+        <div style="position:absolute; left:-10%; right:-10%; bottom:52px; height:200px; z-index:1; background:repeating-linear-gradient(90deg, rgba(150,150,156,.28) 0 1px, transparent 1px 38px), repeating-linear-gradient(0deg, rgba(150,150,156,.16) 0 1px, transparent 1px 24px); transform:perspective(420px) rotateX(66deg); transform-origin:bottom; opacity:.9;"></div>
+        <!-- the model render -->
+        <img src="{{ modelSrc }}" alt="ALTERA look preview" style="position:relative; z-index:2; width:108%; max-width:108%; height:100%; object-fit:contain; object-position:center bottom; mix-blend-mode:multiply; will-change:transform;">
+        <!-- loading veil -->
+        <sc-if value="{{ pgLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:11px; letter-spacing:.24em; color:#E23B3E; background:rgba(238,238,240,.7); padding:8px 14px;">DRESSING…</span>
+          </div>
+        </sc-if>
+      </div>
+      <!-- rotate control (spin lands here in a future build) -->
+      <div style="position:relative; z-index:6; display:flex; align-items:center; justify-content:center; gap:22px; margin-top:6px;">
+        <span title="Rotate left" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid #c3c3c7; background:rgba(255,255,255,.6); color:#161618; font-size:19px; cursor:pointer; user-select:none; transition:.15s;" style-hover="border:1px solid #E23B3E; color:#E23B3E; box-shadow:0 0 14px rgba(226,59,62,.3);">‹</span>
+        <div style="display:flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.2em; color:#8a8a8f;">
+          <span style="display:inline-flex; width:13px; height:19px; border:1.5px solid #9a9a9f; border-radius:7px; position:relative;"><span style="position:absolute; top:3px; left:50%; transform:translateX(-50%); width:1.5px; height:4px; background:#9a9a9f;"></span></span>
+          DRAG TO ROTATE
+        </div>
+        <span title="Rotate right" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid #c3c3c7; background:rgba(255,255,255,.6); color:#161618; font-size:19px; cursor:pointer; user-select:none; transition:.15s;" style-hover="border:1px solid #E23B3E; color:#E23B3E; box-shadow:0 0 14px rgba(226,59,62,.3);">›</span>
+      </div>
+    </div>
+
+    <!-- ===== CENTER :: columns 3-4 (copy + selected look + waitlist) ===== -->
+    <div id="pg-center" style="grid-column:3 / span 2; display:flex; flex-direction:column; padding-top:4px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <span style="width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+        <span style="color:#E23B3E; font-size:12px; letter-spacing:.26em;">STYLE THE DROP</span>
+      </div>
+      <h2 style="font-size:clamp(28px,2.9vw,50px); line-height:1.02; font-weight:700; letter-spacing:.005em; text-transform:uppercase; color:#161618; margin:0;">Build Your<br><span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">Alter Ego.</span></h2>
+      <p style="font-size:13px; line-height:1.6; color:#4a4a4e; max-width:420px; margin:18px 0 0;">Explore the first ALTERA styling system — switch pieces, test the mood and preview how each detail changes the look.</p>
+      <div style="font-size:11px; letter-spacing:.2em; color:#8a8a8f; margin-top:16px;">DROP 001 / <span style="color:#E23B3E;">RED SIGNAL</span></div>
+
+      <!-- SELECTED LOOK card -->
+      <div style="position:relative; margin-top:26px; border:1px solid #cdcdd1; border-radius:3px; background:#fbfbfc; padding:20px 22px;">
+        <span style="position:absolute; top:-1px; left:-1px; width:12px; height:12px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span style="position:absolute; top:-1px; right:-1px; width:12px; height:12px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        <span style="position:absolute; bottom:-1px; left:-1px; width:12px; height:12px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span style="position:absolute; bottom:-1px; right:-1px; width:12px; height:12px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        <div style="font-size:12px; letter-spacing:.22em; color:#161618; margin-bottom:16px; display:flex; align-items:center; gap:9px;"><span style="width:6px; height:6px; background:#E23B3E;"></span>SELECTED LOOK</div>
+        <div style="display:flex; flex-direction:column; gap:11px;">
+          <sc-for list="{{ selectedLook }}" as="s" hint-placeholder-count="3">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid #e6e6e9; padding-bottom:9px;">
+              <span style="font-size:11px; letter-spacing:.16em; color:#8a8a8f;">{{ s.slot }}</span>
+              <span style="font-size:13px; letter-spacing:.04em; color:#E23B3E; text-align:right;">{{ s.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- WAITLIST button (full width) -->
+      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; padding:18px 24px; white-space:nowrap; text-decoration:none; color:#fff; font-size:13px; letter-spacing:.18em; text-transform:uppercase; background:#161618; border:1px solid #161618; transition:.16s;" style-hover="background:#000; border:1px solid #E23B3E; box-shadow:0 0 22px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+        Join the Waitlist
+        <span style="color:#E23B3E; font-size:16px; line-height:1;">→</span>
+        <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner tr" style="position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+        <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      </a>
+    </div>
+
+    <!-- ===== RIGHT :: columns 5-7 (styling sections) ===== -->
+    <div id="pg-sections" style="grid-column:5 / span 3; display:flex; flex-direction:column; gap:26px; padding-top:4px;">
+      <sc-for list="{{ pgGroups }}" as="g" hint-placeholder-count="3">
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
+            <span style="display:flex; align-items:center; gap:9px; font-size:13px; letter-spacing:.2em; color:#161618;"><span style="width:8px; height:8px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>{{ g.label }}</span>
+            <span style="font-size:10px; letter-spacing:.16em; color:#9a9a9f;">VIEW ALL +</span>
+          </div>
+          <div class="pg-optrow" style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+            <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3">
+              <div onClick="{{ o.pick }}" style="{{ o.wrap }}">
+                <span style="{{ o.brTL }}"></span>
+                <span style="{{ o.brBR }}"></span>
+                <sc-if value="{{ o.active }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute; top:6px; right:6px; z-index:2; display:flex; align-items:center; justify-content:center; width:15px; height:15px; background:#E23B3E; color:#fff; font-size:9px; letter-spacing:0;">+</span>
+                </sc-if>
+                <div style="{{ o.imgWrap }}">
+                  <img src="{{ o.thumb }}" alt="{{ o.label }}" style="{{ o.imgStyle }}">
+                </div>
+                <span style="{{ o.labelStyle }}">{{ o.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+
+  // ---- PLAYGROUND (styling studio) — Sims-style dress-up ----
+  // Three sections (TOP / BOTTOM / SUNGLASSES). Every combination has a
+  // pre-rendered full-body model image in altera/pg/model_<top>_<bottom>_<glasses>.png.
+  state = { pgSel: [0, 0, 0], pgLoad: false };
+
+  _pgCats = [
+    { key: 'top',     label: 'TOPS',       slot: 'TOP',
+      opts: [
+        { code: 'cami',   name: 'Lace Cami',    thumb: 'altera/pg/top_cami.png' },
+        { code: 'corset', name: 'Rose Corset',  thumb: 'altera/pg/top_corset.png' },
+        { code: 'bell',   name: 'Lace Bell Top',thumb: 'altera/pg/top_bell.png' },
+      ] },
+    { key: 'bottom',  label: 'BOTTOMS',    slot: 'BOTTOM',
+      opts: [
+        { code: 'redjean', name: 'Star Denim',   thumb: 'altera/pg/bottom_redjean.png' },
+        { code: 'skirt',   name: 'Ruffle Skirt', thumb: 'altera/pg/bottom_skirt.png' },
+        { code: 'flare',   name: 'Lace Flare',   thumb: 'altera/pg/bottom_flare.png' },
+      ] },
+    { key: 'glasses', label: 'SUNGLASSES', slot: 'SUNGLASSES',
+      opts: [
+        { code: 'chrome', name: 'Red Chrome',   thumb: 'altera/pg/glasses_chrome.png' },
+        { code: 'star',   name: 'Star Shield',  thumb: 'altera/pg/glasses_star.png' },
+        { code: 'spike',  name: 'Silver Spike', thumb: 'altera/pg/glasses_spike.png' },
+      ] },
+  ];
+
+  _modelSrc() {
+    const [t, b, g] = this.state.pgSel;
+    const top = this._pgCats[0].opts[t].code;
+    const bot = this._pgCats[1].opts[b].code;
+    const gl = this._pgCats[2].opts[g].code;
+    return 'altera/pg/model_' + top + '_' + bot + '_' + gl + '.png';
+  }
+
+  _pgPick(cat, j) {
+    if (this.state.pgSel[cat] === j) return;
+    const s = this.state.pgSel.slice();
+    s[cat] = j;
+    this.setState({ pgSel: s, pgLoad: true });
+    // preload the new render, then clear the loading veil
+    const img = new Image();
+    img.onload = () => this.setState({ pgLoad: false });
+    img.onerror = () => this.setState({ pgLoad: false });
+    img.src = this._modelSrc();
+  }
+
+  // ---- DECORATIVE PIXEL ARTIFACTS (built once) ----
+  renderVals() {
+    const cats = this._pgCats, sel = this.state.pgSel;
+
+    const pgGroups = cats.map((c, ci) => ({
+      label: c.label,
+      slot: c.slot,
+      current: c.opts[sel[ci]].name,
+      idx: String(sel[ci] + 1).padStart(2, '0'),
+      count: String(c.opts.length).padStart(2, '0'),
+      opts: c.opts.map((o, j) => {
+        const a = j === sel[ci];
+        return {
+          label: o.name,
+          thumb: o.thumb,
+          active: a,
+          wrap: 'position:relative; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; padding:9px 7px 8px; background:' + (a ? '#fff' : '#f5f5f7') + '; border:1px solid ' + (a ? '#E23B3E' : '#d3d3d7') + '; border-radius:3px; transition:.15s;',
+          imgWrap: 'position:relative; width:100%; aspect-ratio:1/1; overflow:hidden; background:repeating-linear-gradient(45deg, rgba(170,170,176,.08) 0 7px, rgba(170,170,176,.16) 7px 14px), #ededf0; border:1px solid ' + (a ? 'rgba(226,59,62,.35)' : '#dcdce0') + ';',
+          imgStyle: 'width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply;',
+          labelStyle: 'font-size:10px; letter-spacing:.06em; text-align:center; line-height:1.2; color:' + (a ? '#E23B3E' : '#4a4a4e') + ';',
+          brTL: 'position:absolute; top:-1px; left:-1px; width:10px; height:10px; border-top:2px solid ' + (a ? '#E23B3E' : 'transparent') + '; border-left:2px solid ' + (a ? '#E23B3E' : 'transparent') + ';',
+          brBR: 'position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-bottom:2px solid ' + (a ? '#E23B3E' : 'transparent') + '; border-right:2px solid ' + (a ? '#E23B3E' : 'transparent') + ';',
+          pick: () => this._pgPick(ci, j),
+        };
+      }),
+    }));
+
+    const selectedLook = cats.map((c, ci) => ({
+      slot: c.slot,
+      value: c.opts[sel[ci]].name.toUpperCase(),
+    }));
+
+    return {
+      artifacts: this._artifacts || (this._artifacts = this.buildArtifacts()),
+      essArtifacts: this._essArtifacts || (this._essArtifacts = this.buildEssArtifacts()),
+      pgArtifacts: this._pgArtifacts || (this._pgArtifacts = this.buildPgArtifacts()),
+      status: [
+        { label: 'LOOKBOOK LOADING', bars: this.bars(0) },
+        { label: 'LIMITED RELEASE',  bars: this.bars(0.4) },
+        { label: 'QUALITY OVER NOISE', bars: this.bars(0.8) },
+      ],
+      pgGroups,
+      selectedLook,
+      modelSrc: this._modelSrc(),
+      pgLoading: this.state.pgLoad,
+      lookCode: 'LOOK ' + (sel[0] + 1) + (sel[1] + 1) + (sel[2] + 1),
+    };
+  }
+
+  // animated pixel loader: a red light sweeps across the bars
+  bars(offset) {
+    const out = [];
+    const n = 7;
+    for (let i = 0; i < n; i++) {
+      out.push('width:9px;height:5px;display:inline-block;background:rgba(255,255,255,.22);'
+        + `animation:barLoad 1.4s ease-in-out ${(offset + i * 0.13).toFixed(2)}s infinite;`);
+    }
+    return out;
+  }
+
+  // each artifact = positioned WRAP (moved by JS repulsion) + visual INNER (CSS float)
+  wrap(top, left, w, h) {
+    return { position:'absolute', top:top+'%', left:left+'%', width:w+'px', height:h+'px', willChange:'transform' };
+  }
+  // pixel sparkle-star (the attached SVG) — variant picks the 3-tone palette; size/opacity vary
+  cross(top, left, size, op, variant) {
+    const pal = variant === 'silver' ? ['#9a9a9d', '#cfcfd1', '#ffffff']
+      : variant === 'white' ? ['#bdbdc0', '#e6e6e8', '#ffffff']
+      : variant === 'rose' ? ['#E23B3E', '#F99193', '#FFE8E9']
+      : ['#C71D20', '#F99193', '#FFE8E9'];
+    return { wrap: this.wrap(top, left, size, size),
+      inner: { width:'100%', height:'100%', opacity:op,
+        backgroundImage:'url("' + this.starURI(pal[0], pal[1], pal[2]) + '")',
+        backgroundSize:'contain', backgroundRepeat:'no-repeat', backgroundPosition:'center',
+        imageRendering:'pixelated' } };
+  }
+  starURI(c1, c2, c3) {
+    const r = (x, y, c) => "<rect x='" + x + "' y='" + y + "' width='3.2' height='3.2' fill='" + c + "'/>";
+    const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'>"
+      + r(0,6.4,c1) + r(3.2,3.2,c1) + r(3.2,6.4,c2) + r(3.2,9.6,c1)
+      + r(6.4,0,c1) + r(6.4,3.2,c2) + r(6.4,6.4,c3) + r(6.4,9.6,c2) + r(6.4,12.8,c1)
+      + r(9.6,3.2,c1) + r(9.6,6.4,c2) + r(9.6,9.6,c1) + r(12.8,6.4,c1)
+      + "</svg>";
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+  sq(top, left, size, color, op, anim) {
+    const inner = { width:'100%', height:'100%', background:color, opacity:op };
+    if (anim) inner.animation = anim;
+    return { wrap: this.wrap(top, left, size, size), inner };
+  }
+  glitch(top, left, w, op) {
+    return { wrap: this.wrap(top, left, w, 2),
+      inner: { width:'100%', height:'100%', background:'rgba(255,255,255,'+op+')', mixBlendMode:'overlay' } };
+  }
+
+  // ~56 artifacts scattered everywhere; JS gives each a constant random drift velocity.
+  buildArtifacts() {
+    const W = '#ffffff', G = 'rgba(200,200,205,.75)';
+    // tiny seeded RNG so the layout is stable between renders
+    let seed = 20260629;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    const A = [];
+    const N = 56;
+    for (let i = 0; i < N; i++) {
+      const top = rnd() * 96, left = rnd() * 97, r = rnd();
+      if (r < 0.2) {                                   // pixel sparkle-star (varied palette + size)
+        const v = rnd(); const variant = v < 0.55 ? 'red' : v < 0.78 ? 'silver' : v < 0.9 ? 'white' : 'rose';
+        A.push(this.cross(top, left, 9 + rnd() * 9, 0.6 + rnd() * 0.35, variant));
+      } else if (r < 0.32) {                            // glitch line
+        A.push(this.glitch(top, left, 16 + rnd() * 22, 0.22 + rnd() * 0.2));
+      } else {                                          // white / grey square
+        A.push(this.sq(top, left, 3 + rnd() * 5, rnd() < 0.5 ? W : G, 0.4 + rnd() * 0.3));
+      }
+    }
+    return A;
+  }
+
+  // ~13 premium pixel artifacts for the essence section (mostly toward the edges)
+  buildEssArtifacts() {
+    const W = '#ffffff', G = 'rgba(180,180,186,.7)';
+    let seed = 24052026;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    const A = [];
+    const N = 42;   // plentiful, scattered everywhere (JS flies them — no static float)
+    for (let i = 0; i < N; i++) {
+      const top = rnd() * 94, left = rnd() * 96, r = rnd();
+      if (r < 0.2) A.push(this.cross(top, left, 9 + rnd() * 7, 0.6 + rnd() * 0.3, rnd() < 0.6 ? 'red' : 'silver'));
+      else if (r < 0.32) A.push(this.glitch(top, left, 14 + rnd() * 20, 0.2 + rnd() * 0.2));
+      else A.push(this.sq(top, left, 3 + rnd() * 5, rnd() < 0.5 ? W : G, 0.35 + rnd() * 0.35));
+    }
+    return A;
+  }
+
+  // subtle pixel artifacts for the LIGHT playground — dark-grey squares + red stars, edge-biased
+  buildPgArtifacts() {
+    const D = 'rgba(120,120,126,.7)', L = 'rgba(150,150,156,.55)';
+    let seed = 30063003;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    // push most points toward the edges so they stay off the text/cards
+    const edge = () => { const v = rnd(); return v < 0.5 ? v * 24 : 76 + (v - 0.5) * 48; };
+    const A = []; const N = 22;
+    for (let i = 0; i < N; i++) {
+      const useEdge = rnd() < 0.7;
+      const top = useEdge ? edge() : rnd() * 94;
+      const left = useEdge ? edge() : rnd() * 96;
+      const r = rnd();
+      if (r < 0.22) A.push(this.cross(top, left, 8 + rnd() * 6, 0.5 + rnd() * 0.3, rnd() < 0.7 ? 'red' : 'silver'));
+      else A.push(this.sq(top, left, 3 + rnd() * 4, rnd() < 0.5 ? D : L, 0.35 + rnd() * 0.3));
+    }
+    return A;
+  }
+
+  // ---- INTERACTION: image parallax + free-flying particles that FLEE the cursor ----
+  componentDidMount() {
+    const hero = document.getElementById('alt-hero');
+    if (!hero) return;
+    const fig = document.getElementById('alt-figure');
+    const arts = Array.from(hero.querySelectorAll('.alt-art'));
+    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+
+    // ---- HERO VIDEO: plays forward when idle, scrubs with vertical cursor movement ----
+    // idle -> plays forward (always visible)   cursor up -> scrub forward   down -> scrub backward
+    const vid = document.getElementById('alt-hero-video');
+    let lastMy = null, vImpulse = 0, lastMoveT = -9999, sTarget = null;
+    const initVideo = () => {
+      if (!vid) return;
+      vid.muted = true; vid.playsInline = true; vid.setAttribute('muted', '');
+      if (mobile()) {                         // mobile has no cursor -> just play/loop
+        vid.loop = true; const p = vid.play(); if (p && p.catch) p.catch(() => {}); return;
+      }
+      // desktop: do NOT play on its own. Hold a frame; the cursor scrubs it.
+      vid.loop = false; vid.pause();
+      const seed = () => { try { vid.currentTime = (vid.duration || 5) * 0.4; } catch (e) {} };
+      // Progressive mp4 isn't seekable until fully indexed — fetch the whole file as a
+      // Blob and play from an object URL so scrubbing (seeking) works immediately.
+      fetch(vid.currentSrc || vid.getAttribute('src'))
+        .then((res) => res.blob())
+        .then((b) => {
+          vid.addEventListener('loadeddata', seed, { once: true });
+          vid.src = URL.createObjectURL(b);
+          vid.load();
+        })
+        .catch(() => { if (vid.readyState >= 1) seed(); else vid.addEventListener('loadedmetadata', seed, { once: true }); });
+    };
+    initVideo();
+
+    // ---- TRANSITION VIDEO: hero -> essence camera move, scrubbed by scroll ----
+    const tWrap = document.getElementById('alt-transition');
+    const tVid = document.getElementById('alt-transition-video');
+    if (tVid) {
+      tVid.muted = true; tVid.pause();
+      fetch(tVid.getAttribute('src')).then((r) => r.blob()).then((b) => {
+        tVid.src = URL.createObjectURL(b);
+        tVid.addEventListener('loadeddata', () => { try { tVid.currentTime = 0; } catch (e) {} }, { once: true });
+        tVid.load();
+      }).catch(() => {});
+    }
+
+    let mx = -9999, my = -9999;             // cursor (px, hero-relative)
+    // ---- ABOUT BACKGROUND VIDEO: loops while the essence section is on screen ----
+    const essVid = document.getElementById('essence-blink-video');
+    const essBlinkVid = null;
+    let essObs = null;
+    // Blob-load the about clip (direct src streaming doesn't buffer reliably in-frame), then play.
+    const blobLoad = (v, autoplay) => {
+      if (!v) return;
+      v.muted = true; v.loop = true; v.playsInline = true;
+      fetch(v.getAttribute('src')).then((r) => r.blob()).then((b) => {
+        v.src = URL.createObjectURL(b);
+        if (autoplay) v.addEventListener('loadeddata', () => { const q = v.play(); if (q && q.catch) q.catch(() => {}); }, { once: true });
+        v.load();
+      }).catch(() => {});
+    };
+    blobLoad(essVid, true);
+    if (essVid) {
+      const essSection = document.getElementById('alt-essence');
+      essObs = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { const q = essVid.play(); if (q && q.catch) q.catch(() => {}); }
+          else essVid.pause();
+        });
+      }, { threshold: 0.02 });
+      if (essSection) essObs.observe(essSection);
+    }
+
+    let fx = 0, fy = 0, cfx = 0, cfy = 0;   // figure parallax target / current
+    let W = hero.clientWidth, H = hero.clientHeight, raf = 0;
+
+    // each particle flies on its own constant-ish velocity, bouncing off the edges
+    const P = arts.map((el) => {
+      const ang = Math.random() * Math.PI * 2;
+      const sp = 0.18 + Math.random() * 0.42;        // base drift speed (px/frame)
+      const ox = el.offsetLeft, oy = el.offsetTop;
+      return {
+        el, ox, oy,
+        x: ox, y: oy,
+        w: el.offsetWidth, h: el.offsetHeight,
+        vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+        sp,
+      };
+    });
+
+    // On resize the %-positioned particles move; re-measure their pixel origin and pull any
+    // that now sit outside the new viewport back into bounds, so they stay responsive everywhere.
+    const onResize = () => {
+      W = hero.clientWidth; H = hero.clientHeight;
+      for (let i = 0; i < P.length; i++) {
+        const p = P[i];
+        p.ox = p.el.offsetLeft; p.oy = p.el.offsetTop;
+        p.w = p.el.offsetWidth; p.h = p.el.offsetHeight;
+        p.x = Math.max(0, Math.min(W - p.w, p.x));
+        p.y = Math.max(0, Math.min(H - p.h, p.y));
+      }
+    };
+    window.addEventListener('resize', onResize);
+
+    // ---- ESSENCE PARTICLES: same free-flying physics, scoped to the about section ----
+    const essSecForArts = document.getElementById('alt-essence');
+    const essArtsEls = essSecForArts ? Array.from(essSecForArts.querySelectorAll('.ess-art')) : [];
+    let eW = essSecForArts ? essSecForArts.clientWidth : 0, eH = essSecForArts ? essSecForArts.clientHeight : 0;
+    let emx = -9999, emy = -9999;
+    const essP = essArtsEls.map((el) => {
+      const ang = Math.random() * Math.PI * 2; const sp = 0.16 + Math.random() * 0.4;
+      const ox = el.offsetLeft, oy = el.offsetTop;
+      return { el, ox, oy, x: ox, y: oy, w: el.offsetWidth, h: el.offsetHeight, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, sp };
+    });
+    if (essSecForArts) {
+      essSecForArts.addEventListener('mousemove', (e) => { const r = essSecForArts.getBoundingClientRect(); emx = e.clientX - r.left; emy = e.clientY - r.top; });
+      essSecForArts.addEventListener('mouseleave', () => { emx = -9999; emy = -9999; });
+      const essArtResize = () => { eW = essSecForArts.clientWidth; eH = essSecForArts.clientHeight; for (const p of essP) { p.ox = p.el.offsetLeft; p.oy = p.el.offsetTop; p.w = p.el.offsetWidth; p.h = p.el.offsetHeight; p.x = Math.max(0, Math.min(eW - p.w, p.x)); p.y = Math.max(0, Math.min(eH - p.h, p.y)); } };
+      window.addEventListener('resize', essArtResize);
+    }
+
+    // ---- PLAYGROUND: very subtle cursor parallax on the model ----
+    const pgSecP = document.getElementById('alt-playground');
+    const pgFig = document.getElementById('pg-model-figure');
+    if (pgSecP && pgFig && !mobile()) {
+      let pfx = 0, pfy = 0, ptx = 0, pty = 0;
+      pgSecP.addEventListener('mousemove', (e) => {
+        const r = pgSecP.getBoundingClientRect();
+        ptx = ((e.clientX - r.left) / r.width - 0.5) * 14;   // ±7px
+        pty = ((e.clientY - r.top) / r.height - 0.5) * 8;     // ±4px
+      });
+      pgSecP.addEventListener('mouseleave', () => { ptx = 0; pty = 0; });
+      const pfTick = () => {
+        pfx += (ptx - pfx) * 0.06; pfy += (pty - pfy) * 0.06;
+        pgFig.style.transform = 'translate(' + pfx.toFixed(2) + 'px,' + pfy.toFixed(2) + 'px)';
+        requestAnimationFrame(pfTick);
+      };
+      pfTick();
+    }
+
+    // ---- PLAYGROUND PARTICLES: same free-flying physics, scoped to the playground ----
+    const pgSec = document.getElementById('alt-playground');
+    const pgArtsEls = pgSec ? Array.from(pgSec.querySelectorAll('.pg-art')) : [];
+    let pW = pgSec ? pgSec.clientWidth : 0, pH = pgSec ? pgSec.clientHeight : 0;
+    let pmx = -9999, pmy = -9999;
+    const pgP = pgArtsEls.map((el) => {
+      const ang = Math.random() * Math.PI * 2; const sp = 0.16 + Math.random() * 0.4;
+      const ox = el.offsetLeft, oy = el.offsetTop;
+      return { el, ox, oy, x: ox, y: oy, w: el.offsetWidth, h: el.offsetHeight, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, sp };
+    });
+    if (pgSec) {
+      pgSec.addEventListener('mousemove', (e) => { const r = pgSec.getBoundingClientRect(); pmx = e.clientX - r.left; pmy = e.clientY - r.top; });
+      pgSec.addEventListener('mouseleave', () => { pmx = -9999; pmy = -9999; });
+      const pgResize = () => { pW = pgSec.clientWidth; pH = pgSec.clientHeight; for (const p of pgP) { p.ox = p.el.offsetLeft; p.oy = p.el.offsetTop; p.w = p.el.offsetWidth; p.h = p.el.offsetHeight; p.x = Math.max(0, Math.min(pW - p.w, p.x)); p.y = Math.max(0, Math.min(pH - p.h, p.y)); } };
+      window.addEventListener('resize', pgResize);
+    }
+
+    // ---- SCROLL TRANSITION: hero -> essence (fashion camera push-in) ----
+    const essImg = document.getElementById('essence-image');
+    const essStage = document.getElementById('essence-sticky');
+    const essBg = document.getElementById('essence-blink-video');
+    const essBlink = null;
+    const essContent = document.getElementById('essence-content');
+    const essOverlays = document.getElementById('essence-overlays');
+    const essMarker = document.getElementById('essence-marker');
+    const heroUIs = ['alt-left', 'alt-right', 'alt-social', 'alt-scroll'].map((id) => document.getElementById(id)).filter(Boolean);
+    const reveals = essContent ? Array.from(essContent.children) : [];
+    heroUIs.forEach((el) => { el.dataset.base = el.style.transform || ''; el.style.willChange = 'transform,opacity'; });
+    reveals.forEach((el) => { el.style.willChange = 'transform,opacity'; });
+
+    // ---- ABOUT ENTRANCE: reveal ONCE when the section scrolls into view (not scroll-gated) ----
+    // Start hidden, then fade/slide in with a stagger the first time ≥30% of the section is visible.
+    if (essOverlays) essOverlays.style.transition = 'opacity .9s ease';
+    if (essMarker) { essMarker.style.opacity = '0'; essMarker.style.transition = 'opacity .9s ease'; }
+    reveals.forEach((el) => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .7s ease, transform .7s cubic-bezier(.16,.7,.2,1)';
+    });
+    let essRevealed = false;
+    const revealEss = () => {
+      if (essRevealed) return; essRevealed = true;
+      if (essOverlays) essOverlays.style.opacity = '1';
+      if (essMarker) essMarker.style.opacity = '1';
+      reveals.forEach((el, i) => { setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 120 + i * 85); });
+    };
+    const essSecEl = document.getElementById('alt-essence');
+    if (essSecEl) {
+      const essRevObs = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) revealEss(); }); }, { threshold: 0.28 });
+      essRevObs.observe(essSecEl);
+    }
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const seg = (p, a, b) => clamp01((p - a) / (b - a));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    let scrollProg = 0;   // raw scroll in viewport units (0 .. ~3), unclamped so phases can map past 1
+    const onScroll = () => { scrollProg = window.scrollY / (window.innerHeight || 1); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const applyTransition = () => {
+      const p = scrollProg, m = mobile();
+      // PHASES (hero is pinned for scroll 0→2.0 viewport-heights via #alt-pin-driver):
+      //   0.0–1.1  hero video scrubs fully backward + hero UI fades
+      //   1.0–1.9  2nd (transition) video covers + scrubs through
+      //   1.9→3.0  hero unpins, essence scrolls up + reveals
+      if (m) {
+        // mobile: no pin/scrub — simple fade. essence reveals as it enters.
+        heroUIs.forEach((el) => { el.style.opacity = 1 - seg(p, 0.2, 0.9); });
+        if (fig) fig.style.transform = 'none';
+        if (tWrap) tWrap.style.opacity = 0;
+        if (essImg) { essImg.style.opacity = 1; essImg.style.transform = 'none'; }
+        revealEss();   // entrance handled once by the IntersectionObserver
+        return;
+      }
+      // 1. hero UI + text STAY fully visible until the 2nd video starts, then fade out fast
+      const uiF = seg(p, 0.46, 0.56);
+      heroUIs.forEach((el) => { el.style.opacity = 1 - uiF; el.style.transform = (el.dataset.base || '') + ' translateY(' + (-uiF * 18) + 'px)'; });
+      // 2. hero visual zooms in slightly (camera push-in) while its video scrubs
+      if (fig) { const z = seg(p, 0.05, 0.55); fig.style.transform = 'translate3d(' + lerp(0, -20, z) + 'px,0,0) scale(' + lerp(1, 1.04, z) + ')'; }
+      // 2b. transition video: covers once the hero scrub finishes, scrubs as the about section RISES
+      //     into view, then dissolves exactly as the about fills — position-driven so it stays aligned
+      //     at any viewport height (no fixed magic scroll number).
+      if (tWrap && tVid) {
+        const essRect = essSecEl ? essSecEl.getBoundingClientRect() : { top: H };
+        const rise = clamp01(1 - essRect.top / H);   // 0 = about below screen, 1 = about filling
+        const tin = seg(p, 0.5, 0.62);               // fade IN once the hero scrub is done
+        const tout = seg(rise, 0.8, 1.0);            // fade OUT as the about rises to fill
+        tWrap.style.opacity = Math.min(tin, 1 - tout);
+        const td = tVid.duration;
+        if (td > 0 && isFinite(td) && tVid.seekable && tVid.seekable.length && tVid.seekable.end(0) > 0.1) {
+          const tt = seg(rise, 0, 0.82) * (td - 0.06);
+          if (!tVid.seeking && Math.abs((tVid.currentTime || 0) - tt) > 0.02) { try { tVid.currentTime = tt; } catch (e) {} }
+        }
+      }
+      // ---- ABOUT SECTION (fixed stage): local progress 0→1 across the section's scroll ----
+      const essSec = document.getElementById('alt-essence');
+      let ep = 0;
+      if (essSec) {
+        const pinRange = Math.max(1, essSec.offsetHeight - H);
+        ep = clamp01((window.scrollY - essSec.offsetTop) / pinRange);
+      }
+      if (essImg) { essImg.style.opacity = 1; }
+      // gentle camera-settle parallax as the section moves into place; scale stays ≥1 so it always fills.
+      // NOTE: text/overlay reveal is NOT scroll-gated (see IntersectionObserver below) — the about
+      // barely scrolls, so gating opacity on ep left everything dim/grey like a veil.
+      const essTf = 'scale(' + lerp(1.05, 1.0, ep) + ') translate3d(0,' + lerp(1.5, 0, ep) + '%,0)';
+      if (essImg) essImg.style.transform = essTf;
+    };
+
+    const onMove = (e) => {
+      const r = hero.getBoundingClientRect();
+      mx = e.clientX - r.left; my = e.clientY - r.top;
+      if (mobile()) { fx = 0; fy = 0; return; }
+      fx = (mx / r.width - 0.5) * 2;          // -1..1
+      fy = (my / r.height - 0.5) * 2;
+      // accumulate vertical movement → scrubs the video (up = forward, down = backward)
+      if (vid) {
+        if (lastMy !== null) vImpulse += (my - lastMy);   // +down / -up
+        lastMy = my; lastMoveT = performance.now();
+      }
+    };
+    const onLeave = () => { mx = -9999; my = -9999; fx = 0; fy = 0; lastMy = null; };
+
+    const R = 150, ACC = 1.4, VMAX = 4.5;     // scare radius / push accel / speed cap
+    // step one set of free-flying particles within bounds bw×bh, fleeing cursor (pmx,pmy)
+    const stepSet = (list, bw, bh, pmx, pmy) => {
+      const sc = !mobile() && pmx > -9000;
+      for (let i = 0; i < list.length; i++) {
+        const p = list[i];
+        if (sc) { const dx = (p.x + p.w / 2) - pmx, dy = (p.y + p.h / 2) - pmy; const d = Math.hypot(dx, dy); if (d < R && d > 0.01) { const f = (R - d) / R; p.vx += dx / d * f * ACC; p.vy += dy / d * f * ACC; } }
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) { p.x = 0; p.vx = Math.abs(p.vx); } else if (p.x > bw - p.w) { p.x = bw - p.w; p.vx = -Math.abs(p.vx); }
+        if (p.y < 0) { p.y = 0; p.vy = Math.abs(p.vy); } else if (p.y > bh - p.h) { p.y = bh - p.h; p.vy = -Math.abs(p.vy); }
+        let s = Math.hypot(p.vx, p.vy);
+        if (s > VMAX) { p.vx = p.vx / s * VMAX; p.vy = p.vy / s * VMAX; s = VMAX; }
+        if (s < p.sp) { if (s < 0.001) { p.vx = p.sp; p.vy = 0; } else { p.vx = p.vx / s * p.sp; p.vy = p.vy / s * p.sp; } } else { p.vx *= 0.985; p.vy *= 0.985; }
+        p.el.style.transform = `translate(${p.x - p.ox}px, ${p.y - p.oy}px)`;
+      }
+    };
+    const tick = () => {
+      applyTransition();   // scroll-driven hero -> essence transition
+      // hero video: SCROLL-driven scrub while pinned — scrolling plays the clip FORWARD
+      // (full scrub completes within the first viewport-height of scroll, before the transition)
+      if (vid && !mobile() && vid.duration > 0 && isFinite(vid.duration)) {
+        const dur = vid.duration;
+        if (!vid.paused) vid.pause();
+        const seekable = vid.seekable && vid.seekable.length && vid.seekable.end(0) > 0.1;
+        if (seekable) {
+          const tt = 0.05 + seg(scrollProg, 0, 0.55) * (dur - 0.1);
+          if (!vid.seeking && Math.abs((vid.currentTime || 0) - tt) > 0.02) { try { vid.currentTime = tt; } catch (e) {} }
+        }
+      }
+
+      stepSet(P, W, H, mx, my);            // hero particles
+      stepSet(essP, eW, eH, emx, emy);     // about-section particles (fly everywhere too)
+      stepSet(pgP, pW, pH, pmx, pmy);      // playground particles
+      raf = requestAnimationFrame(tick);
+    };
+
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+    tick();
+    this._startType();
+    this._cleanup = () => { cancelAnimationFrame(raf); hero.removeEventListener('mousemove', onMove); hero.removeEventListener('mouseleave', onLeave); window.removeEventListener('resize', onResize); window.removeEventListener('scroll', onScroll); if (essObs) essObs.disconnect(); if (this._typeStop) this._typeStop(); };
+  }
+
+  // ---- DROP 001 :: "RED SIGNAL" typewriter (types, holds, erases, repeats) ----
+  _startType() {
+    const el = document.getElementById('alt-redsignal');
+    if (!el) return;
+    const full = 'RED SIGNAL';
+    let i = 0, dir = 1, tmo = 0;
+    const step = () => {
+      el.textContent = full.slice(0, i);
+      let delay = 120;
+      i += dir;
+      if (i > full.length) { i = full.length; dir = -1; delay = 2400; }
+      else if (i < 0) { i = 0; dir = 1; delay = 700; }
+      tmo = setTimeout(step, delay);
+    };
+    step();
+    this._typeStop = () => clearTimeout(tmo);
+  }
+
+  componentWillUnmount() { if (this._cleanup) this._cleanup(); }
+}
+</script>
+</body>
+</html>

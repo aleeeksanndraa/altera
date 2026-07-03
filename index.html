@@ -23,6 +23,9 @@
     /* hero appearance: zoom-out reveal */
     @keyframes heroIntro{ 0%{ transform:scale(1.4); opacity:.15; } 60%{ opacity:1; } 100%{ transform:scale(1.04); opacity:1; } }
     @keyframes scrollDot{ 0%{ transform:translateY(0); opacity:0; } 25%{ opacity:1; } 75%{ opacity:1; } 100%{ transform:translateY(8px); opacity:0; } }
+    @keyframes ftGlow{ 0%,100%{ opacity:.7; } 50%{ opacity:1; } }
+    @keyframes eqPulse{ 0%,100%{ transform:scaleY(.6); } 50%{ transform:scaleY(1.15); } }
+    @keyframes tvRoll{ 0%{ transform:translateY(0); } 100%{ transform:translateY(6px); } }
 
     /* ---- BUTTONS: red corner brackets push OUTSIDE on hover ---- */
     .alt-btn .corner{ transition:top .2s ease, left .2s ease, right .2s ease, bottom .2s ease; }
@@ -69,6 +72,35 @@
       #pg-model{ margin-left:0 !important; }
       #pg-model > div{ min-height:64vh !important; }
       #pg-center{ padding-top:0 !important; }
+      /* TRANSITION video overlay: static / hidden on mobile */
+      #alt-pgt{ display:none !important; }
+      /* FIXED DOCK + LOADER: compact on mobile */
+      #alt-dock{ bottom:12px !important; gap:0 !important; padding:5px 4px !important; max-width:94vw; overflow-x:auto; }
+      #alt-dock a{ padding:0 8px !important; font-size:9px !important; }
+      #alt-sound{ padding:0 8px !important; font-size:9px !important; }
+      #alt-loader{ top:50% !important; right:56px !important; }
+      #alt-loader > div:first-child span:first-child{ display:none; }
+      /* SHOWCASE: no 3D sphere on mobile — dark section + horizontal card carousel */
+      #alt-showcase{ height:auto !important; }
+      #show-sticky{ position:relative !important; height:auto !important; padding:52px 0 44px !important; overflow:visible !important; }
+      #show-bg-dark{ opacity:1 !important; }
+      #show-grain{ opacity:.4 !important; }
+      #show-chrome{ opacity:1 !important; }
+      #show-copy{ position:relative !important; left:auto !important; top:auto !important; transform:none !important; opacity:1 !important; width:auto !important; padding:34px 20px 18px; }
+      #drop-stage{ position:relative !important; inset:auto !important; display:flex !important; gap:14px; overflow-x:auto; padding:4px 20px 12px; -webkit-overflow-scrolling:touch; }
+      .sph-tile{ position:relative !important; flex:0 0 46% !important; width:auto !important; height:auto !important; aspect-ratio:3/4.1 !important; transform:none !important; opacity:1 !important; filter:none !important; }
+      #drop-veil-in, #drop-veil-out{ display:none !important; }
+      /* WAITLIST: stack */
+      #alt-waitlist{ padding:64px 18px !important; }
+      #wl-grid{ display:flex !important; flex-direction:column !important; gap:26px !important; }
+      #wl-image{ width:100%; }
+      #wl-copy{ padding-left:0 !important; }
+      #wl-form{ flex-direction:column; }
+      /* FOOTER */
+      #alt-footer{ padding:56px 18px 24px !important; }
+      #ft-top{ flex-direction:column !important; }
+      #ft-top > div:last-child{ align-items:flex-start !important; text-align:left !important; }
+      #ft-bottom{ flex-direction:column; align-items:flex-start !important; gap:10px !important; }
     }
   </style>
 </helmet>
@@ -120,18 +152,48 @@
     </sc-for>
   </div>
 
-  <!-- ============ TOP NAVIGATION ============ -->
-  <nav style="position:absolute; top:0; left:0; right:0; z-index:6; display:flex; align-items:center; justify-content:space-between; padding:30px 46px;">
+  <!-- ============ TOP NAVIGATION (fixed, scroll-reactive) ============ -->
+  <nav id="alt-nav" style="position:fixed; top:0; left:0; right:0; z-index:120; display:flex; align-items:center; justify-content:space-between; padding:30px 46px; background:rgba(11,11,13,0); backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px); border-bottom:1px solid rgba(255,255,255,0); transition:padding .35s cubic-bezier(.16,.7,.2,1), background .4s ease, backdrop-filter .4s ease, border-color .4s ease, transform .5s cubic-bezier(.16,.7,.2,1); transform:translateY(0);">
     <div style="display:flex; gap:34px; align-items:center; flex:1;">
       <a href="#alt-essence" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">About</a>
       <a href="#alt-playground" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Playground</a>
     </div>
-    <a href="#" style="flex:0 0 auto; display:block;"><img src="altera/logo.svg" alt="ALTERA" style="height:34px; display:block; image-rendering:pixelated;"></a>
+    <a href="#alt-pin" style="flex:0 0 auto; display:block;"><img src="altera/logo.svg" alt="ALTERA" style="height:34px; display:block; image-rendering:pixelated;"></a>
     <div style="display:flex; gap:34px; align-items:center; justify-content:flex-end; flex:1;">
-      <a href="#" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Collection</a>
-      <a href="#" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Waitlist</a>
+      <a href="#alt-showcase" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Collection</a>
+      <a href="#alt-waitlist" style="color:#FFFCFC; text-decoration:none; font-size:13px; letter-spacing:.18em; text-transform:uppercase; padding-bottom:3px; border-bottom:1px solid transparent; transition:.18s;" style-hover="color:#FFFCFC; border-bottom:1px solid #E23B3E; text-shadow:1px 0 #E23B3E,-1px 0 rgba(120,200,255,.6);">Waitlist</a>
     </div>
   </nav>
+
+  <!-- ============ FIXED BOTTOM DOCK :: quick-nav + sound ============ -->
+  <!-- Vertical mini-navigator pinned to the right edge. Hidden on the hero, fades in once
+       scrolled past it. Sound is icon-only; drop a track at altera/ambient.mp3 later. -->
+  <div id="alt-dock" style="position:fixed; right:16px; top:50%; transform:translateY(-50%) translateX(14px); z-index:2147483000; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 5px; background:rgba(9,9,11,0.62); backdrop-filter:blur(14px) saturate(1.1); -webkit-backdrop-filter:blur(14px) saturate(1.1); border:1px solid rgba(255,255,255,0.10); border-radius:2px; box-shadow:0 8px 26px rgba(0,0,0,.4); opacity:0; pointer-events:none; transition:opacity .45s ease, transform .45s cubic-bezier(.16,.7,.2,1);">
+    <a href="#alt-pin" data-dock="alt-pin" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Home</a>
+    <a href="#alt-essence" data-dock="alt-essence" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">About</a>
+    <a href="#alt-playground" data-dock="alt-playground" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Studio</a>
+    <a href="#alt-showcase" data-dock="alt-showcase" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Showcase</a>
+    <a href="#alt-waitlist" data-dock="alt-waitlist" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Waitlist</a>
+    <span style="width:16px; height:1px; background:rgba(255,255,255,.14); margin:4px 0;"></span>
+    <button id="alt-sound" aria-label="Toggle sound" style="display:flex; align-items:flex-end; justify-content:center; gap:2px; height:16px; padding:4px 6px 6px; background:transparent; border:0; color:#c8c8cc; cursor:pointer; transition:.16s;" style-hover="color:#E23B3E;">
+      <span id="alt-sound-eq" style="display:inline-flex; align-items:flex-end; gap:2px; height:12px;">
+        <span style="width:2px; height:4px; background:currentColor; display:block;"></span>
+        <span style="width:2px; height:9px; background:currentColor; display:block;"></span>
+        <span style="width:2px; height:6px; background:currentColor; display:block;"></span>
+      </span>
+    </button>
+    <audio id="alt-audio" src="altera/ambient.mp3" loop preload="none"></audio>
+  </div>
+
+  <!-- ============ FIXED SHOWCASE LOADER :: % top-right (waterfall only) ============ -->
+  <div id="alt-loader" style="position:fixed; top:50%; right:84px; transform:translateY(-50%); z-index:125; display:flex; flex-direction:column; align-items:flex-end; gap:5px; opacity:0; pointer-events:none; transition:opacity .4s ease; font-family:'Space Mono',monospace; color:#f2f2f4;">
+    <div style="display:flex; align-items:baseline; gap:5px; font-size:8px; letter-spacing:.16em;"><span style="color:#9a9a9f;">LOADING</span><span id="alt-loader-pct" style="color:#E23B3E; font-size:10px; min-width:28px; text-align:right;">000%</span></div>
+    <div style="width:88px; height:2px; background:rgba(255,255,255,.16); overflow:hidden;"><div id="alt-loader-bar" style="height:100%; width:0%; background:#E23B3E; box-shadow:0 0 8px rgba(226,59,62,.7);"></div></div>
+  </div>
+
+  <!-- ============ GLOBAL TV-SCANLINE TEXTURE (over everything) ============ -->
+  <div id="alt-scanlines" style="position:fixed; inset:0; z-index:118; pointer-events:none; mix-blend-mode:overlay; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, rgba(0,0,0,.10) 1px 3px);"></div>
+  <div id="alt-scanflicker" style="position:fixed; inset:0; z-index:117; pointer-events:none; mix-blend-mode:overlay; opacity:.06; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0 2px, transparent 2px 6px); will-change:transform; animation:tvRoll .5s steps(3) infinite;"></div>
 
   <!-- ============ LEFT CONTENT BLOCK ============ -->
   <div id="alt-left" class="alt-side" style="position:absolute; left:46px; top:112px; z-index:6; width:min(33vw,400px);">
@@ -148,7 +210,7 @@
 
     <!-- ---- BUTTONS ---- -->
     <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:32px;">
-      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.78); border:1px solid #FFFCFC; transition:.16s;" style-hover="background:rgba(0,0,0,.92); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+      <a href="#alt-showcase" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.78); border:1px solid #FFFCFC; transition:.16s;" style-hover="background:rgba(0,0,0,.92); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
         Explore The Drop
         <span style="width:11px; height:11px; flex:0 0 auto; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
         <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
@@ -156,7 +218,7 @@
         <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
         <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
       </a>
-      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.35); border:1px solid rgba(255,255,255,.55); transition:.16s;" style-hover="background:rgba(0,0,0,.7); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.4); text-shadow:1px 0 #E23B3E;">
+      <a href="#alt-waitlist" class="alt-btn" style="position:relative; display:flex; align-items:center; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.35); border:1px solid rgba(255,255,255,.55); transition:.16s;" style-hover="background:rgba(0,0,0,.7); border:1px solid #E23B3E; box-shadow:0 0 18px rgba(226,59,62,.4); text-shadow:1px 0 #E23B3E;">
         Join Waitlist
         <span style="width:11px; height:11px; flex:0 0 auto; background:linear-gradient(#E23B3E,#E23B3E) center/100% 34% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/34% 100% no-repeat;"></span>
         <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
@@ -210,11 +272,11 @@
 
   <!-- ============ BOTTOM: SOCIALS + SCROLL ============ -->
   <div id="alt-social" style="position:absolute; left:46px; bottom:30px; z-index:6; display:flex; gap:14px; align-items:center; font-size:12px; letter-spacing:.14em;">
-    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">INSTAGRAM</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">INSTAGRAM</a>
     <span style="color:rgba(255,255,255,.3);">|</span>
-    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">TIKTOK</a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">TIKTOK</a>
     <span style="color:rgba(255,255,255,.3);">|</span>
-    <a href="#" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">PINTEREST</a>
+    <a href="https://pinterest.com" target="_blank" rel="noopener" style="color:#e6e6e8; text-decoration:none;" style-hover="color:#E23B3E;">PINTEREST</a>
   </div>
 
   <div id="alt-scroll" style="position:absolute; left:50%; bottom:26px; transform:translateX(-50%); z-index:6; display:flex; flex-direction:column; align-items:center; gap:11px;">
@@ -274,12 +336,12 @@
     <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(8,8,10,.8) 0%, transparent 24%, transparent 76%, rgba(8,8,10,.92) 100%);"></div>
   </div>
 
-  <!-- ============ LEFT-EDGE MARKER ============ -->
-  <div id="essence-marker" style="position: absolute; right: 30px; left: auto; top: 50%; transform: translateY(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 13px; font-size: 12px; letter-spacing: .22em; color: #FFFCFC">
+  <!-- ============ TOP-RIGHT MARKER (horizontal) ============ -->
+  <div id="essence-marker" style="position: absolute; right: 40px; left: auto; top: 34px; transform: none; z-index: 5; display: flex; flex-direction: row; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .22em; color: #FFFCFC">
     <span style="color:#E23B3E;">002</span>
-    <span style="width:1px; height:16px; background:#E23B3E;"></span>
-    <span style="writing-mode:vertical-rl; letter-spacing:.3em;">ALTERA</span>
-    <span style="width:1px; height:16px; background:#E23B3E;"></span>
+    <span style="width:16px; height:1px; background:#E23B3E;"></span>
+    <span style="letter-spacing:.3em;">ALTERA</span>
+    <span style="width:16px; height:1px; background:#E23B3E;"></span>
     <span>24SS</span>
   </div>
 
@@ -332,7 +394,7 @@
     </div>
 
     <!-- button (same language as hero) -->
-    <a href="#" class="alt-btn" style="position:relative; align-self:flex-start; display:flex; align-items:center; justify-content:space-between; gap:48px; width:min(100%,440px); padding:19px 28px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.5); border:1px solid rgba(255,255,255,.6); transition:.16s;" style-hover="background:rgba(0,0,0,.85); border:1px solid #E23B3E; box-shadow:0 0 20px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+    <a href="#alt-showcase" class="alt-btn" style="position:relative; align-self:flex-start; display:flex; align-items:center; justify-content:space-between; gap:48px; width:min(100%,440px); padding:19px 28px; white-space:nowrap; text-decoration:none; color:#FFFCFC; font-size:13px; letter-spacing:.16em; text-transform:uppercase; background:rgba(8,8,10,.5); border:1px solid rgba(255,255,255,.6); transition:.16s;" style-hover="background:rgba(0,0,0,.85); border:1px solid #E23B3E; box-shadow:0 0 20px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
       Discover Collection
       <span style="font-size:17px; line-height:1;">→</span>
       <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:10px; height:10px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
@@ -344,6 +406,24 @@
 </section>
 
 <!-- ================================================================= -->
+<!-- ============ TRANSITION :: ABOUT → PLAYGROUND ==================== -->
+<!-- Fixed full-viewport clip (same mechanism as hero → about): it fades -->
+<!-- in and scrubs as the PLAYGROUND rises into view, then dissolves as  -->
+<!-- the playground fills — position-driven, so there is NO empty scroll -->
+<!-- gap and it feels like one continuous video. -->
+<div id="alt-pgt" style="position:fixed; inset:0; z-index:31; pointer-events:none; opacity:0; background:radial-gradient(120% 95% at 50% 42%, #cfcfd1 0%, #9a9a9d 26%, #545457 56%, #28282b 80%, #131315 100%);">
+  <video id="pgt-video" src="altera/pg-transition.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA transition" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(.92); mix-blend-mode:multiply;"></video>
+  <!-- same treatment as hero → about: vignette + scanlines + pixel branding, always on -->
+  <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%);"></div>
+  <div style="position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay; opacity:.3; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);"></div>
+  <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:80%; right:16%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
+  <span style="position:absolute; top:40%; left:6%; width:5px; height:5px; background:rgba(255,255,255,.6);"></span>
+  <span style="position:absolute; top:60%; right:7%; width:5px; height:5px; background:rgba(200,200,205,.6);"></span>
+</div>
+
 <!-- ============ SECTION 03 :: PLAYGROUND (styling studio) ========== -->
 <!-- Light studio fitting room · 7-column grid (margin 60 / gutter 20)  -->
 <!-- ================================================================= -->
@@ -356,27 +436,27 @@
     </sc-for>
   </div>
 
-  <!-- left-edge marker :: 003 / PLAYGROUND / 24SS  (+ DROP + drag hint) -->
-  <div id="pg-marker" style="position:absolute; left:34px; top:96px; z-index:5; display:flex; flex-direction:column; gap:14px; font-size:11px; letter-spacing:.24em; color:#6a6a6e;">
-    <span style="color:#E23B3E;">003</span>
-    <span style="width:22px; height:1px; background:#c3c3c7;"></span>
-    <span style="letter-spacing:.3em;">PLAYGROUND</span>
-    <span style="width:22px; height:1px; background:#c3c3c7;"></span>
-    <span>24SS</span>
-    <span style="margin-top:150px; color:#E23B3E; letter-spacing:.2em;">+ DROP 001</span>
-    <span style="color:#E23B3E; letter-spacing:.2em;">RED SIGNAL</span>
-  </div>
-
   <!-- ============ 7-COLUMN GRID ============ -->
-  <div id="pg-grid" style="position:relative; z-index:3; display:grid; grid-template-columns:repeat(7,1fr); gap:24px; max-width:1500px; margin:0 auto; align-items:start;">
+  <div id="pg-grid" style="position:relative; z-index:3; display:grid; grid-template-columns:repeat(7,1fr); gap:24px; max-width:1500px; margin:0 auto; align-items:stretch;">
 
     <!-- ===== MODEL RENDER :: columns 1-2 (live full-body preview) ===== -->
     <div id="pg-model" style="grid-column:1 / span 2; position:relative; align-self:stretch; display:flex; flex-direction:column;">
-      <div style="position:relative; flex:1; overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:clamp(560px,84vh,880px);">
-        <!-- floor grid -->
-        <div style="position:absolute; left:-10%; right:-10%; bottom:52px; height:200px; z-index:1; background:repeating-linear-gradient(90deg, rgba(150,150,156,.28) 0 1px, transparent 1px 38px), repeating-linear-gradient(0deg, rgba(150,150,156,.16) 0 1px, transparent 1px 24px); transform:perspective(420px) rotateX(66deg); transform-origin:bottom; opacity:.9;"></div>
-        <!-- the model render -->
-        <img src="{{ modelSrc }}" alt="ALTERA look preview" style="position:relative; z-index:2; width:108%; max-width:108%; height:100%; object-fit:contain; object-position:center bottom; mix-blend-mode:multiply; will-change:transform;">
+      <div style="position:relative; flex:1; overflow:hidden; border:1px solid #c9c9cd; background:linear-gradient(#cdcdd1,#bebec3); min-height:clamp(560px,84vh,880px);">
+        <!-- the model render (framed card, like the reference) -->
+        <!-- 360° model turntable :: drag horizontally (or scroll sideways) to scrub.
+             The video is the DEFAULT look; any other selection overlays its still. -->
+        <video id="pg-model-video" src="altera/pg-model.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA look preview — drag to rotate" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; will-change:transform; cursor:ew-resize;"></video>
+        <sc-if value="{{ showModelImage }}" hint-placeholder-val="{{ false }}">
+          <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply;">
+        </sc-if>
+        <!-- marker ON the image, left edge (like the reference) -->
+        <div id="pg-marker" style="position:absolute; left:12px; top:18px; z-index:4; display:flex; flex-direction:column; align-items:center; gap:12px; font-size:11px; letter-spacing:.26em; color:#f2f2f4;">
+          <span style="color:#E23B3E;">003</span>
+          <span style="width:1px; height:26px; background:#E23B3E;"></span>
+          <span style="writing-mode:vertical-rl; letter-spacing:.4em; font-size:11px; color:#f2f2f4;">PLAYGROUND</span>
+          <span style="width:1px; height:26px; background:#E23B3E;"></span>
+          <span>24SS</span>
+        </div>
         <!-- loading veil -->
         <sc-if value="{{ pgLoading }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;">
@@ -386,27 +466,28 @@
       </div>
       <!-- rotate control (spin lands here in a future build) -->
       <div style="position:relative; z-index:6; display:flex; align-items:center; justify-content:center; gap:22px; margin-top:6px;">
-        <span title="Rotate left" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid #c3c3c7; background:rgba(255,255,255,.6); color:#161618; font-size:19px; cursor:pointer; user-select:none; transition:.15s;" style-hover="border:1px solid #E23B3E; color:#E23B3E; box-shadow:0 0 14px rgba(226,59,62,.3);">‹</span>
         <div style="display:flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.2em; color:#8a8a8f;">
           <span style="display:inline-flex; width:13px; height:19px; border:1.5px solid #9a9a9f; border-radius:7px; position:relative;"><span style="position:absolute; top:3px; left:50%; transform:translateX(-50%); width:1.5px; height:4px; background:#9a9a9f;"></span></span>
           DRAG TO ROTATE
         </div>
-        <span title="Rotate right" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid #c3c3c7; background:rgba(255,255,255,.6); color:#161618; font-size:19px; cursor:pointer; user-select:none; transition:.15s;" style-hover="border:1px solid #E23B3E; color:#E23B3E; box-shadow:0 0 14px rgba(226,59,62,.3);">›</span>
       </div>
     </div>
 
     <!-- ===== CENTER :: columns 3-4 (copy + selected look + waitlist) ===== -->
-    <div id="pg-center" style="grid-column:3 / span 2; display:flex; flex-direction:column; padding-top:4px;">
+    <div id="pg-center" style="grid-column:3 / span 2; align-self:stretch; display:flex; flex-direction:column; justify-content:space-between; gap:34px; padding-top:4px;">
+      <div style="display:flex; flex-direction:column;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
         <span style="width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
         <span style="color:#E23B3E; font-size:12px; letter-spacing:.26em;">STYLE THE DROP</span>
       </div>
       <h2 style="font-size:clamp(28px,2.9vw,50px); line-height:1.02; font-weight:700; letter-spacing:.005em; text-transform:uppercase; color:#161618; margin:0;">Build Your<br><span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">Alter Ego.</span></h2>
-      <p style="font-size:13px; line-height:1.6; color:#4a4a4e; max-width:420px; margin:18px 0 0;">Explore the first ALTERA styling system — switch pieces, test the mood and preview how each detail changes the look.</p>
-      <div style="font-size:11px; letter-spacing:.2em; color:#8a8a8f; margin-top:16px;">DROP 001 / <span style="color:#E23B3E;">RED SIGNAL</span></div>
+      <p style="font-size:13px; line-height:1.6; color:#4a4a4e; max-width:420px; margin:18px 0 0;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
+      </div>
 
+      <div style="display:flex; flex-direction:column;">
+      <div style="font-size:11px; letter-spacing:.2em; color:#8a8a8f; margin-bottom:12px;">DROP 001 <span style="color:#c3c3c7;">|</span> <span style="color:#E23B3E;">RED SIGNAL</span></div>
       <!-- SELECTED LOOK card -->
-      <div style="position:relative; margin-top:26px; border:1px solid #cdcdd1; border-radius:3px; background:#fbfbfc; padding:20px 22px;">
+      <div style="position:relative; border:1px solid #cdcdd1; border-radius:3px; background:#fbfbfc; padding:20px 22px;">
         <span style="position:absolute; top:-1px; left:-1px; width:12px; height:12px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
         <span style="position:absolute; top:-1px; right:-1px; width:12px; height:12px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
         <span style="position:absolute; bottom:-1px; left:-1px; width:12px; height:12px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
@@ -423,7 +504,7 @@
       </div>
 
       <!-- WAITLIST button (full width) -->
-      <a href="#" class="alt-btn" style="position:relative; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; padding:18px 24px; white-space:nowrap; text-decoration:none; color:#fff; font-size:13px; letter-spacing:.18em; text-transform:uppercase; background:#161618; border:1px solid #161618; transition:.16s;" style-hover="background:#000; border:1px solid #E23B3E; box-shadow:0 0 22px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+      <a href="#alt-waitlist" class="alt-btn" style="position:relative; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; padding:18px 24px; white-space:nowrap; text-decoration:none; color:#fff; font-size:13px; letter-spacing:.18em; text-transform:uppercase; background:#161618; border:1px solid #161618; transition:.16s;" style-hover="background:#000; border:1px solid #E23B3E; box-shadow:0 0 22px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
         Join the Waitlist
         <span style="color:#E23B3E; font-size:16px; line-height:1;">→</span>
         <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
@@ -431,10 +512,11 @@
         <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
         <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
       </a>
+      </div>
     </div>
 
     <!-- ===== RIGHT :: columns 5-7 (styling sections) ===== -->
-    <div id="pg-sections" style="grid-column:5 / span 3; display:flex; flex-direction:column; gap:26px; padding-top:4px;">
+    <div id="pg-sections" style="grid-column:5 / span 3; align-self:stretch; display:flex; flex-direction:column; justify-content:space-between; gap:26px; padding-top:4px;">
       <sc-for list="{{ pgGroups }}" as="g" hint-placeholder-count="3">
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
@@ -450,7 +532,7 @@
                   <span style="position:absolute; top:6px; right:6px; z-index:2; display:flex; align-items:center; justify-content:center; width:15px; height:15px; background:#E23B3E; color:#fff; font-size:9px; letter-spacing:0;">+</span>
                 </sc-if>
                 <div style="{{ o.imgWrap }}">
-                  <img src="{{ o.thumb }}" alt="{{ o.label }}" style="{{ o.imgStyle }}">
+                  <img data-thumb="{{ o.thumb }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="{{ o.label }}" style="{{ o.imgStyle }}">
                 </div>
                 <span style="{{ o.labelStyle }}">{{ o.label }}</span>
               </div>
@@ -462,7 +544,195 @@
 
   </div>
 </section>
-</x-dc>
+
+
+<!-- ================================================================= -->
+<!-- ==== SECTION 04 :: SHOWCASE (waterfall-in ⇄ 3D sphere ⇄ out) ==== -->
+<!-- One tall pinned stage runs the whole storyboard on a single       -->
+<!-- scroll progress (cards travel continuously, no cross-section      -->
+<!-- hand-off). Timeline (see _initShowcase):                          -->
+<!--   .00–.16 WATERFALL IN  — grey archive cards fall in (light bg)   -->
+<!--   .16–.34 FORM SPHERE   — cards collect + fold onto the globe;    -->
+<!--                           background cross-fades to dark          -->
+<!--   .34–.62 ROTATE        — sphere turns slowly on scroll           -->
+<!--   .62–.80 WATERFALL OUT — sphere breaks back into falling cards;  -->
+<!--                           background returns to light             -->
+<!--   .80–1.0 CTA LANDING   — LOOK 01 flies to the CTA image slot,    -->
+<!--                           the rest fall away and fade             -->
+<!-- Every card is 3D-projected in JS so net↔sphere is seamless.       -->
+<!-- Cards are grey placeholders — swap for real images later          -->
+<!-- (altera/look-01.jpg, detail-sunglasses.jpg, look-02.jpg, …).      -->
+<!-- ================================================================= -->
+<section id="alt-showcase" data-screen-label="Showcase" style="position:relative; width:100%; height:440vh; font-family:'Space Mono',monospace; color:#1a1a1c;">
+  <div id="show-sticky" style="position:sticky; top:0; height:100vh; overflow:hidden;">
+
+    <!-- backgrounds: light (waterfall) under, dark (showcase) fades in for the sphere -->
+    <div id="show-bg-light" style="position:absolute; inset:0; z-index:1; background:radial-gradient(120% 120% at 50% 42%, #f3f3f5 0%, #e7e7ea 55%, #dededf 100%);"></div>
+    <div id="show-bg-dark" style="position:absolute; inset:0; z-index:2; opacity:0; background:radial-gradient(120% 130% at 58% 44%, #1b1b1f 0%, #101012 46%, #050506 100%); will-change:opacity;"></div>
+    <!-- subtle grain -->
+    <div id="show-grain" style="position:absolute; inset:0; z-index:3; opacity:0; mix-blend-mode:overlay; pointer-events:none; background-image:repeating-radial-gradient(rgba(255,255,255,.05) 0 1px, transparent 1px 2px); background-size:3px 3px; will-change:opacity;"></div>
+
+    <!-- header + marker + corner ticks (fade in with the dark showcase) -->
+    <div id="show-chrome" style="position:absolute; inset:0; z-index:45; pointer-events:none; opacity:0; will-change:opacity;">
+      <div style="position:absolute; top:24px; left:60px; right:60px; display:flex; align-items:center; justify-content:space-between; font-size:11px; letter-spacing:.24em; color:#c8c8cc;">
+        <span>ALTERA <span style="color:#E23B3E;">/</span> SHOWCASE</span>
+        <span style="color:#9a9a9f;">DROP 001 / <span style="color:#E23B3E;">RED SIGNAL</span></span>
+      </div>
+      <span style="position:absolute; top:60px; left:60px; width:16px; height:16px; border-top:1px solid rgba(226,59,62,.7); border-left:1px solid rgba(226,59,62,.7);"></span>
+      <span style="position:absolute; top:60px; right:60px; width:16px; height:16px; border-top:1px solid rgba(226,59,62,.7); border-right:1px solid rgba(226,59,62,.7);"></span>
+      <span style="position:absolute; bottom:44px; left:60px; width:16px; height:16px; border-bottom:1px solid rgba(226,59,62,.7); border-left:1px solid rgba(226,59,62,.7);"></span>
+      <span style="position:absolute; bottom:44px; right:60px; width:16px; height:16px; border-bottom:1px solid rgba(226,59,62,.7); border-right:1px solid rgba(226,59,62,.7);"></span>
+    </div>
+
+    <!-- showcase copy on the left (fades in during the sphere) -->
+    <div id="show-copy" style="position:absolute; left:60px; top:50%; transform:translateY(-50%); z-index:46; width:300px; opacity:0; will-change:opacity; color:#FFFCFC;">
+      <div style="display:flex; align-items:center; gap:12px; font-size:12px; letter-spacing:.26em; color:#9a9a9f; margin-bottom:18px;"><span style="color:#E23B3E;">005</span><span style="width:22px; height:1px; background:#E23B3E;"></span>SHOWCASE</div>
+      <h2 style="font-size:clamp(34px,4vw,64px); line-height:.98; font-weight:700; letter-spacing:.01em; text-transform:uppercase; color:#FFFCFC; margin:0;">Show<span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">case</span></h2>
+      <p style="font-size:12.5px; line-height:1.7; color:#b6b6ba; margin:20px 0 22px;">Fragments of the vision.<br>Pieces of the universe.</p>
+      <a href="#alt-waitlist" style="display:inline-flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.2em; color:#E23B3E; text-decoration:none;">EXPLORE ARCHIVE <span>&#8594;</span></a>
+    </div>
+
+    <!-- 3D stage — every card positioned by JS (manual perspective projection) -->
+    <div id="drop-stage" style="position:absolute; inset:0; z-index:30;">
+      <sc-for list="{{ sphereTiles }}" as="t" hint-placeholder-count="14">
+        <div class="sph-tile" style="{{ t.style }}">
+          <sc-if value="{{ t.isModel }}" hint-placeholder-val="{{ false }}">
+            <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 8%; display:block;">
+          </sc-if>
+          <sc-if value="{{ t.img }}" hint-placeholder-val="{{ false }}">
+            <img data-img="{{ t.img }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 12%; display:block;">
+          </sc-if>
+          <sc-if value="{{ t.hasLabel }}" hint-placeholder-val="{{ false }}">
+            <span style="{{ t.labelStyle }}">{{ t.label }}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- entry / exit veils (light in, dark out — blend into the now-dark waitlist) -->
+    <div id="drop-veil-in" style="position:absolute; inset:0; background:#dadade; opacity:1; pointer-events:none; z-index:55;"></div>
+    <div id="drop-veil-out" style="position:absolute; inset:0; background:#070709; opacity:0; pointer-events:none; z-index:56;"></div>
+    <!-- waterfall framing gradients: top blends with the light playground, bottom into the dark waitlist -->
+    <div id="wf-grad-top" style="position:absolute; top:0; left:0; right:0; height:20%; z-index:4000; pointer-events:none; opacity:0; background:linear-gradient(to bottom, #e7e7ea, rgba(231,231,234,0));"></div>
+    <div id="wf-grad-bot" style="position:absolute; bottom:0; left:0; right:0; height:26%; z-index:4000; pointer-events:none; opacity:0; background:linear-gradient(to top, #060608, rgba(6,6,8,0));"></div>
+    <!-- free-flying pixel particles (dark scene) -->
+    <div id="show-artifacts" style="position:absolute; inset:0; z-index:47; pointer-events:none;">
+      <sc-for list="{{ artifacts }}" as="a" hint-placeholder-count="20">
+        <div class="sh-art" style="{{ a.wrap }}"><div style="{{ a.inner }}"></div></div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HANDOFF GHOSTS (no-gap continuity, fixed overlays) ==== -->
+<!-- ho-entry: the Playground character frame travels down into the first  -->
+<!-- waterfall card as the Showcase pins. ho-exit: the landed LOOK 01 card -->
+<!-- continues into the Waitlist image as that section rises. Both are     -->
+<!-- driven by section position (transform+opacity only) → no scroll gap.  -->
+<img id="ho-entry" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; border:1px solid #E23B3E; will-change:transform,opacity;">
+<img id="ho-exit" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 12%; border:1px solid #E23B3E; will-change:transform,opacity;">
+
+<!-- ================================================================= -->
+<!-- ==== SECTION 05 :: WAITLIST CTA ================================= -->
+<!-- ================================================================= -->
+<section id="alt-waitlist" data-screen-label="Waitlist" style="position:relative; width:100%; min-height:100vh; background:radial-gradient(120% 120% at 50% 0%, #1a1a1e 0%, #101012 52%, #060608 100%); font-family:'Space Mono',monospace; color:#f2f2f4; display:flex; align-items:center; padding:90px 60px;">
+  <!-- free-flying pixel particles (behind content) -->
+  <div id="wl-artifacts" style="position:absolute; inset:0; z-index:0; pointer-events:none;">
+    <sc-for list="{{ artifacts }}" as="a" hint-placeholder-count="20">
+      <div class="wl-art" style="{{ a.wrap }}"><div style="{{ a.inner }}"></div></div>
+    </sc-for>
+  </div>
+  <div id="wl-grid" style="position:relative; z-index:2; display:grid; grid-template-columns:repeat(7,1fr); gap:20px; width:100%; max-width:1440px; margin:0 auto; align-items:center;">
+
+    <!-- LEFT :: final CTA image (the card that lands from the sphere) -->
+    <!-- FUTURE: replace the placeholder below with the final look image, e.g. altera/look-01.jpg -->
+    <div id="wl-image" style="grid-column:1 / span 3; position:relative; aspect-ratio:3/3.7; background:#141416; border:1px solid #34343a; padding:10px 10px 13px; display:flex; flex-direction:column; gap:9px;">
+      <span style="position:absolute; top:-1px; left:-1px; width:14px; height:14px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+      <span style="position:absolute; top:-1px; right:-1px; width:14px; height:14px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      <span style="position:absolute; bottom:-1px; left:-1px; width:14px; height:14px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+      <span style="position:absolute; bottom:-1px; right:-1px; width:14px; height:14px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+      <div style="position:relative; flex:1; overflow:hidden; border:1px solid #2c2c32; background:#1c1c20; display:flex; align-items:center; justify-content:center;">
+        <!-- FUTURE: replace this model render with altera/look-01.jpg -->
+        <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 10%;">
+        <span style="position:absolute; left:10px; bottom:10px; font-size:9px; letter-spacing:.16em; color:#c8c8cc; background:rgba(10,10,12,.6); padding:3px 7px;">FINAL CTA IMAGE / SELECTED LOOK</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; gap:8px; font-size:10px; letter-spacing:.08em;">
+        <span style="color:#E23B3E;">LOOK 01</span>
+        <span style="color:#9a9a9f;">SELECTED LOOK</span>
+      </div>
+    </div>
+
+    <!-- RIGHT :: CTA copy + join -->
+    <div id="wl-copy" style="grid-column:4 / span 4; display:flex; flex-direction:column; padding-left:26px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:12px; letter-spacing:.26em;">
+        <span style="color:#E23B3E;">006</span>
+        <span style="width:22px; height:1px; background:#E23B3E;"></span>
+        <span style="color:#9a9a9f;">EARLY ACCESS</span>
+      </div>
+      <h2 style="font-size:clamp(30px,3.2vw,54px); line-height:1.02; font-weight:700; letter-spacing:.005em; text-transform:uppercase; color:#FFFCFC; margin:0;">Join the First<br><span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">Altera Drop.</span></h2>
+      <p style="font-size:13px; line-height:1.6; color:#b6b6ba; max-width:440px; margin:18px 0 0;">Be the first to enter the ALTERA universe and receive early access to Drop 001 / Red Signal.</p>
+      <!-- info lines -->
+      <div style="display:flex; flex-direction:column; margin-top:24px; max-width:440px; border-top:1px solid #34343a;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #2a2a30; font-size:11px; letter-spacing:.16em; color:#b6b6ba;">DROP 001 / <span style="color:#E23B3E;">RED SIGNAL</span></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #2a2a30; font-size:11px; letter-spacing:.16em; color:#b6b6ba;">LIMITED RELEASE <span style="color:#E23B3E;">+</span></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #2a2a30; font-size:11px; letter-spacing:.16em; color:#b6b6ba;">COMING SOON <span style="color:#E23B3E;">+</span></div>
+      </div>
+      <div id="wl-form" style="display:flex; gap:14px; margin-top:26px; max-width:560px;">
+        <input type="email" placeholder="YOUR@EMAIL.COM" style="flex:1; min-width:0; padding:16px 18px; background:rgba(255,255,255,.05); border:1px solid #3a3a40; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#f2f2f4; outline:none;">
+        <a href="#alt-waitlist" class="alt-btn" style="position:relative; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#fff; font-size:12px; letter-spacing:.16em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid #4a4a50; transition:.16s;" style-hover="background:#000; border:1px solid #E23B3E; box-shadow:0 0 22px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
+          Join the Waitlist
+          <span style="color:#E23B3E; font-size:15px; line-height:1;">→</span>
+          <span class="corner tl" style="position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+          <span class="corner tr" style="position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-top:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+          <span class="corner bl" style="position:absolute; bottom:-1px; left:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-left:2px solid #E23B3E;"></span>
+          <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
+        </a>
+      </div>
+      <div style="margin-top:30px; font-size:10.5px; letter-spacing:.2em; color:#7a7a7f;">ALTERA <span style="color:#4a4a50;">/</span> DRESS YOUR ALTER EGO <span style="color:#4a4a50;">/</span> <span style="color:#E23B3E;">24SS</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ==== FOOTER :: big ALTERA wordmark ============================== -->
+<!-- ================================================================= -->
+<footer id="alt-footer" data-screen-label="Footer" style="position:relative; width:100%; overflow:hidden; background:radial-gradient(120% 130% at 50% 120%, #17171b 0%, #0d0d0f 52%, #060608 100%); font-family:'Space Mono',monospace; color:#FFFCFC; padding:84px 60px 34px; -webkit-font-smoothing:antialiased;">
+
+  <!-- top row: nav + meta -->
+  <div id="ft-top" style="display:flex; align-items:flex-start; justify-content:space-between; gap:32px; max-width:1500px; margin:0 auto;">
+    <div style="display:flex; flex-direction:column; gap:12px; font-size:12px; letter-spacing:.18em;">
+      <a href="#alt-essence" style="color:#FFFCFC; text-decoration:none; transition:.16s;" style-hover="color:#E23B3E; text-shadow:1px 0 #E23B3E;">ABOUT</a>
+      <a href="#alt-playground" style="color:#FFFCFC; text-decoration:none; transition:.16s;" style-hover="color:#E23B3E; text-shadow:1px 0 #E23B3E;">PLAYGROUND</a>
+      <a href="#alt-showcase" style="color:#FFFCFC; text-decoration:none; transition:.16s;" style-hover="color:#E23B3E; text-shadow:1px 0 #E23B3E;">COLLECTION</a>
+      <a href="#alt-waitlist" style="color:#FFFCFC; text-decoration:none; transition:.16s;" style-hover="color:#E23B3E; text-shadow:1px 0 #E23B3E;">WAITLIST</a>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px; font-size:11px; letter-spacing:.2em; color:#9a9a9d; text-align:right;">
+      <span style="color:#E23B3E;">DROP 001 / RED SIGNAL</span>
+      <span>24SS COLLECTION</span>
+      <span>@ALTERA.WORLD</span>
+    </div>
+  </div>
+
+  <!-- big wordmark (lava-lamp red glow blobs + noise, cursor-reactive) -->
+  <div id="ft-logo-wrap" style="position:relative; max-width:1500px; margin:70px auto 0;">
+    <!-- lava-lamp blob field (blobs drift + swell toward the cursor) -->
+    <div id="ft-glow-field" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:120%; height:200%; pointer-events:none; filter:blur(40px); opacity:.85;">
+      <div class="ft-blob" style="position:absolute; left:30%; top:45%; width:34%; height:60%; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(226,59,62,.75), rgba(226,59,62,0) 70%); will-change:transform;"></div>
+      <div class="ft-blob" style="position:absolute; left:55%; top:40%; width:40%; height:70%; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(226,59,62,.6), rgba(226,59,62,0) 70%); will-change:transform;"></div>
+      <div class="ft-blob" style="position:absolute; left:44%; top:55%; width:28%; height:52%; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(255,90,92,.55), rgba(226,59,62,0) 72%); will-change:transform;"></div>
+    </div>
+    <!-- animated noise/grain over the glow -->
+    <div id="ft-glow-noise" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:80%; height:150%; pointer-events:none; mix-blend-mode:overlay; opacity:.5; background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%222%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.5%22/></svg>'); background-size:120px 120px;"></div>
+    <img id="ft-logo" src="altera/logo.svg" alt="ALTERA" style="position:relative; display:block; width:100%; height:auto; user-select:none; pointer-events:none; filter:drop-shadow(0 0 16px rgba(226,59,62,.5)) drop-shadow(0 0 40px rgba(226,59,62,.26)); animation:ftGlow 4.5s ease-in-out infinite;">
+  </div>
+
+  <!-- bottom row -->
+  <div id="ft-bottom" style="display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1500px; margin:26px auto 0; padding-top:20px; border-top:1px solid rgba(255,255,255,.14); font-size:10.5px; letter-spacing:.16em; color:#8a8a8f;">
+    <span>© 2026 ALTERA. ALL RIGHTS RESERVED.</span>
+    <span style="display:flex; align-items:center; gap:8px;"><span style="width:6px; height:6px; background:#E23B3E;"></span>DRESS YOUR ALTER EGO<span style="color:#E23B3E;">_</span></span>
+    <span>MADE TO EXPRESS. MADE TO TRANSFORM.</span>
+  </div>
+</footer></x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
 
@@ -505,11 +775,17 @@ class Component extends DCLogic {
     const s = this.state.pgSel.slice();
     s[cat] = j;
     this.setState({ pgSel: s, pgLoad: true });
+    // the turntable video only represents the default look — hide it for any other choice
+    const isDefault = (s[0] === 0 && s[1] === 0 && s[2] === 0);
+    const v = document.getElementById('pg-model-video');
+    if (v) v.style.opacity = isDefault ? '1' : '0';
     // preload the new render, then clear the loading veil
     const img = new Image();
     img.onload = () => this.setState({ pgLoad: false });
     img.onerror = () => this.setState({ pgLoad: false });
     img.src = this._modelSrc();
+    // keep all model-bound imgs (ghosts, waitlist, tile) in sync with the new look
+    setTimeout(() => this._bindImgs(), 0);
   }
 
   // ---- DECORATIVE PIXEL ARTIFACTS (built once) ----
@@ -555,9 +831,13 @@ class Component extends DCLogic {
       ],
       pgGroups,
       selectedLook,
+      sphereTiles: this._sphereTiles || (this._sphereTiles = this._buildSphereTiles()),
       modelSrc: this._modelSrc(),
       pgLoading: this.state.pgLoad,
       lookCode: 'LOOK ' + (sel[0] + 1) + (sel[1] + 1) + (sel[2] + 1),
+      // the turntable video shows only for the video's look (default: cami+redjean+chrome).
+      // every other combination falls back to its still render for now.
+      showModelImage: !(sel[0] === 0 && sel[1] === 0 && sel[2] === 0),
     };
   }
 
@@ -785,24 +1065,7 @@ class Component extends DCLogic {
       window.addEventListener('resize', essArtResize);
     }
 
-    // ---- PLAYGROUND: very subtle cursor parallax on the model ----
-    const pgSecP = document.getElementById('alt-playground');
-    const pgFig = document.getElementById('pg-model-figure');
-    if (pgSecP && pgFig && !mobile()) {
-      let pfx = 0, pfy = 0, ptx = 0, pty = 0;
-      pgSecP.addEventListener('mousemove', (e) => {
-        const r = pgSecP.getBoundingClientRect();
-        ptx = ((e.clientX - r.left) / r.width - 0.5) * 14;   // ±7px
-        pty = ((e.clientY - r.top) / r.height - 0.5) * 8;     // ±4px
-      });
-      pgSecP.addEventListener('mouseleave', () => { ptx = 0; pty = 0; });
-      const pfTick = () => {
-        pfx += (ptx - pfx) * 0.06; pfy += (pty - pfy) * 0.06;
-        pgFig.style.transform = 'translate(' + pfx.toFixed(2) + 'px,' + pfy.toFixed(2) + 'px)';
-        requestAnimationFrame(pfTick);
-      };
-      pfTick();
-    }
+    // ---- PLAYGROUND: model frame is static (no cursor hover/parallax on the video) ----
 
     // ---- PLAYGROUND PARTICLES: same free-flying physics, scoped to the playground ----
     const pgSec = document.getElementById('alt-playground');
@@ -820,6 +1083,22 @@ class Component extends DCLogic {
       const pgResize = () => { pW = pgSec.clientWidth; pH = pgSec.clientHeight; for (const p of pgP) { p.ox = p.el.offsetLeft; p.oy = p.el.offsetTop; p.w = p.el.offsetWidth; p.h = p.el.offsetHeight; p.x = Math.max(0, Math.min(pW - p.w, p.x)); p.y = Math.max(0, Math.min(pH - p.h, p.y)); } };
       window.addEventListener('resize', pgResize);
     }
+
+    // ---- SHOWCASE + WAITLIST PARTICLES: free-flying, cursor-fleeing (dark scenes) ----
+    const mkSet = (secId, artSel, boundsId) => {
+      const sec = document.getElementById(secId);
+      if (!sec) return null;
+      const bnd = boundsId ? (document.getElementById(boundsId) || sec) : sec;
+      const els = Array.from(sec.querySelectorAll(artSel));
+      const st = { sec, bnd, W: bnd.clientWidth, H: bnd.clientHeight, mx: -9999, my: -9999,
+        P: els.map((el) => { const ang = Math.random() * Math.PI * 2, sp = 0.16 + Math.random() * 0.4; const ox = el.offsetLeft, oy = el.offsetTop; return { el, ox, oy, x: ox, y: oy, w: el.offsetWidth, h: el.offsetHeight, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, sp }; }) };
+      sec.addEventListener('mousemove', (e) => { const r = bnd.getBoundingClientRect(); st.mx = e.clientX - r.left; st.my = e.clientY - r.top; });
+      sec.addEventListener('mouseleave', () => { st.mx = -9999; st.my = -9999; });
+      window.addEventListener('resize', () => { st.W = bnd.clientWidth; st.H = bnd.clientHeight; for (const p of st.P) { p.ox = p.el.offsetLeft; p.oy = p.el.offsetTop; p.w = p.el.offsetWidth; p.h = p.el.offsetHeight; } });
+      return st;
+    };
+    const showSet = mkSet('alt-showcase', '.sh-art', 'show-sticky');
+    const wlSet = mkSet('alt-waitlist', '.wl-art');
 
     // ---- SCROLL TRANSITION: hero -> essence (fashion camera push-in) ----
     const essImg = document.getElementById('essence-image');
@@ -959,14 +1238,581 @@ class Component extends DCLogic {
       stepSet(P, W, H, mx, my);            // hero particles
       stepSet(essP, eW, eH, emx, emy);     // about-section particles (fly everywhere too)
       stepSet(pgP, pW, pH, pmx, pmy);      // playground particles
+      if (showSet) stepSet(showSet.P, showSet.W, showSet.H, showSet.mx, showSet.my);   // showcase
+      if (wlSet) stepSet(wlSet.P, wlSet.W, wlSet.H, wlSet.mx, wlSet.my);               // waitlist
       raf = requestAnimationFrame(tick);
     };
 
     hero.addEventListener('mousemove', onMove);
     hero.addEventListener('mouseleave', onLeave);
     tick();
+    this._initPgTransition();
+    this._initModelTurntable();
+    this._initShowcase();
+    this._initHandoffs();
+    this._initNav();
+    this._initDock();
+    this._initFooterLogo();
+    // bind dynamic image sources (avoids literal {{ }} src fetches during streaming)
+    this._bindImgs();
+    [120, 400, 900, 1600].forEach((t) => setTimeout(() => this._bindImgs(), t));
     this._startType();
     this._cleanup = () => { cancelAnimationFrame(raf); hero.removeEventListener('mousemove', onMove); hero.removeEventListener('mouseleave', onLeave); window.removeEventListener('resize', onResize); window.removeEventListener('scroll', onScroll); if (essObs) essObs.disconnect(); if (this._typeStop) this._typeStop(); };
+  }
+
+  // ---- PLAYGROUND :: model turntable — drag horizontally / scroll sideways to scrub ----
+  // The video is a 360° turn of the look; horizontal input maps to video time so the
+  // model appears to rotate. Blob-loaded because progressive mp4 won't seek reliably here.
+  _initModelTurntable() {
+    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const box = document.getElementById('pg-model');
+    const vid = document.getElementById('pg-model-video');
+    if (!box || !vid) return;
+    vid.muted = true; vid.playsInline = true; vid.pause();
+    let ready = false;
+    fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
+      vid.src = URL.createObjectURL(b);
+      vid.addEventListener('loadeddata', () => { ready = true; try { vid.currentTime = 0.001; } catch (e) {} }, { once: true });
+      vid.load();
+    }).catch(() => {});
+
+    // target time chased smoothly each frame → buttery rotation
+    let target = 0, cur = 0, dur = 0, raf = 0;
+    const wrap = (t) => { const d = dur || (vid.duration || 1); return ((t % d) + d) % d; };
+    const spin = () => {
+      raf = requestAnimationFrame(spin);
+      if (!ready) return;
+      dur = vid.duration || 0;
+      if (!dur) return;
+      cur += (target - cur) * 0.18;
+      const tt = wrap(cur);
+      if (!vid.seeking && Math.abs((vid.currentTime || 0) - tt) > 0.008) { try { vid.currentTime = tt; } catch (e) {} }
+    };
+    spin();
+
+    // sensitivity: a full box-width drag ≈ one full turn
+    const perPx = () => (vid.duration || 4) / Math.max(320, box.clientWidth);
+
+    // pointer drag
+    let dragging = false, lastX = 0;
+    const down = (e) => { dragging = true; lastX = (e.touches ? e.touches[0].clientX : e.clientX); box.style.cursor = 'grabbing'; if (e.cancelable && e.touches) e.preventDefault(); };
+    const move = (e) => {
+      if (!dragging) return;
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      target += (x - lastX) * perPx();
+      lastX = x;
+    };
+    const up = () => { dragging = false; box.style.cursor = 'ew-resize'; };
+    box.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    box.addEventListener('touchstart', down, { passive: false });
+    box.addEventListener('touchmove', move, { passive: true });
+    box.addEventListener('touchend', up);
+
+    // horizontal wheel / trackpad swipe over the model area
+    box.addEventListener('wheel', (e) => {
+      const hx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : 0;
+      if (!hx) return;
+      e.preventDefault();
+      target += hx * perPx() * 0.6;
+    }, { passive: false });
+
+    this._turnStop = () => { cancelAnimationFrame(raf); window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+  }
+
+  // ---- PLAYGROUND :: model turntable end ----
+  // Swap each card's grey placeholder background for a real image later
+  // (altera/look-01.jpg, altera/detail-sunglasses.jpg, altera/look-02.jpg, …).
+  _buildSphereTiles() {
+    let seed = 77031;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    const labels = { 4: 'DETAIL 01', 11: 'ARCHIVE', 17: 'LOOK 02', 23: 'DETAIL 02' };
+    // real ALTERA PRODUCT photos (garments / sunglasses — not the model) cycled across cards
+    const IMGS = [
+      'altera/pg/top_cami.png', 'altera/pg/bottom_redjean.png', 'altera/pg/glasses_chrome.png',
+      'altera/pg/top_corset.png', 'altera/pg/bottom_skirt.png', 'altera/pg/glasses_star.png',
+      'altera/pg/top_bell.png', 'altera/pg/bottom_flare.png', 'altera/pg/glasses_spike.png',
+    ];
+    const N = 30;                     // enough panels to read as a real globe
+    const tiles = [];
+    for (let i = 0; i < N; i++) {
+      const isModel = i === 0;
+      // small, lightly varied panels so the sphere shows gaps + a round silhouette.
+      // every 3rd card is a 1:1 square; the rest keep the taller lookbook ratio.
+      const square = !isModel && (i % 3 === 0);
+      const w = isModel ? 104 : Math.round(58 + rnd() * 30);
+      const h = isModel ? 138 : (square ? w : Math.round(w * (1.24 + rnd() * 0.28)));
+      const g1 = 188 + Math.floor(rnd() * 24), g2 = 150 + Math.floor(rnd() * 26);
+      const bg = isModel ? '#fff' : 'linear-gradient(158deg, rgb(' + g1 + ',' + g1 + ',' + (g1 + 3) + '), rgb(' + g2 + ',' + g2 + ',' + (g2 + 4) + '))';
+      const img = isModel ? '' : IMGS[(i - 1) % IMGS.length];
+      const hasLabel = isModel || labels[i] != null;
+      const label = isModel ? 'LOOK 01' : (labels[i] || '');
+      const labelStyle = 'position:absolute; left:5px; bottom:5px; z-index:3; font-size:7px; letter-spacing:.1em; color:' + (isModel ? '#E23B3E' : '#f4f4f6') + '; background:rgba(' + (isModel ? '255,255,255,.85' : '20,20,22,.55') + '); padding:1px 4px;';
+      tiles.push({
+        isModel, img, hasLabel, label, labelStyle,
+        // transform-origin center — JS sets a projected 2×2 matrix each frame
+        style: 'position:absolute; left:0; top:0; width:' + w + 'px; height:' + h + 'px; transform-origin:50% 50%; background:' + bg + '; border:1px solid ' + (isModel ? '#E23B3E' : 'rgba(120,120,126,.5)') + '; box-shadow:0 6px 20px rgba(0,0,0,.18); overflow:hidden; opacity:0; backface-visibility:hidden; will-change:transform,opacity; transform:translate(-9999px,0);',
+      });
+    }
+    return tiles;
+  }
+
+  // ---- TRANSITION :: about → playground (scroll-scrubbed video) ----
+  _initPgTransition() {
+    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const wrap = document.getElementById('alt-pgt');
+    const vid = document.getElementById('pgt-video');
+    const pgSec = document.getElementById('alt-playground');
+    if (!wrap || !vid || !pgSec) return;
+    vid.muted = true; vid.playsInline = true; vid.pause();
+    // blob-load: progressive mp4 doesn't seek reliably here (same as hero videos)
+    fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
+      vid.src = URL.createObjectURL(b);
+      if (mobile()) { vid.loop = true; vid.addEventListener('loadeddata', () => { const q = vid.play(); if (q && q.catch) q.catch(() => {}); }, { once: true }); }
+      vid.load();
+    }).catch(() => {});
+    const seg = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      if (mobile()) { wrap.style.opacity = 0; return; }
+      const H = window.innerHeight;
+      // POSITION-DRIVEN like hero → about: scrub + dissolve as the PLAYGROUND rises.
+      const pr = pgSec.getBoundingClientRect();
+      const rise = clamp01(1 - pr.top / H);          // 0 = playground below screen, 1 = filling
+      const fin = seg(rise, 0.0, 0.16);              // fade IN as playground starts entering
+      const fout = seg(rise, 0.80, 1.0);             // dissolve OUT as playground fills
+      wrap.style.opacity = Math.min(fin, 1 - fout);
+      if (vid.duration > 0 && isFinite(vid.duration)) {
+        if (!vid.paused) vid.pause();
+        const seekable = vid.seekable && vid.seekable.length && vid.seekable.end(0) > 0.1;
+        if (seekable) {
+          const tt = 0.04 + seg(rise, 0.04, 0.92) * (vid.duration - 0.08);
+          const cur = vid.currentTime || 0;
+          const next = cur + (tt - cur) * 0.24;      // smoothed scrub — same feel as hero → about
+          if (!vid.seeking && Math.abs(next - cur) > 0.012) { try { vid.currentTime = next; } catch (e) {} }
+        }
+      }
+    };
+    tick();
+    this._pgtStop = () => cancelAnimationFrame(raf);
+  }
+
+  // ---- bind dynamic <img> sources from data-* attrs (no literal {{ }} in src) ----
+  _bindImgs() {
+    const ms = this._modelSrc();
+    document.querySelectorAll('img[data-model]').forEach((im) => { if (im.getAttribute('src') !== ms) im.src = ms; });
+    document.querySelectorAll('img[data-img]').forEach((im) => { const u = im.getAttribute('data-img'); if (u && u.indexOf('{{') < 0 && (im.src || '').indexOf(u) < 0) im.src = u; });
+    document.querySelectorAll('img[data-thumb]').forEach((im) => { const u = im.getAttribute('data-thumb'); if (u && u.indexOf('{{') < 0 && (im.src || '').indexOf(u) < 0) im.src = u; });
+  }
+
+  // ---- DOCK :: fixed bottom navigator — active-section highlight + sound toggle ----
+  _initDock() {
+    const dock = document.getElementById('alt-dock');
+    const btn = document.getElementById('alt-sound');
+    const audio = document.getElementById('alt-audio');
+    const label = null;
+    const eq = document.getElementById('alt-sound-eq');
+    if (!dock) return;
+    // sound toggle (no autoplay; plays only after a click, safe if the file isn't there yet)
+    let on = false;
+    if (btn) btn.addEventListener('click', () => {
+      on = !on;
+      if (label) label.textContent = on ? 'Sound On' : 'Sound Off';      if (eq) eq.style.color = on ? '#E23B3E' : 'currentColor';
+      if (eq) eq.style.animation = on ? 'eqPulse .9s ease-in-out infinite' : 'none';
+      if (audio) { if (on) { const q = audio.play(); if (q && q.catch) q.catch(() => {}); } else audio.pause(); }
+    });
+    // active-section highlight
+    const links = Array.from(dock.querySelectorAll('a[data-dock]'));
+    const secs = links.map((a) => document.getElementById(a.getAttribute('data-dock')));
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const y = window.scrollY || 0;
+      // hidden on the hero; fades in once scrolled past it and stays through every transition
+      const shown = y > 520;
+      dock.style.opacity = shown ? '1' : '0';
+      dock.style.pointerEvents = shown ? 'auto' : 'none';
+      dock.style.transform = 'translateY(-50%) translateX(' + (shown ? '0' : '14px') + ')';
+      const mid = window.innerHeight * 0.5;
+      let active = 0;
+      secs.forEach((s, i) => { if (s) { const r = s.getBoundingClientRect(); if (r.top <= mid) active = i; } });
+      links.forEach((a, i) => {
+        a.style.color = i === active ? '#E23B3E' : '#c8c8cc';
+      });
+    };
+    tick();
+    this._dockStop = () => cancelAnimationFrame(raf);
+  }
+
+  // ---- FOOTER LOGO :: cursor-reactive shine + occasional blink ----
+  _initFooterLogo() {
+    const foot = document.getElementById('alt-footer');
+    const logo = document.getElementById('ft-logo');
+    const field = document.getElementById('ft-glow-field');
+    const noise = document.getElementById('ft-glow-noise');
+    const blobs = field ? Array.from(field.querySelectorAll('.ft-blob')) : [];
+    if (!foot || !logo) return;
+    let raf = 0, tgt = 0.12, cur = 0.12, px = 0.5, py = 0.5, blink = 1, nextBlink = performance.now() + 2600;
+    // per-blob drift params (lava-lamp) + smoothed cursor-follow offsets
+    const bp = blobs.map((_, i) => ({ ax: 40 + i * 22, ay: 60 + i * 18, sx: 0.00022 + i * 0.00009, sy: 0.00017 + i * 0.00007, ph: i * 2.1, fx: 0, fy: 0, pull: 0.4 + i * 0.28 }));
+    const onMove = (e) => {
+      const r = logo.getBoundingClientRect();
+      px = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      py = Math.max(-0.5, Math.min(1.5, (e.clientY - r.top) / r.height));
+      const near = e.clientY > r.top - 260 && e.clientY < r.bottom + 260;
+      tgt = near ? 1 : 0.2;
+    };
+    foot.addEventListener('mousemove', onMove);
+    foot.addEventListener('mouseleave', () => { tgt = 0.12; });
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      cur += (tgt - cur) * 0.10;
+      const now = performance.now();
+      // occasional quick blink (a Y2K signal flicker)
+      if (now > nextBlink) { blink = 0.5; nextBlink = now + 1800 + Math.random() * 3200; }
+      blink += (1 - blink) * 0.14;
+      // lava-lamp blobs: slow autonomous drift + swell & drift toward the cursor
+      blobs.forEach((b, i) => {
+        const q = bp[i];
+        const dx = Math.sin(now * q.sx + q.ph) * q.ax + (px - 0.5) * 180 * q.pull;
+        const dy = Math.cos(now * q.sy + q.ph * 1.3) * q.ay + (py - 0.5) * 150 * q.pull;
+        const sc = (0.85 + 0.35 * cur) * (1 + 0.10 * Math.sin(now * 0.0011 + q.ph));
+        b.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
+      });
+      if (field) field.style.opacity = ((0.55 + cur * 0.5) * blink).toFixed(3);
+      if (noise) { noise.style.opacity = (0.35 + 0.35 * cur).toFixed(3); noise.style.backgroundPosition = (now * 0.05 % 120) + 'px ' + (now * 0.03 % 120) + 'px'; }
+      const g1 = (0.5 + cur * 0.9) * blink, g2 = (0.26 + cur * 0.6) * blink;
+      logo.style.filter = 'drop-shadow(0 0 ' + (16 + cur * 34) + 'px rgba(226,59,62,' + g1.toFixed(3) + ')) drop-shadow(0 0 ' + (40 + cur * 70) + 'px rgba(226,59,62,' + g2.toFixed(3) + '))';
+      logo.style.opacity = (0.82 + 0.18 * blink).toFixed(3);
+    };
+    tick();
+    this._footStop = () => { cancelAnimationFrame(raf); foot.removeEventListener('mousemove', onMove); };
+  }
+
+  // ---- NAV :: scroll-reactive fixed header (backdrop on scroll, hide-down / show-up) ----
+  _initNav() {
+    const nav = document.getElementById('alt-nav');
+    if (!nav) return;
+    let lastY = window.scrollY || 0, ticking = false;
+    const apply = () => {
+      ticking = false;
+      const y = window.scrollY || 0;
+      const scrolled = y > 40;
+      // condensed + translucent backdrop once scrolled off the hero top
+      nav.style.padding = scrolled ? '15px 46px' : '30px 46px';
+      nav.style.background = scrolled ? 'rgba(9,9,11,0.72)' : 'rgba(11,11,13,0)';
+      nav.style.backdropFilter = nav.style.webkitBackdropFilter = scrolled ? 'blur(16px) saturate(1.1)' : 'blur(0px)';
+      nav.style.borderBottomColor = scrolled ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0)';
+      // header only shows near the top; once past the hero it stays hidden (even scrolling up)
+      nav.style.transform = (y > 520) ? 'translateY(-102%)' : 'translateY(0)';
+      lastY = y;
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }, { passive: true });
+    apply();
+    this._navStop = () => window.removeEventListener('scroll', apply);
+  }
+
+  // ---- HANDOFFS :: no-gap continuity ghosts (transform + opacity only) ----
+  // ENTRY: Playground character frame → first waterfall card (as Showcase pins).
+  // EXIT:  landed LOOK 01 card → Waitlist left image (as Waitlist rises).
+  // Both driven by section position so the motion starts the instant you scroll
+  // the boundary — no dead scroll, no cut.
+  _initHandoffs() {
+    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const showSec = document.getElementById('alt-showcase');
+    const pgFrame = document.querySelector('#pg-model > div');
+    const wl = document.getElementById('alt-waitlist');
+    const wlImg = document.getElementById('wl-image');
+    const gEntry = document.getElementById('ho-entry');
+    const gExit = document.getElementById('ho-exit');
+    if (!showSec || !gEntry || !gExit) return;
+    const seg = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+    const smooth = (t) => t * t * (3 - 2 * t);
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const place = (el, cx, cy, w, h, op) => {
+      el.style.width = w + 'px'; el.style.height = h + 'px';
+      el.style.transform = 'translate3d(' + (cx - w / 2).toFixed(1) + 'px,' + (cy - h / 2).toFixed(1) + 'px,0)';
+      el.style.opacity = op.toFixed(3);
+    };
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      if (mobile()) { gEntry.style.opacity = 0; gExit.style.opacity = 0; return; }
+      const vh = window.innerHeight, vw = window.innerWidth;
+
+      // ENTRY — playground frame → LOOK 01 waterfall slot, as the showcase enters+pins.
+      // Start from a FIXED on-screen home (the character's spot) and DESCEND into the
+      // lower waterfall slot, so the motion always reads downward.
+      const sc = showSec.getBoundingClientRect();
+      if (pgFrame && sc.top <= vh * 0.85 && sc.top > -vh * 0.05) {
+        const q = smooth(seg(sc.top, vh * 0.85, vh * 0.04));      // 0 entering … 1 pinned
+        const pf = pgFrame.getBoundingClientRect();
+        const sw = Math.max(pf.width, 220), sh = Math.max(pf.height, 300);
+        const startCx = 0.16 * vw, startCy = 0.40 * vh;           // character's home on screen
+        const tw = 104 * 0.86, th = 138 * 0.86;                   // waterfall card size
+        const tCx = 0.15 * vw, tCy = 0.60 * vh;                   // LOOK 01 slot (lower) → downward
+        const w = lerp(sw, tw, q), h = lerp(sh, th, q);
+        const cx = lerp(startCx, tCx, q), cy = lerp(startCy, tCy, q);
+        const op = Math.min(seg(q, 0.04, 0.16), 1 - seg(q, 0.82, 0.98));
+        place(gEntry, cx, cy, w, h, op);
+      } else gEntry.style.opacity = 0;
+
+      // EXIT — landed LOOK 01 card → waitlist image, as the waitlist rises
+      const wr = wl.getBoundingClientRect();
+      if (wlImg && wr.top <= vh && wr.top > -vh * 0.4) {
+        const q2 = smooth(seg(wr.top, vh * 0.95, vh * 0.1));      // 0 rising … 1 seated
+        const startH = 0.66 * vh, startW = startH * (104 / 138);
+        const startCx = 0.225 * vw, startCy = 0.5 * vh;           // showcase CTA landing spot
+        const ir = wlImg.getBoundingClientRect();
+        const tCx = ir.left + ir.width / 2, tCy = ir.top + ir.height / 2;
+        const w = lerp(startW, ir.width, q2), h = lerp(startH, ir.height, q2);
+        const cx = lerp(startCx, tCx, q2), cy = lerp(startCy, tCy, q2);
+        const op = Math.min(seg(q2, 0.0, 0.12), 1 - seg(q2, 0.82, 1));
+        place(gExit, cx, cy, w, h, op);
+      } else gExit.style.opacity = 0;
+    };
+    tick();
+    this._hoStop = () => cancelAnimationFrame(raf);
+  }
+
+  // ---- SHOWCASE :: waterfall-in ⇄ 3D sphere ⇄ waterfall-out ⇄ CTA landing ----
+  // All cards are projected in JS (manual perspective) so the net↔sphere morph
+  // is one continuous space — no CSS preserve-3d, no cross-section hand-off.
+  _initShowcase() {
+    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const sec = document.getElementById('alt-showcase');
+    const stage = document.getElementById('drop-stage');
+    if (!sec || !stage) return;
+    const cards = Array.from(stage.querySelectorAll('.sph-tile'));
+    if (!cards.length) return;
+    const bgDark = document.getElementById('show-bg-dark');
+    const grain = document.getElementById('show-grain');
+    const chrome = document.getElementById('show-chrome');
+    const copy = document.getElementById('show-copy');
+    const veilIn = document.getElementById('drop-veil-in');
+    const veilOut = document.getElementById('drop-veil-out');
+    const gradTop = document.getElementById('wf-grad-top');
+    const gradBot = document.getElementById('wf-grad-bot');
+    const loader = document.getElementById('alt-loader');
+    const loaderPct = document.getElementById('alt-loader-pct');
+    const loaderBar = document.getElementById('alt-loader-bar');
+    const N = cards.length;
+    const modelIdx = 0;
+    const seg = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+    const smooth = (t) => t * t * (3 - 2 * t);
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    // even sphere distribution (fibonacci) + a tangent frame per card so each
+    // panel sits FLAT ON the sphere surface (turns edge-on near the silhouette)
+    const GOLD = Math.PI * (3 - Math.sqrt(5));
+    const sph = [];
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (i / (N - 1)) * 2;
+      const rad = Math.sqrt(Math.max(0, 1 - y * y));
+      const th = GOLD * i;
+      const u = { x: Math.cos(th) * rad, y: -y, z: Math.sin(th) * rad };
+      // tangent basis: right = up × normal, down = normal × right
+      let rx = -u.z, ry0 = 0, rz = u.x;            // cross((0,1,0), u)
+      let rl = Math.hypot(rx, ry0, rz) || 1; rx /= rl; ry0 /= rl; rz /= rl;
+      const dx = u.y * rz - u.z * ry0;             // cross(u, right)
+      const dy = u.z * rx - u.x * rz;
+      const dz = u.x * ry0 - u.y * rx;
+      // negate the down vector so card images sit UPRIGHT on the globe (were flipped)
+      sph.push({ u, r: { x: rx, y: ry0, z: rz }, d: { x: -dx, y: -dy, z: -dz } });
+    }
+    // STRUCTURED WATERFALL — clean flowing lanes (archive stream, not a cramped stack).
+    // Cards sit on a tall virtual column at a fixed PITCH and DESCEND with scroll, so only
+    // a few per lane are on screen at once with even gaps. Same slots for in AND out.
+    const LANES = [0.15, 0.38, 0.62, 0.85];        // lane X as fraction of width
+    const PITCH = 0.66;                            // vh between card centres in a lane → gaps
+    const scatter = cards.map((c, i) => {
+      const lane = i % LANES.length;
+      const row = Math.floor(i / LANES.length);
+      return {
+        lane, row,
+        rx: LANES[lane],
+        vy: row * PITCH + (lane % 2 ? PITCH * 0.5 : 0),   // virtual Y (vh units) — staggered
+        scale: (lane === 1 || lane === 2) ? 0.72 : 0.60,  // uniform-ish, small → clean gaps
+        rz: (lane % 2 ? 1 : -1) * (1.5 + (i % 3) * 1.1),  // subtle alternating tilt
+        tIn: row * 0.018 + lane * 0.005,                  // even top-down cascade
+      };
+    });
+
+    // LOOK 01 (the character) is PINNED mid-lane-1 (doesn't flow) so the entry ghost has a
+    // stable target and the CTA hand-off stays continuous.
+    if (scatter[0]) { scatter[0].rx = 0.15; scatter[0].vy = 0; scatter[0].scale = 0.86; scatter[0].rz = -3; }
+
+    let W = 0, H = 0, cx = 0, cy = 0, focal = 0, R = 0, dims = [];
+    const layout = () => {
+      W = stage.clientWidth; H = stage.clientHeight; cx = W / 2; cy = H / 2;
+      focal = Math.max(W, H) * 0.82;      // stronger perspective = real depth
+      R = Math.min(W, H) * 0.46;          // big globe, cards spread with gaps
+      dims = cards.map((c) => ({ w: c.offsetWidth, h: c.offsetHeight }));
+    };
+    layout();
+    window.addEventListener('resize', layout);
+
+    let rot = 0, raf = 0;
+    // drag-to-rotate: user can grab the sphere and spin it (adds to the scroll rotation).
+    let dragRotY = 0, dragRotX = 0, dragging = false, lastX = 0, lastY = 0, spinV = 0;
+    const stageEl = document.getElementById('show-sticky') || stage;
+    const dDown = (e) => { if (mobile()) return; dragging = true; const t = e.touches ? e.touches[0] : e; lastX = t.clientX; lastY = t.clientY; spinV = 0; stage.style.cursor = 'grabbing'; };
+    const dMove = (e) => {
+      if (!dragging) return;
+      const t = e.touches ? e.touches[0] : e;
+      const dx = t.clientX - lastX, dy = t.clientY - lastY;
+      dragRotY += dx * 0.35; spinV = dx * 0.35;
+      dragRotX = Math.max(-40, Math.min(40, dragRotX - dy * 0.22));
+      lastX = t.clientX; lastY = t.clientY;
+      if (e.cancelable && e.touches) e.preventDefault();
+    };
+    const dUp = () => { dragging = false; stage.style.cursor = 'grab'; };
+    stageEl.style.cursor = 'grab';
+    stageEl.addEventListener('mousedown', dDown);
+    window.addEventListener('mousemove', dMove);
+    window.addEventListener('mouseup', dUp);
+    stageEl.addEventListener('touchstart', dDown, { passive: true });
+    stageEl.addEventListener('touchmove', dMove, { passive: false });
+    stageEl.addEventListener('touchend', dUp);
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      if (mobile()) return;
+      const vh = window.innerHeight;
+      const r = sec.getBoundingClientRect();
+      if (r.top > vh || r.bottom < 0) return;
+      if (!W) layout();
+      const p = seg(-r.top, 0, r.height - vh);
+
+      // phase factors — timeline:
+      //  .00–.14 waterfall-in (position-based focal scaling)
+      //  .14–.30 form sphere · .30–.44 sphere EXPANDS · .44–.58 sphere CONTRACTS back
+      //  .58–.78 unform → SAME waterfall · .80–1.0 selected card lands in CTA
+      const form = smooth(seg(p, 0.13, 0.35));      // net → sphere (wider = smoother morph)
+      const unform = smooth(seg(p, 0.56, 0.80));    // sphere → net (same waterfall)
+      const sphereMix = form * (1 - unform);        // 1 = full sphere
+      const cta = smooth(seg(p, 0.86, 1.0));        // model lands in CTA (compressed → shorter black tail)
+      const outFall = smooth(seg(p, 0.86, 1.0));    // the rest fall away
+      // sphere EXPAND pulse — grows for one scroll (.30→.44) then contracts (.44→.58)
+      const expand = smooth(seg(p, 0.30, 0.44)) * (1 - smooth(seg(p, 0.44, 0.58)));
+      // FLOWING STREAM offset (vh units): cards descend as the waterfall scrolls — in during
+      // waterfall-in, and again during waterfall-out. Negative start = column enters from top.
+      const streamOff = -0.45 + seg(p, 0, 0.14) * 0.9 + seg(p, 0.58, 0.82) * 1.2;
+
+      // smooth scroll-driven rotation (slow, archive-browsing feel) + user drag
+      const targetRot = smooth(seg(p, 0.14, 0.78)) * 240;
+      rot += (targetRot - rot) * 0.09;
+      if (!dragging) { dragRotY += spinV; spinV *= 0.92; if (Math.abs(spinV) < 0.02) spinV = 0; }  // inertia
+      const ry = (rot + dragRotY) * Math.PI / 180, rxT = (-14 * sphereMix + dragRotX) * Math.PI / 180;
+      const cyr = Math.cos(ry), syr = Math.sin(ry), cxr = Math.cos(rxT), sxr = Math.sin(rxT);
+      // rotate a vector: rotateY(ry) then rotateX(rxT)
+      const rotv = (v) => {
+        const x1 = v.x * cyr + v.z * syr;
+        const z1 = -v.x * syr + v.z * cyr;
+        const y2 = v.y * cxr - z1 * sxr;
+        const z2 = v.y * sxr + z1 * cxr;
+        return { x: x1, y: y2, z: z2 };
+      };
+
+      // background / chrome — dark from the sphere all the way THROUGH into the dark waitlist
+      // (no fade back to light at the end → seamless dark-to-dark, no separate black gap)
+      const darkOn = seg(p, 0.15, 0.30);
+      if (bgDark) bgDark.style.opacity = String(darkOn);
+      if (grain) grain.style.opacity = String(darkOn * 0.5);
+      if (chrome) chrome.style.opacity = String(Math.max(0, seg(p, 0.15, 0.30) - seg(p, 0.66, 0.82)));
+      if (copy) copy.style.opacity = String(smooth(seg(p, 0.30, 0.40)) * (1 - smooth(seg(p, 0.60, 0.70))));
+      if (veilIn) veilIn.style.opacity = String(1 - seg(p, 0.0, 0.06));
+      if (veilOut) veilOut.style.opacity = String(seg(p, 0.985, 1));
+      // waterfall framing gradients — top (light) only during the light intro; bottom (dark) frames throughout
+      const framing = 1 - sphereMix;
+      if (gradTop) gradTop.style.opacity = String((1 - darkOn) * framing);
+      if (gradBot) gradBot.style.opacity = String(framing);
+      // % loader (top-right) — "archive loads to 100%" across the waterfall-in → sphere form,
+      // then fades away while the sphere is showcased.
+      if (loader) {
+        const pct = Math.max(0, Math.min(100, Math.round(seg(p, 0.0, 0.30) * 100)));
+        const vis = seg(p, 0.0, 0.03) * (1 - seg(p, 0.33, 0.42));
+        loader.style.opacity = String(vis);
+        if (loaderPct) loaderPct.textContent = String(pct).padStart(3, '0') + '%';
+        if (loaderBar) loaderBar.style.width = pct + '%';
+      }
+
+      // effective radius — the sphere EXPANDS (radius grows) for one scroll, then contracts
+      const Reff = R * (1 + expand * 0.6);
+      for (let i = 0; i < N; i++) {
+        const el = cards[i], S = sph[i], sl = scatter[i], dm = dims[i] || { w: 70, h: 92 };
+        // rotate the card's normal + tangent frame, place its centre on the globe
+        const un = rotv(S.u), rr = rotv(S.r), dd = rotv(S.d);
+        const Cx = un.x * Reff, Cy = un.y * Reff, Cz = un.z * Reff;
+        const peC = focal / (focal - Cz);
+        const gcx = cx + Cx * peC, gcy = cy + Cy * peC;
+        // screen delta for +1 world unit along tangent-right / tangent-down
+        const peR = focal / (focal - (Cz + rr.z));
+        const peD = focal / (focal - (Cz + dd.z));
+        const aX = (cx + (Cx + rr.x) * peR) - gcx, aY = (cy + (Cy + rr.y) * peR) - gcy;
+        const cX = (cx + (Cx + dd.x) * peD) - gcx, cY = (cy + (Cy + dd.y) * peD) - gcy;
+        const depth = (un.z + 1) / 2;                     // 0 back … 1 front
+
+        // flat net (waterfall) state — clean FLOWING lanes.
+        // LOOK 01 is pinned mid-screen; the rest descend on the virtual column with even gaps,
+        // grow subtly through the centre band, and fade at the top/bottom edges of the viewport.
+        let screenVh, ns, waterEdge;
+        if (i === modelIdx) {
+          screenVh = 0.58; ns = sl.scale; waterEdge = 1;
+        } else {
+          screenVh = sl.vy - streamOff;
+          const clampY = Math.max(0, Math.min(1, screenVh));
+          ns = sl.scale * (0.82 + 0.30 * Math.sin(clampY * Math.PI));      // gentle focal grow
+          waterEdge = Math.max(0, Math.min(1, (screenVh + 0.14) / 0.18))
+                    * Math.max(0, Math.min(1, (1.14 - screenVh) / 0.18));  // soft top/bottom fade
+        }
+        const nsx = sl.rx * W, nsy = screenVh * H;
+        const cs = Math.cos(sl.rz * Math.PI / 180), sn = Math.sin(sl.rz * Math.PI / 180);
+        const m = sphereMix;
+
+        // blend centre + 2×2 matrix (net → tangent-on-sphere)
+        let Cxs = lerp(nsx, gcx, m);
+        let Cys = lerp(nsy, gcy, m);
+        let a = lerp(ns * cs, aX, m), b = lerp(ns * sn, aY, m);
+        let c = lerp(-ns * sn, cX, m), d = lerp(ns * cs, cY, m);
+        let op = lerp(1, lerp(0.22, 1, depth), m);
+        let blur = (1 - depth) * 2.2 * m;
+        let zi = 1000 + Math.round(Cz);
+
+        // waterfall reveal + edge fade — cards fade up from transparency and fade at the
+        // viewport edges; this blends fully out as the sphere forms (and back in on the way out).
+        {
+          // reveal starts the INSTANT the showcase enters (right after the playground) and
+          // fills quickly — cards appear on scroll rather than after a long ramp.
+          const introFade = seg(vh - r.top, 0, vh * 0.22);         // fast: ~1/5 viewport of scroll
+          const rv = seg(introFade, sl.tIn, sl.tIn + 0.32);        // tight per-card stagger
+          const wf = (i === modelIdx) ? 1 : (rv * waterEdge);
+          op *= lerp(wf, 1, m);
+          if (m < 0.02) {
+            Cys -= Math.max(0, r.top);                              // pull into view during pre-pin
+            if (i === modelIdx) { op *= smooth(seg(p, 0.0, 0.06)); zi = 2200; }
+          }
+        }
+        // waterfall-out: non-selected cards keep falling + fade out (cleared before the landing)
+        if (i !== modelIdx && outFall > 0) { Cys += outFall * H * 0.95; op *= (1 - smooth(seg(p, 0.86, 0.96))); }
+        // CTA landing: the selected (model) card flies to the left image slot
+        if (i === modelIdx && cta > 0) {
+          const targSc = (H * 0.66) / dm.h;
+          Cxs = lerp(Cxs, W * 0.225, cta); Cys = lerp(Cys, H * 0.5, cta);
+          a = lerp(a, targSc, cta); d = lerp(d, targSc, cta); b = lerp(b, 0, cta); c = lerp(c, 0, cta);
+          op = 1; blur = 0; zi = 3000;
+        }
+
+        el.style.transform = 'translate(' + (Cxs - dm.w / 2).toFixed(1) + 'px,' + (Cys - dm.h / 2).toFixed(1) + 'px) matrix(' + a.toFixed(4) + ',' + b.toFixed(4) + ',' + c.toFixed(4) + ',' + d.toFixed(4) + ',0,0)';
+        el.style.opacity = op.toFixed(3);
+        el.style.filter = blur > 0.05 ? 'blur(' + blur.toFixed(2) + 'px)' : 'none';
+        el.style.zIndex = String(zi);
+      }
+    };
+    tick();
+    this._dropStop = () => { cancelAnimationFrame(raf); window.removeEventListener('resize', layout); window.removeEventListener('mousemove', dMove); window.removeEventListener('mouseup', dUp); };
   }
 
   // ---- DROP 001 :: "RED SIGNAL" typewriter (types, holds, erases, repeats) ----
@@ -987,7 +1833,7 @@ class Component extends DCLogic {
     this._typeStop = () => clearTimeout(tmo);
   }
 
-  componentWillUnmount() { if (this._cleanup) this._cleanup(); }
+  componentWillUnmount() { if (this._cleanup) this._cleanup(); if (this._pgtStop) this._pgtStop(); if (this._dropStop) this._dropStop(); if (this._turnStop) this._turnStop(); if (this._hoStop) this._hoStop(); if (this._navStop) this._navStop(); if (this._footStop) this._footStop(); if (this._dockStop) this._dockStop(); }
 }
 </script>
 </body>

@@ -1115,17 +1115,16 @@ class Component extends DCLogic {
 
     // ---- ABOUT ENTRANCE: reveal ONCE when the section scrolls into view (not scroll-gated) ----
     // Start hidden, then fade/slide in with a stagger the first time ≥30% of the section is visible.
-    if (essOverlays) essOverlays.style.transition = 'opacity .9s ease';
-    if (essMarker) { essMarker.style.opacity = '0'; essMarker.style.transition = 'opacity .9s ease'; }
+    if (essMarker) essMarker.style.opacity = '0';
     reveals.forEach((el) => {
       el.style.opacity = '0'; el.style.transform = 'translateY(22px)';
       el.style.transition = 'opacity .7s ease, transform .7s cubic-bezier(.16,.7,.2,1)';
     });
+    // essOverlays/essMarker opacity is now driven every frame from `rise` in applyTransition()
+    // (see below) instead of a wall-clock CSS transition, so it can't lag behind a fast scroll.
     let essRevealed = false;
     const revealEss = () => {
       if (essRevealed) return; essRevealed = true;
-      if (essOverlays) essOverlays.style.opacity = '1';
-      if (essMarker) essMarker.style.opacity = '1';
       reveals.forEach((el, i) => { setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 120 + i * 85); });
     };
     const essSecEl = document.getElementById('alt-essence');
@@ -1153,6 +1152,8 @@ class Component extends DCLogic {
         if (fig) fig.style.transform = 'none';
         if (tWrap) tWrap.style.opacity = 0;
         if (essImg) { essImg.style.opacity = 1; essImg.style.transform = 'none'; }
+        if (essOverlays) essOverlays.style.opacity = 1;
+        if (essMarker) essMarker.style.opacity = 1;
         revealEss();   // entrance handled once by the IntersectionObserver
         return;
       }
@@ -1164,9 +1165,9 @@ class Component extends DCLogic {
       // 2b. transition video: covers once the hero scrub finishes, scrubs as the about section RISES
       //     into view, then dissolves exactly as the about fills — position-driven so it stays aligned
       //     at any viewport height (no fixed magic scroll number).
+      const essRect = essSecEl ? essSecEl.getBoundingClientRect() : { top: H };
+      const rise = clamp01(1 - essRect.top / H);   // 0 = about below screen, 1 = about filling
       if (tWrap && tVid) {
-        const essRect = essSecEl ? essSecEl.getBoundingClientRect() : { top: H };
-        const rise = clamp01(1 - essRect.top / H);   // 0 = about below screen, 1 = about filling
         const tin = seg(p, 0.5, 0.62);               // fade IN once the hero scrub is done
         const tout = seg(rise, 0.8, 1.0);            // fade OUT as the about rises to fill
         tWrap.style.opacity = Math.min(tin, 1 - tout);
@@ -1176,6 +1177,13 @@ class Component extends DCLogic {
           if (!tVid.seeking && Math.abs((tVid.currentTime || 0) - tt) > 0.02) { try { tVid.currentTime = tt; } catch (e) {} }
         }
       }
+      // essence's own dark vignette must be FULLY opaque before the transition clip finishes
+      // dissolving out (rise 0.8→1.0), or its raw un-vignetted video shows through underneath
+      // the outgoing transition clip for a frame — a jarring double-exposure seam at the top
+      // edge. Driven by `rise` every frame (not the old wall-clock CSS transition + a separate
+      // 28%-visibility IntersectionObserver trigger), so it can never lag behind a fast scroll.
+      if (essOverlays) essOverlays.style.opacity = String(seg(rise, 0.4, 0.75));
+      if (essMarker) essMarker.style.opacity = String(seg(rise, 0.4, 0.75));
       // ---- ABOUT SECTION (fixed stage): local progress 0→1 across the section's scroll ----
       const essSec = document.getElementById('alt-essence');
       let ep = 0;

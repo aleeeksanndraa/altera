@@ -158,26 +158,7 @@
   .play::before{ content:''; margin-left:6px; border-left:24px solid var(--ink); border-top:15px solid transparent; border-bottom:15px solid transparent; }
   .f.on .play{ opacity:0; transform:translate(-50%,-50%) scale(.8); }
 
-  /* ---------- SERIES ---------- */
-  .series{ position:relative; padding:110px 0 90px; overflow:hidden; }
-  .series__head{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:18px; padding:0 var(--g); margin-bottom:46px; }
-  .series__head .disp{ grid-column:1 / span 8; font-size:clamp(70px,10vw,190px); }
-  .series__head .side{ grid-column:10 / span 3; align-self:end; }
-  .series__head .side p{ color:#b9b9b4; margin:10px 0 18px; }
-  .eps{ display:flex; gap:6px; }
-  .dark .chip{ border-color:#f2f2f0; } .dark .chip.on, .dark .chip:hover{ background:#f2f2f0; color:var(--ink); }
-  .reel{ display:flex; gap:10px; padding:0 var(--g) 18px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; cursor:grab; }
-  .reel::-webkit-scrollbar{ display:none; }
-  .reel img{ flex:0 0 auto; width:min(60vw,270px); aspect-ratio:9/16; object-fit:cover; scroll-snap-align:start; user-select:none; -webkit-user-drag:none; filter:grayscale(.15) contrast(1.05); }
-  .reel img:nth-child(odd){ margin-top:40px; }
 
-  /* ---------- ALTERA ---------- */
-  .uni{ position:relative; display:grid; grid-template-columns:repeat(12,1fr); column-gap:18px; padding:110px var(--g) 120px; }
-  .uni__img{ grid-column:2 / span 5; aspect-ratio:5/4; background:#ccc url(img/c/16.jpg) center/cover; position:relative; }
-  .uni__img .tape{ right:-18px; top:22px; transform:rotate(5deg); }
-  .uni__copy{ grid-column:8 / span 4; align-self:end; }
-  .uni__copy img{ width:200px; margin:14px 0 18px; image-rendering:pixelated; filter:brightness(0); }
-  .uni__copy p{ max-width:340px; margin-bottom:22px; }
 
   /* ---------- FOOTER ---------- */
   .ftr{ position:relative; padding:70px var(--g) 0; border-top:1px solid var(--line); overflow:hidden; }
@@ -267,10 +248,9 @@
   /* ---------- scroll transitions ---------- */
   .hero__word > .split{ will-change:transform; }
   .hero__img video{ will-change:transform; }
-  .nums, .series{ will-change:clip-path; }
+  .nums{ will-change:clip-path; }
   .films__r .f{ will-change:clip-path; }
   .ftr__word{ will-change:transform; }
-  .uni__img{ overflow:hidden; } 
   /* reveal */
   .rv{ opacity:0; transform:translateY(40px); transition:opacity 1s var(--ease), transform 1s var(--ease); }
   .rv.in{ opacity:1; transform:none; }
@@ -307,8 +287,6 @@
     .films{ grid-template-columns:1fr; row-gap:12px; }
     .films__l{ grid-column:auto; grid-template-columns:1fr 1fr; gap:12px; }
     .films__r{ grid-column:auto; } .films__r .f{ min-height:70vh; }
-    .series__head{ grid-template-columns:1fr; } .series__head .disp, .series__head .side{ grid-column:auto; }
-    .uni{ grid-template-columns:1fr; row-gap:30px; } .uni__img, .uni__copy{ grid-column:auto; }
     .ftr__top{ grid-template-columns:1fr 1fr; row-gap:34px; }
     .ftr__col{ grid-column:auto; } .ftr__news, .ftr__ig{ grid-column:1 / -1; }
     .pdp__wrap{ grid-template-columns:1fr; gap:24px; }
@@ -327,7 +305,6 @@
     <a href="#drop" data-filter="ring">Rings</a>
     <a href="#drop" data-filter="necklace">Necklaces</a>
     <a href="#drop" data-filter="charm">Charms</a>
-    <a href="#series">Series</a>
   </nav>
   <a class="hdr__logo" href="#top" aria-label="ANGEL 404 home"><img src="img/logo-chrome.webp" alt="ANGEL 404"></a>
   <div class="hdr__r">
@@ -356,7 +333,7 @@
       </div>
       <div class="hero__b rv">
         <div class="disp">About Angel 404</div>
-        <p class="micro">Angel 404 was a silver Y2K jewelry label with its own animated series. The shop is closed now. This is the archive of the drop.</p>
+        <p class="micro">Angel 404 was a silver Y2K jewelry label. The shop is closed now. This is the archive of the drop.</p>
       </div>
       <div class="hero__vert mono">Archive 2026 // Silver Y2K jewelry // Recreation</div>
     </div>
@@ -379,9 +356,9 @@
         <div class="nb__card"><span class="nb__lab">Charms</span><div class="nb__pic"><img src="img/p/46.jpg" alt=""></div><span class="disp num">3</span></div>
         <div class="nb__cap"><b>Clip-on charms</b><p id="cap-charm">Clip to phone, bag, or keys.</p></div>
       </div>
-      <div class="nb nb--4 rv" data-series>
-        <div class="nb__card"><span class="nb__lab">Series</span><div class="nb__pic" style="width:64%;right:-6%;top:10%"><img src="img/s/ep1-04.jpg" alt=""></div><span class="disp num">4</span></div>
-        <div class="nb__cap"><b>The animated series</b><p>Season 1. We call them... Angels.</p></div>
+      <div class="nb nb--4 rv" data-films>
+        <div class="nb__card"><span class="nb__lab">Films</span><div class="nb__pic" style="width:64%;right:-6%;top:10%"><img src="v/hand.jpg" alt=""></div><span class="disp num">4</span></div>
+        <div class="nb__cap"><b>Pieces in motion</b><p>Short films of the drop.</p></div>
       </div>
     </div>
     <div class="nums__big disp">Index</div>
@@ -411,36 +388,13 @@
     </div>
   </section>
 
-  <!-- SERIES -->
-  <section class="series dark" id="series" data-theme="dark">
-    <div class="scan"></div>
-    <div class="series__head">
-      <h2 class="disp rv">We call<br>them... <span class="red">Angels</span></h2>
-      <div class="side rv">
-        <span class="mono">Angel 404 // Season 1</span>
-        <p class="micro">There are people who just watch, and people who get watched. Sometimes someone just becomes one of them.</p>
-        <div class="eps" id="eps"><button class="chip on" data-ep="ep1">Ep 1</button><button class="chip" data-ep="ep2">Ep 2 · Not you</button></div>
-      </div>
-    </div>
-    <div class="reel" id="reel"></div>
-  </section>
 
-  <!-- ALTERA -->
-  <section class="uni" data-theme="light">
-    <div class="uni__img rv"><span class="tape">Same universe</span></div>
-    <div class="uni__copy rv">
-      <span class="mono">The Angel 404 universe</span>
-      <img src="img/altera.svg" alt="ALTERA">
-      <p class="micro">ALTERA is the clothing side of the Angel 404 world: real clothing with a digital-age attitude. Build your alter ego, then finish it in silver.</p>
-      <a class="bracket" href="../">[ <span>Enter ALTERA</span> ]</a>
-    </div>
-  </section>
 </main>
 
 <footer class="ftr" data-theme="light">
   <div class="ftr__top">
     <div class="ftr__col mono"><a href="#drop" data-filter="all">Shop</a><a href="#drop" data-filter="ring">Rings</a><a href="#drop" data-filter="necklace">Necklaces</a><a href="#drop" data-filter="charm">Charms</a></div>
-    <div class="ftr__col mono"><a href="#series">Series</a><a href="../">ALTERA</a><a href="https://www.instagram.com/angel404shop/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@angel404_shop" target="_blank" rel="noopener">TikTok</a></div>
+    <div class="ftr__col mono"><a href="https://www.instagram.com/angel404shop/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@angel404_shop" target="_blank" rel="noopener">TikTok</a></div>
     <div class="ftr__news">
       <span class="mono">Join the angels</span>
       <form id="news" novalidate><input type="email" id="newsEmail" placeholder="your@email.com" aria-label="Email address" autocomplete="email"><button type="submit">Join →</button></form>
@@ -575,7 +529,7 @@ $('#filters').addEventListener('click', (e) => { const b = e.target.closest('[da
 document.addEventListener('click', (e) => {
   const a = e.target.closest('[data-filter]'); if (a) setFilter(a.dataset.filter);
   const c = e.target.closest('[data-go]'); if (c) { setFilter(c.dataset.go); $('#drop').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); }
-  if (e.target.closest('[data-series]')) $('#series').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+  if (e.target.closest('[data-films]')) $('.films').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
 });
 
 // ---- bag (kept in this browser only) ----
@@ -658,21 +612,6 @@ grid.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.clas
 const fromHash = () => { const m = location.hash.match(/^#\/p\/(.+)$/); if (m) { const p = P.find((x) => slug(x.name) === m[1]); if (p) openPdp(p, false); } };
 fromHash(); addEventListener('hashchange', fromHash);
 
-// ---- series reel ----
-const EPS = { ep1: 12, ep2: 12 }, MISSING = { ep2: [7] };   // panel 7 of episode 2 is not in the export
-function renderReel(ep) {
-  const list = []; for (let i = 1; i <= EPS[ep]; i++) if (!(MISSING[ep] || []).includes(i)) list.push(i);
-  $('#reel').innerHTML = (ep === 'ep2' ? '<img src="img/c/ep2-cover.jpg" alt="Angel 404 episode 2 cover" draggable="false">' : '') + list.map((i) => `<img src="img/s/${ep}-${String(i).padStart(2, '0')}.jpg" alt="Angel 404 ${ep} panel ${i}" loading="lazy" draggable="false">`).join('');
-  $('#reel').scrollLeft = 0;
-}
-$('#eps').addEventListener('click', (e) => { const b = e.target.closest('[data-ep]'); if (!b) return; $$('#eps .chip').forEach((x) => x.classList.toggle('on', x === b)); renderReel(b.dataset.ep); });
-renderReel('ep1');
-(() => {
-  const r = $('#reel'); let down = false, sx = 0, sl = 0;
-  r.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; down = true; sx = e.clientX; sl = r.scrollLeft; r.style.scrollSnapType = 'none'; r.style.cursor = 'grabbing'; });
-  addEventListener('pointerup', () => { if (!down) return; down = false; r.style.scrollSnapType = ''; r.style.cursor = ''; });
-  addEventListener('pointermove', (e) => { if (down) r.scrollLeft = sl - (e.clientX - sx); });
-})();
 
 // ---- videos ----
 const vio = new IntersectionObserver((ents) => ents.forEach((en) => { const v = en.target; if (en.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; play(v); } else v.pause(); }), { rootMargin: '10% 0px' });
@@ -714,7 +653,7 @@ addEventListener('scroll', () => { const y = scrollY; hdr.classList.toggle('show
   const ease = (t) => 1 - Math.pow(1 - t, 3);
   const H = () => innerHeight;
   const words = $$('.hero__word > .split'), heroV = $('.hero__img video'), heroImg = $('.hero__img');
-  const nums = $('.nums'), series = $('.series'), bigF = $('.films__r .f'), fword = $('.ftr__word'), uni = $('.uni__img'), ghosts = $$('.drop__ghost');
+  const nums = $('.nums'), bigF = $('.films__r .f'), fword = $('.ftr__word'), ghosts = $$('.drop__ghost');
   const mobile = matchMedia('(max-width:900px)').matches;
   let tick = false;
   function frame() {
@@ -732,12 +671,6 @@ addEventListener('scroll', () => { const y = scrollY; hdr.classList.toggle('show
     // 4. the big film grows out of a narrow slit
     const fr = bigF.getBoundingClientRect(), f = ease(cl((vh - fr.top) / (vh * 0.8)));
     bigF.style.clipPath = `inset(${(1 - f) * 38}% ${(1 - f) * 6}% round ${(1 - f) * 24}px)`;
-    // 5. series: a diagonal wipe in from the left
-    const sr = series.getBoundingClientRect(), sp = ease(cl((vh - sr.top) / (vh * 0.85)));
-    const a = sp * 130 - 30;
-    series.style.clipPath = `polygon(0 0, ${a + 30}% 0, ${a}% 100%, 0 100%)`;
-    // 6. ALTERA image parallax
-    const ur = uni.getBoundingClientRect(); uni.style.backgroundPosition = `center ${50 + (ur.top / vh - 0.5) * 30}%`;
     // 7. footer wordmark rises out of the floor
     const wr = fword.getBoundingClientRect(), w = ease(cl((vh - wr.top) / (wr.height * 1.6)));
     fword.style.transform = `translateY(${(1 - w) * 45}%)`; fword.style.backgroundPosition = `center ${20 + w * 40}%`;

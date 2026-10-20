@@ -126,6 +126,26 @@
   .card__shine{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,.75) 48%, transparent 60%); transform:translateX(-120%); }
   .card:hover .card__shine{ transition:transform 1s var(--ease); transform:translateX(120%); }
 
+  /* video on product cards */
+  .card__vid{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .5s; background:#fff; }
+  .card.playing .card__vid{ opacity:1; }
+  .card__play{ position:absolute; left:12px; bottom:12px; padding:5px 9px; border-radius:999px; font-size:9.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; background:rgba(11,11,13,.08); color:#0b0b0d; }
+  .pdp__main video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .35s; background:#fff; }
+
+  /* sky film */
+  .sky{ position:relative; margin-top:110px; height:100vh; min-height:620px; overflow:hidden; display:grid; align-items:end; }
+  .sky video, .outro video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .sky::after{ content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(8,8,10,.92) 0%, rgba(8,8,10,.2) 45%, rgba(8,8,10,.05) 70%, rgba(8,8,10,.6) 100%); }
+  .sky__copy{ position:relative; z-index:2; display:flex; justify-content:space-between; align-items:flex-end; gap:30px; padding:0 34px 54px; }
+  .sky__copy .h2{ font-size:clamp(44px,7vw,120px); }
+  .sky__side{ display:flex; flex-direction:column; align-items:flex-end; gap:16px; max-width:340px; text-align:right; }
+  .sky__side p{ font-size:15px; line-height:1.55; color:#e3e3e8; font-weight:300; }
+  .sky__clip{ width:180px; aspect-ratio:1; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.35); box-shadow:0 20px 50px rgba(0,0,0,.5); }
+  .sky__clip video{ position:static; }
+  .outro{ position:relative; height:78vh; min-height:480px; margin-top:120px; overflow:hidden; display:grid; place-items:center; text-align:center; }
+  .outro::after{ content:''; position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 50%, transparent 40%, rgba(8,8,10,.85) 100%); }
+  .outro__cta{ position:absolute; z-index:2; left:0; right:0; bottom:44px; display:flex; justify-content:center; }
+
   /* campaign band */
   .band{ margin-top:110px; display:grid; grid-template-columns:1.1fr 1fr; min-height:88vh; }
   .band__img{ position:relative; overflow:hidden; }
@@ -255,6 +275,7 @@
     .card__name{ font-size:13.5px; }
     .card__add{ opacity:1; transform:none; width:34px; height:34px; font-size:17px; }
     .cat:not(:first-child) .cat__label span{ display:none; }
+    .sky__copy{ flex-direction:column; align-items:flex-start; padding:0 16px 40px; } .sky__side{ align-items:flex-start; text-align:left; } .sky__clip{ width:130px; }
     .band{ grid-template-columns:1fr; } .band__img{ height:70vh; } .band__copy{ padding:60px 22px; }
     .series__intro{ grid-template-columns:1fr; padding:0 16px; } .series__intro p{ justify-self:start; }
     .eps, .reel, .reel__hint{ padding-left:16px; padding-right:16px; }
@@ -316,6 +337,19 @@
     </div>
   </section>
 
+  <!-- SKY FILM -->
+  <section class="sky">
+    <video data-lazy src="v/crimson-sky.mp4" poster="v/crimson-sky.jpg" muted loop playsinline preload="none" aria-label="Crimson Angel necklace floating in the sky"></video>
+    <div class="sky__copy">
+      <div class="rv"><div class="eyebrow">✦ Angel 404 / Drop</div><h2 class="h2">Jewellery<br><span class="chrome-text">of the future</span></h2></div>
+      <div class="sky__side rv">
+        <div class="sky__clip"><video data-lazy src="v/hand.mp4" poster="v/hand.jpg" muted loop playsinline preload="none" aria-label="Angel 404 pieces held in a hand"></video></div>
+        <p>Chrome chains, deep red stones and sculpted silver, made to be layered and worn every day.</p>
+        <a class="btn btn--chrome" href="#shop">Shop the drop →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- SHOP -->
   <section class="shop" id="shop">
     <div class="sec-head rv">
@@ -358,6 +392,11 @@
       <a class="btn" href="../" >Enter ALTERA →</a>
     </div>
   </section>
+  <!-- OUTRO -->
+  <section class="outro">
+    <video data-lazy src="v/logo-sky.mp4" poster="v/logo-sky.jpg" muted loop playsinline preload="none" aria-label="Angel 404 chrome logo turning in the clouds"></video>
+    <div class="outro__cta"><a class="btn btn--ghost" href="#shop">You want this →</a></div>
+  </section>
 </main>
 
 <footer class="ftr">
@@ -370,7 +409,6 @@
     <div><h4>Shop</h4><ul><li><a href="#shop" data-filter="ring">Rings</a></li><li><a href="#shop" data-filter="necklace">Necklaces</a></li><li><a href="#shop" data-filter="charm">Charms</a></li></ul></div>
     <div><h4>Follow</h4><ul><li><a href="https://www.instagram.com/angel404shop/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.tiktok.com/@angel404_shop" target="_blank" rel="noopener">TikTok</a></li><li><a href="#series">The series</a></li></ul></div>
   </div>
-  <div class="ftr__big"><img src="img/logo-red.webp" alt="ANGEL 404"></div>
   <div class="ftr__bottom"><span>© 2026 Angel 404</span><span>Recreation of the original store, now closed</span><span>Silver Y2K jewelry</span></div>
 </footer>
 
@@ -416,7 +454,7 @@ const P = [
   { id:48, name:'Grain Metal Ring', type:'ring', tag:'subtle grain, refined edge', f:['Textured metal','Adjustable fit'], d:'Linear carved finish, clean structured silhouette.', price:22 },
   { id:49, name:'Branch Metal Ring', type:'ring', tag:'quiet detail, refined edge', f:['Polished metal','Adjustable fit'], d:'Open silhouette with subtle texture.', price:22 },
   { id:50, name:'Orbit Star Necklace', type:'necklace', tag:'a statement from your angel404 era', f:['Chrome finish','Layered stars'], d:'Designed to catch light, reflect movement.', price:32 },
-  { id:51, name:'Inferno Heart Necklace', type:'necklace', tag:'a statement from your angel404 era', f:['Chrome finish chain','Deep red heart'], d:'Designed to catch light, reflect energy.', price:36, badge:'Deep red', red:true },
+  { id:51, name:'Inferno Heart Necklace', type:'necklace', tag:'a statement from your angel404 era', f:['Chrome finish chain','Deep red heart'], d:'Designed to catch light, reflect energy.', price:36, badge:'Deep red', red:true, video:'v/p51' },
   { id:55, name:'Melt Metal Ring', type:'ring', tag:'fluid, warm sculpted elegance', f:['Polished finish','Adjustable fit'], d:'Organic sculpted form reflecting light with movement.', price:24 },
   { id:56, name:'Split Metal Ring', type:'ring', tag:'minimal silhouette, refined essential', f:['Polished chrome','Adjustable fit'], d:'Open dual-line design, subtle and modern.', price:22 },
   { id:57, name:'Flow Metal Ring', type:'ring', tag:'sculpted flow, refined edge', f:['Polished chrome','Adjustable fit'], d:'Soft organic shape, wraps the finger.', price:24 },
@@ -427,13 +465,13 @@ const P = [
   { id:62, name:'Shadow Charm', type:'charm', tag:'minimal. dark. essential.', f:['Black chrome finish','Lightweight & durable'], d:'Clip to phone, bag, or keys; carry Angel 404 energy.', price:18 },
   { id:63, name:'Piercing Charm', type:'charm', tag:'edge, without the commitment', f:['Polished chrome finish','Lightweight & durable'], d:'Designed to stand out, effortlessly.', price:16 },
   { id:64, name:'Molten Metal Ring', type:'ring', tag:'fluid form, sculpted edge', f:['Polished chrome finish','Adjustable fit'], d:'Organic, flowing shape reflects light from every angle.', price:24 },
-  { id:65, name:'Star Clip Charm', type:'charm', tag:'utility meets style', f:['Polished metal','Secure clip'], d:'Attach, layer, and move with you.', price:16 },
+  { id:65, name:'Star Clip Charm', type:'charm', tag:'utility meets style', f:['Polished metal','Secure clip'], d:'Attach, layer, and move with you.', price:16, video:'v/p65' },
   { id:66, name:'Stack Metal Ring', type:'ring', tag:'layered design, bold presence', f:['Polished chrome finish','Adjustable fit'], d:'Intertwined bands wrapping the finger in sculptural form.', price:25 },
   { id:67, name:'Forge Metal Ring', type:'ring', tag:'raw texture, bold edge', f:['Textured metal','Adjustable fit'], d:'A statement piece with a raw, unpolished feel.', price:25 },
   { id:68, name:'Mini Rose Metal Ring', type:'ring', tag:'delicate bloom, everyday elegance', f:['Polished metal','Adjustable fit'], d:'Small detail with a soft presence.', price:20 },
   { id:69, name:'Thorn Metal Ring', type:'ring', tag:'sculpted sharpness, refined edge', f:['Polished metal','Adjustable fit'], d:'Branching spikes wrap the finger in a sharp silhouette.', price:24 },
   { id:70, name:'Starlight Layer Necklace', type:'necklace', tag:'statement from your angel404 era', f:['Chrome finish chain','Starburst crystal accents'], d:'Reflects movement, shifts your look.', price:38 },
-  { id:71, name:'Crimson Angel Necklace', type:'necklace', tag:'a statement from angel 404', f:['Chrome finish','Deep red gemstone'], d:'Subtle yet impossible to ignore, designed for layering.', price:36, badge:'Deep red', red:true },
+  { id:71, name:'Crimson Angel Necklace', type:'necklace', tag:'a statement from angel 404', f:['Chrome finish','Deep red gemstone'], d:'Subtle yet impossible to ignore, designed for layering.', price:36, badge:'Deep red', red:true, video:'v/p71' },
   { id:72, name:'Organic Metal Ring', type:'ring', tag:'effortless statement, natural movement', f:['Polished metal finish','Adjustable fit'], d:'Flowing branch-like form; soft, distinctive.', price:22 }
 ];
 const TYPES = { all:'All', ring:'Rings', necklace:'Necklaces', charm:'Charms' };
@@ -457,7 +495,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const grid = $('#grid');
 grid.innerHTML = P.map((p) => `
   <article class="card" data-id="${p.id}" data-type="${p.type}" tabindex="0" aria-label="${p.name}">
-    <div class="card__img"><img src="img/p/${p.id}.jpg" alt="${p.name}" loading="lazy">${p.badge ? `<span class="card__tag ${p.red ? 'card__tag--red' : ''}">${p.badge}</span>` : ''}<span class="card__shine"></span></div>
+    <div class="card__img"><img src="img/p/${p.id}.jpg" alt="${p.name}" loading="lazy">${p.video ? `<video class="card__vid" src="${p.video}.mp4" muted loop playsinline preload="none"></video><span class="card__play">▶ Motion</span>` : ''}${p.badge ? `<span class="card__tag ${p.red ? 'card__tag--red' : ''}">${p.badge}</span>` : ''}<span class="card__shine"></span></div>
     <button class="card__add" data-add="${p.id}" aria-label="Add ${p.name} to bag">+</button>
     <div class="card__info"><div><div class="card__name">${p.name}</div><div class="card__sub">${p.f[0]}</div></div><div class="card__price">${euro(p.price)}</div></div>
   </article>`).join('');
@@ -539,9 +577,10 @@ function openPdp(p, push) {
   $('#pdpPrice').textContent = euro(p.price);
   $('#pdpDesc').textContent = p.d;
   $('#pdpFeats').innerHTML = p.f.map((x) => '<span>' + x + '</span>').join('');
-  const imgs = [{ src: 'img/p/' + p.id + '.jpg', cover: false }].concat(p.look ? [{ src: p.look, cover: true }] : []);
-  $('#pdpMain').innerHTML = imgs.map((m, i) => `<img src="${m.src}" alt="${p.name}" class="${m.cover ? 'cover' : ''}" style="opacity:${i ? 0 : 1}">`).join('');
-  $('#pdpThumbs').innerHTML = imgs.length > 1 ? imgs.map((m, i) => `<button class="${i ? '' : 'on'}" data-i="${i}"><img src="${m.src}" alt=""></button>`).join('') : '';
+  const imgs = [{ src: 'img/p/' + p.id + '.jpg' }].concat(p.video ? [{ vid: p.video }] : []);
+  $('#pdpMain').innerHTML = imgs.map((m, i) => m.vid ? `<video src="${m.vid}.mp4" poster="${m.vid}.jpg" muted loop playsinline autoplay style="opacity:0"></video>` : `<img src="${m.src}" alt="${p.name}" style="opacity:${i ? 0 : 1}">`).join('');
+  $('#pdpThumbs').innerHTML = imgs.length > 1 ? imgs.map((m, i) => `<button class="${i ? '' : 'on'}" data-i="${i}"><img src="${m.vid ? m.vid + '.jpg' : m.src}" alt="">${m.vid ? '' : ''}</button>`).join('') : '';
+  if (p.video) setTimeout(() => { const b = $('#pdpThumbs [data-i="1"]'); if (b && cur === p) b.click(); }, 900);
   const more = P.filter((x) => x.type === p.type && x.id !== p.id).slice(0, 4);
   $('#pdpMore').innerHTML = more.map((x) => `<button data-open="${x.id}" aria-label="${x.name}"><img src="img/p/${x.id}.jpg" alt=""></button>`).join('');
   $('#pdp').classList.add('on'); $('#scrim').classList.add('on');
@@ -550,10 +589,11 @@ function openPdp(p, push) {
   if (push !== false) history.replaceState(null, '', '#/p/' + slug(p.name));
 }
 function closePdp() {
+  $$('#pdpMain video').forEach((v) => v.pause());
   $('#pdp').classList.remove('on'); if (!$('#bag').classList.contains('on')) $('#scrim').classList.remove('on');
   document.body.style.overflow = ''; history.replaceState(null, '', location.pathname);
 }
-$('#pdpThumbs').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (!b) return; $$('#pdpThumbs button').forEach((x) => x.classList.toggle('on', x === b)); $$('#pdpMain img').forEach((im, i) => { im.style.opacity = i === +b.dataset.i ? 1 : 0; }); });
+$('#pdpThumbs').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (!b) return; $$('#pdpThumbs button').forEach((x) => x.classList.toggle('on', x === b)); Array.from($('#pdpMain').children).forEach((im, i) => { im.style.opacity = i === +b.dataset.i ? 1 : 0; if (im.tagName === 'VIDEO') { if (i === +b.dataset.i) { const q = im.play(); if (q && q.catch) q.catch(() => {}); } else im.pause(); } }); });
 $('#pdpMore').addEventListener('click', (e) => { const b = e.target.closest('[data-open]'); if (b) openPdp(byId(b.dataset.open)); });
 $('#qMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); $('#qVal').textContent = qty; });
 $('#qPlus').addEventListener('click', () => { qty += 1; $('#qVal').textContent = qty; });
@@ -598,6 +638,23 @@ $('#news').addEventListener('submit', (e) => {
 // ---- toast ----
 let tt;
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('on'), 2200); }
+
+// ---- videos: section films play only while on screen; product clips play on hover ----
+const vio = new IntersectionObserver((ents) => ents.forEach((en) => {
+  const v = en.target;
+  if (en.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; const q = v.play(); if (q && q.catch) q.catch(() => {}); } else v.pause();
+}), { rootMargin: '10% 0px' });
+$$('video[data-lazy]').forEach((v) => vio.observe(v));
+const canHover = matchMedia('(hover:hover)').matches;
+$$('.card').forEach((c) => {
+  const v = $('.card__vid', c); if (!v) return;
+  if (canHover) {
+    c.addEventListener('mouseenter', () => { c.classList.add('playing'); v.currentTime = 0; const q = v.play(); if (q && q.catch) q.catch(() => {}); });
+    c.addEventListener('mouseleave', () => { c.classList.remove('playing'); v.pause(); });
+  } else {   // touch: play while the card is on screen
+    new IntersectionObserver((e) => { if (e[0].isIntersecting) { c.classList.add('playing'); const q = v.play(); if (q && q.catch) q.catch(() => {}); } else { c.classList.remove('playing'); v.pause(); } }, { threshold: 0.6 }).observe(c);
+  }
+});
 
 // ---- reveals + hero sparkles + band parallax ----
 const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0.15 });

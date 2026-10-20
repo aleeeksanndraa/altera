@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALTERA | Dress Your Alter Ego</title>
+<meta name="description" content="ALTERA creates real clothing with a digital-age attitude: sharp silhouettes, Y2K references and pieces made to unlock another side of you. Drop 001, early access open.">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="icon" type="image/svg+xml" href="altera/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ALTERA | Dress Your Alter Ego">
+<meta property="og:description" content="A clothing brand for every version of you. Drop 001, early access open.">
+<meta property="og:image" content="https://aleeeksanndraa.github.io/altera/altera/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -249,7 +258,32 @@
     var go = function () { if (playHero) playHero(); };
     if (window.__altIntroDone) go(); else window.addEventListener('alt:intro-done', go, { once: true });
   }
-  if (window.__altMounted) start(); else window.addEventListener('alt:mounted', start, { once: true });
+  // ---- WAITLIST: validate the email, then confirm in the same pixel language ----
+  function waitlist() {
+    var input = document.getElementById('wl-email'), box = document.getElementById('wl-form'), msg = document.getElementById('wl-msg');
+    if (!input || !box || box._wired) return; box._wired = true;
+    var btn = box.querySelector('.alt-btn');
+    var say = function (t, c) { if (msg) { msg.style.color = c; if (window.__altScramble) { msg.textContent = t; msg._scr = false; scramble(msg, 500); } else msg.textContent = t; } };
+    var submit = function (e) {
+      if (e) e.preventDefault();
+      var v = (input.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+        input.style.borderColor = '#E23B3E';
+        if (input.animate && !reduced) input.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(0)' }], { duration: 320 });
+        say('ENTER A VALID EMAIL', '#E23B3E'); input.focus(); return;
+      }
+      input.style.borderColor = '#3a3a40';
+      // no backend yet: this only confirms on screen (hook up a form service to collect emails)
+      input.value = ''; input.disabled = true; input.placeholder = 'SIGNAL RECEIVED';
+      say('+ YOU ARE ON THE LIST', '#E23B3E');
+    };
+    if (btn) btn.addEventListener('click', submit);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(e); });
+    input.addEventListener('input', function () { input.style.borderColor = '#3a3a40'; if (msg) msg.textContent = ''; });
+  }
+
+  var boot = function () { start(); waitlist(); };
+  if (window.__altMounted) boot(); else window.addEventListener('alt:mounted', boot, { once: true });
 })();
 </script>
 <x-dc>
@@ -321,8 +355,9 @@
       /* TRANSITION video overlay: static / hidden on mobile */
       #alt-pgt{ display:none !important; }
       /* FIXED DOCK + LOADER: compact on mobile */
-      #alt-dock{ bottom:12px !important; gap:0 !important; padding:5px 4px !important; max-width:94vw; overflow-x:auto; }
-      #alt-dock a{ padding:0 8px !important; font-size:9px !important; }
+      #alt-dock{ top:auto !important; bottom:12px !important; right:50% !important; flex-direction:row !important; transform:translateX(50%) !important; gap:0 !important; padding:4px !important; max-width:94vw; overflow-x:auto; }
+      #alt-dock a{ writing-mode:horizontal-tb !important; padding:8px 8px !important; font-size:9px !important; white-space:nowrap; }
+      #alt-dock > span{ display:none !important; }
       #alt-sound{ padding:0 8px !important; font-size:9px !important; }
       #alt-loader{ top:50% !important; right:56px !important; }
       #alt-loader > div:first-child span:first-child{ display:none; }
@@ -420,8 +455,8 @@
     <a href="#alt-playground" data-dock="alt-playground" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Studio</a>
     <a href="#alt-showcase" data-dock="alt-showcase" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Showcase</a>
     <a href="#alt-waitlist" data-dock="alt-waitlist" style="writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; padding:9px 3px; color:#c8c8cc; text-decoration:none; font-size:9px; letter-spacing:.24em; text-transform:uppercase; transition:.16s;" style-hover="color:#fff;">Waitlist</a>
-    <span style="width:16px; height:1px; background:rgba(255,255,255,.14); margin:4px 0;"></span>
-    <button id="alt-sound" aria-label="Toggle sound" style="display:flex; align-items:flex-end; justify-content:center; gap:2px; height:16px; padding:4px 6px 6px; background:transparent; border:0; color:#c8c8cc; cursor:pointer; transition:.16s;" style-hover="color:#E23B3E;">
+    <span style="display:none; width:16px; height:1px; background:rgba(255,255,255,.14); margin:4px 0;"></span>
+    <button id="alt-sound" aria-label="Toggle sound" style="display:none; align-items:flex-end; justify-content:center; gap:2px; height:16px; padding:4px 6px 6px; background:transparent; border:0; color:#c8c8cc; cursor:pointer; transition:.16s;" style-hover="color:#E23B3E;">
       <span id="alt-sound-eq" style="display:inline-flex; align-items:flex-end; gap:2px; height:12px;">
         <span style="width:2px; height:4px; background:currentColor; display:block;"></span>
         <span style="width:2px; height:9px; background:currentColor; display:block;"></span>
@@ -449,7 +484,7 @@
     </div>
     <h1 style="font-size:clamp(28px,3.3vw,50px); line-height:1.05; font-weight:700; letter-spacing:.01em; text-transform:uppercase; text-shadow:0 2px 14px rgba(0,0,0,.45);">A Clothing<div>Brand for</div><div><span style="font-family: &quot;Pixelify Sans&quot;, monospace; font-weight: 600; letter-spacing: 0px; display: inline-block; line-height: 0.95; color:#E23B3E;">Every Version<br>Of You</span></div></h1>
     <div style="width:230px; height:1px; background:linear-gradient(to right, rgba(255,255,255,.85), rgba(255,255,255,0)); margin:24px 0;"></div>
-    <p style="font-size:12px; line-height:1.4; color:#FFFCFC; max-width:340px;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
+    <p style="font-size:12px; line-height:1.4; color:#FFFCFC; max-width:340px;">ALTERA creates real clothing with a digital-age attitude: sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
 
     </div>
 
@@ -599,7 +634,7 @@
     <h2 style="font-size:clamp(30px,3.4vw,52px); line-height:1.08; font-weight:700; letter-spacing:.01em; text-transform:uppercase; margin-bottom:30px; text-shadow:0 2px 16px rgba(0,0,0,.5);">Made To Express.<br>Made To Transform.</h2>
 
     <!-- paragraphs -->
-    <p style="font-size:13px; line-height:1.7; color:#c9c9cd; max-width:520px; margin-bottom:16px;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.</p>
+    <p style="font-size:13px; line-height:1.7; color:#c9c9cd; max-width:520px; margin-bottom:16px;">ALTERA creates real clothing with a digital-age attitude: sharp silhouettes, Y2K references and pieces made to unlock another side of your style.</p>
     <p style="font-size:13px; line-height:1.7; color:#c9c9cd; max-width:520px; margin-bottom:22px;">Each piece is designed to move with you, adapt to your mood, and reveal a different version of you.</p>
 
     <!-- closing -->
@@ -682,7 +717,7 @@
         <!-- the model render (framed card, like the reference) -->
         <!-- 360° model turntable :: drag horizontally (or scroll sideways) to scrub.
              The video is the DEFAULT look; any other selection overlays its still. -->
-        <video id="pg-model-video" src="altera/pg-model.mp4" muted="" playsinline="" preload="none" aria-label="ALTERA look preview — drag to rotate" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; will-change:transform; cursor:ew-resize;"></video>
+        <video id="pg-model-video" src="altera/pg-model.mp4" muted="" playsinline="" preload="none" aria-label="ALTERA look preview, drag to rotate" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; will-change:transform; cursor:ew-resize;"></video>
         <sc-if value="{{ showModelImage }}" hint-placeholder-val="{{ false }}">
           <img decoding="async" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply;">
         </sc-if>
@@ -718,7 +753,7 @@
         <span style="color:#E23B3E; font-size:12px; letter-spacing:.26em;">STYLE THE DROP</span>
       </div>
       <h2 style="font-size:clamp(28px,2.9vw,50px); line-height:1.02; font-weight:700; letter-spacing:.005em; text-transform:uppercase; color:#161618; margin:0;">Build Your<br><span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">Alter Ego.</span></h2>
-      <p style="font-size:13px; line-height:1.6; color:#4a4a4e; max-width:420px; margin:18px 0 0;">ALTERA creates real clothing with a digital-age attitude — sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
+      <p style="font-size:13px; line-height:1.6; color:#4a4a4e; max-width:420px; margin:18px 0 0;">ALTERA creates real clothing with a digital-age attitude: sharp silhouettes, Y2K references and pieces made to unlock another side of your style.<span style="color:#E23B3E;">_</span></p>
       </div>
 
       <div style="display:flex; flex-direction:column;">
@@ -915,7 +950,7 @@
         <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #2a2a30; font-size:11px; letter-spacing:.16em; color:#b6b6ba;">COMING SOON <span style="color:#E23B3E;">+</span></div>
       </div>
       <div id="wl-form" style="display:flex; gap:14px; margin-top:26px; max-width:560px;">
-        <input type="email" placeholder="YOUR@EMAIL.COM" style="flex:1; min-width:0; padding:16px 18px; background:rgba(255,255,255,.05); border:1px solid #3a3a40; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#f2f2f4; outline:none;">
+        <input id="wl-email" type="email" name="email" autocomplete="email" aria-label="Email address" placeholder="YOUR@EMAIL.COM" style="flex:1; min-width:0; padding:16px 18px; background:rgba(255,255,255,.05); border:1px solid #3a3a40; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#f2f2f4; outline:none;">
         <a href="#alt-waitlist" class="alt-btn" style="position:relative; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 22px; white-space:nowrap; text-decoration:none; color:#fff; font-size:12px; letter-spacing:.16em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid #4a4a50; transition:.16s;" style-hover="background:#000; border:1px solid #E23B3E; box-shadow:0 0 22px rgba(226,59,62,.45); text-shadow:1px 0 #E23B3E;">
           Join the Waitlist
           <span style="color:#E23B3E; font-size:15px; line-height:1;">→</span>
@@ -925,6 +960,7 @@
           <span class="corner br" style="position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
         </a>
       </div>
+      <div id="wl-msg" role="status" aria-live="polite" style="min-height:16px; margin-top:12px; font-size:11px; letter-spacing:.16em; color:#7a7a7f;"></div>
       <div style="margin-top:30px; font-size:10.5px; letter-spacing:.2em; color:#7a7a7f;">ALTERA <span style="color:#4a4a50;">/</span> DRESS YOUR ALTER EGO <span style="color:#4a4a50;">/</span> <span style="color:#E23B3E;">24SS</span></div>
     </div>
   </div>
@@ -1394,13 +1430,12 @@ class Component extends DCLogic {
       //   1.9→3.0  hero unpins, essence scrolls up + reveals
       if (m) {
         // mobile: no pin/scrub — simple fade. essence reveals as it enters.
-        heroUIs.forEach((el) => { el.style.opacity = 1 - seg(p, 0.2, 0.9); });
+        heroUIs.forEach((el) => { if (el.style.opacity !== '1') el.style.opacity = '1'; });   // stacked layout: content must stay readable
         if (fig) fig.style.transform = 'none';
         if (tWrap) tWrap.style.opacity = 0;
         if (essImg) { essImg.style.opacity = 1; essImg.style.transform = 'none'; }
         if (essOverlays) essOverlays.style.opacity = 1;
         if (essMarker) essMarker.style.opacity = 1;
-        revealEss();   // entrance handled once by the IntersectionObserver
         return;
       }
       // 1. hero UI + text STAY fully visible until the 2nd video starts, then fade out fast
@@ -2007,8 +2042,9 @@ class Component extends DCLogic {
       if (bgDark && bgDark._iris !== iris) {
         bgDark._iris = iris;
         bgDark.style.opacity = iris > 0 ? '1' : '0';
-        const r = (iris * 130).toFixed(1);
-        const m = iris >= 1 ? 'none' : 'radial-gradient(circle farthest-corner at 52% 50%, #000 ' + r + '%, transparent ' + (+r + 28).toFixed(1) + '%)';
+        // clean circular wipe with a thin soft edge (px, so the edge stays thin at every size)
+        const r = iris * Math.hypot(innerWidth, innerHeight) * 0.62;
+        const m = iris >= 1 ? 'none' : 'radial-gradient(circle at 52% 50%, #000 ' + r.toFixed(0) + 'px, transparent ' + (r + 18).toFixed(0) + 'px)';
         bgDark.style.webkitMaskImage = m; bgDark.style.maskImage = m;
       }
       if (grain) grain.style.opacity = String(iris * 0.5);

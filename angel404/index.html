@@ -35,10 +35,10 @@
   .chrome-text{ background:var(--chrome); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
   /* grain + scan lines, plain opacity (no blend modes) */
-  .grain{ position:fixed; inset:-50%; z-index:200; pointer-events:none; opacity:.09; background-size:220px; animation:grain 1s steps(4) infinite; }
+  .grain{ position:fixed; inset:-50%; z-index:200; pointer-events:none; opacity:.035; background-size:220px; animation:grain 2.4s steps(3) infinite; }
   @keyframes grain{ 25%{ transform:translate(-3%,2%); } 50%{ transform:translate(2%,-3%); } 75%{ transform:translate(-2%,-1%); } }
-  .scan{ position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to bottom, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
-  .dark .scan{ background:repeating-linear-gradient(to bottom, rgba(255,255,255,.04) 0 1px, transparent 1px 3px); }
+  .scan{ position:absolute; inset:0; pointer-events:none; }
+  .dark .scan{ background:repeating-linear-gradient(to bottom, rgba(255,255,255,.022) 0 1px, transparent 1px 4px); }
 
   /* tape label */
   .tape{ position:absolute; z-index:5; padding:7px 12px 6px; background:var(--red); color:#fff; font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; transform:rotate(-4deg); box-shadow:0 6px 16px rgba(0,0,0,.25); white-space:nowrap; }
@@ -263,6 +263,14 @@
   .toast.on{ opacity:1; transform:translate(-50%,0); }
   .fly{ position:fixed; z-index:140; pointer-events:none; object-fit:contain; background:#fff; }
 
+
+  /* ---------- scroll transitions ---------- */
+  .hero__word > .split{ will-change:transform; }
+  .hero__img video{ will-change:transform; }
+  .nums, .series{ will-change:clip-path; }
+  .films__r .f{ will-change:clip-path; }
+  .ftr__word{ will-change:transform; }
+  .uni__img{ overflow:hidden; } 
   /* reveal */
   .rv{ opacity:0; transform:translateY(40px); transition:opacity 1s var(--ease), transform 1s var(--ease); }
   .rv.in{ opacity:1; transform:none; }
@@ -331,7 +339,6 @@
 <main id="top">
   <!-- HERO -->
   <section class="hero" id="hero" data-theme="light">
-    <div class="scan"></div>
     <h1 class="hero__word disp" aria-label="Angel 404"><span class="split"><span>Angel<sup>✦</sup></span></span><span class="split"><span>404</span></span></h1>
     <div class="hero__grid">
       <div class="hero__a">
@@ -698,6 +705,46 @@ const hdr = $('#hdr');
 const themeIO = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) hdr.classList.toggle('dark', en.target.dataset.theme === 'dark'); }), { rootMargin: '0px 0px -94% 0px' });
 $$('[data-theme]').forEach((s) => themeIO.observe(s));
 addEventListener('scroll', () => { const y = scrollY; hdr.classList.toggle('show-logo', y > innerHeight * 0.6); hdr.classList.toggle('solid', y > 40); }, { passive: true });
+
+
+// ---- scroll transitions between sections (progress driven, one rAF) ----
+(() => {
+  if (reduced) return;
+  const cl = (v) => Math.max(0, Math.min(1, v));
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const H = () => innerHeight;
+  const words = $$('.hero__word > .split'), heroV = $('.hero__img video'), heroImg = $('.hero__img');
+  const nums = $('.nums'), series = $('.series'), bigF = $('.films__r .f'), fword = $('.ftr__word'), uni = $('.uni__img'), ghosts = $$('.drop__ghost');
+  const mobile = matchMedia('(max-width:900px)').matches;
+  let tick = false;
+  function frame() {
+    tick = false; const vh = H();
+    // 1. hero: the wordmark splits apart and the photo pushes in as you leave
+    const h = cl(scrollY / (vh * 0.9));
+    if (!mobile) { words[0].style.transform = `translateX(${-h * 9}vw)`; words[1].style.transform = `translateX(${h * 9}vw)`; }
+    heroV.style.transform = `scale(${1 + h * 0.18})`;
+    // 2. dark index opens like a window from the centre
+    const n = ease(cl(1 - nums.getBoundingClientRect().top / vh));
+    const ix = (1 - n) * (mobile ? 6 : 14), iy = (1 - n) * 8;
+    nums.style.clipPath = `inset(${iy}% ${ix}% 0 ${ix}% round ${(1 - n) * 40}px ${(1 - n) * 40}px 0 0)`;
+    // 3. giant 4 0 4 drift at different speeds behind the drop
+    ghosts.forEach((g, i) => { const r = g.parentElement.getBoundingClientRect(); g.style.transform = `translateY(${(r.top * (0.12 + i * 0.07)).toFixed(1)}px)`; });
+    // 4. the big film grows out of a narrow slit
+    const fr = bigF.getBoundingClientRect(), f = ease(cl((vh - fr.top) / (vh * 0.8)));
+    bigF.style.clipPath = `inset(${(1 - f) * 38}% ${(1 - f) * 6}% round ${(1 - f) * 24}px)`;
+    // 5. series: a diagonal wipe in from the left
+    const sr = series.getBoundingClientRect(), sp = ease(cl((vh - sr.top) / (vh * 0.85)));
+    const a = sp * 130 - 30;
+    series.style.clipPath = `polygon(0 0, ${a + 30}% 0, ${a}% 100%, 0 100%)`;
+    // 6. ALTERA image parallax
+    const ur = uni.getBoundingClientRect(); uni.style.backgroundPosition = `center ${50 + (ur.top / vh - 0.5) * 30}%`;
+    // 7. footer wordmark rises out of the floor
+    const wr = fword.getBoundingClientRect(), w = ease(cl((vh - wr.top) / (wr.height * 1.6)));
+    fword.style.transform = `translateY(${(1 - w) * 45}%)`; fword.style.backgroundPosition = `center ${20 + w * 40}%`;
+  }
+  const req = () => { if (!tick) { tick = true; requestAnimationFrame(frame); } };
+  addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); frame();
+})();
 
 // ---- reveals ----
 const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0.12 });

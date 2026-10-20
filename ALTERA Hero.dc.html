@@ -299,19 +299,15 @@
   <!-- vignette + pixel branding kept ON over the transition so the treatment never drops out -->
   <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%)"></div>
   <div style="position: absolute; inset: 0; pointer-events: none; opacity: .3; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)"></div>
-  <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:80%; right:16%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:40%; left:6%; width:5px; height:5px; background:rgba(255,255,255,.6);"></span>
-  <span style="position:absolute; top:60%; right:7%; width:5px; height:5px; background:rgba(200,200,205,.6);"></span>
-  <span style="position:absolute; top:18%; left:46%; width:4px; height:4px; background:rgba(255,255,255,.5);"></span>
 </div>
 
 <!-- ================================================================= -->
 <!-- ============ SECTION 02 :: ESSENCE (layout) ===================== -->
 <!-- ================================================================= -->
-<section id="alt-essence" data-screen-label="Essence" style="position:relative; width:100%; min-height:104vh; overflow:hidden; background:linear-gradient(155deg,#0b0b0d 0%,#161618 52%,#0a0a0c 100%); font-family:'Space Mono',monospace; color:#FFFCFC; display:flex; align-items:center;">
+<!-- the about section holds on screen for 80vh of scroll (sticky inside this wrapper) so its copy
+     can be read before the playground transition clip takes over -->
+<div id="alt-essence-pin" style="position:relative;">
+<section id="alt-essence" data-screen-label="Essence" style="position:sticky; top:0; width:100%; min-height:104vh; overflow:hidden; background:linear-gradient(155deg,#0b0b0d 0%,#161618 52%,#0a0a0c 100%); font-family:'Space Mono',monospace; color:#FFFCFC; display:flex; align-items:center;">
 
   <!-- texture: vignette + scanlines -->
   <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(120% 110% at 32% 46%, transparent 50%, rgba(0,0,0,.7) 100%);"></div>
@@ -403,6 +399,8 @@
     </a>
   </div>
 </section>
+  <div id="ess-pin-driver" style="height:80vh; pointer-events:none;"></div>
+</div>
 
 <!-- ================================================================= -->
 <!-- ============ TRANSITION :: ABOUT → PLAYGROUND ==================== -->
@@ -415,12 +413,6 @@
   <!-- same treatment as hero → about: vignette + scanlines + pixel branding, always on -->
   <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%);"></div>
   <div style="position:absolute; inset:0; pointer-events:none; opacity:.3; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);"></div>
-  <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:80%; right:16%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
-  <span style="position:absolute; top:40%; left:6%; width:5px; height:5px; background:rgba(255,255,255,.6);"></span>
-  <span style="position:absolute; top:60%; right:7%; width:5px; height:5px; background:rgba(200,200,205,.6);"></span>
 </div>
 
 <!-- ============ SECTION 03 :: PLAYGROUND (styling studio) ========== -->
@@ -1133,7 +1125,7 @@ class Component extends DCLogic {
     };
     const essSecEl = document.getElementById('alt-essence');
     if (essSecEl) {
-      const essRevObs = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) revealEss(); }); }, { threshold: 0.28 });
+      const essRevObs = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting && mobile()) revealEss(); }); }, { threshold: 0.28 });
       essRevObs.observe(essSecEl);
     }
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -1172,12 +1164,14 @@ class Component extends DCLogic {
       const essRect = essSecEl ? essSecEl.getBoundingClientRect() : { top: H };
       const rise = clamp01(1 - essRect.top / H);   // 0 = about below screen, 1 = about filling
       if (tWrap && tVid) {
-        const tin = seg(p, 0.5, 0.62);               // fade IN once the hero scrub is done
-        const tout = seg(rise, 0.8, 1.0);            // fade OUT as the about rises to fill
+        // short dissolves only: a long crossfade left the clip and the page ghosted over each other
+        const tin = seg(p, 0.5, 0.55);               // fade IN once the hero scrub is done
+        const tout = seg(rise, 0.93, 1.0);           // quick dissolve once the about fills the screen
+        if (rise >= 0.9) revealEss();                // about copy animates in as the clip clears, not hidden under it
         tWrap.style.opacity = Math.min(tin, 1 - tout);
         const td = tVid.duration;
         if (td > 0 && isFinite(td) && tVid.seekable && tVid.seekable.length && tVid.seekable.end(0) > 0.1) {
-          const tt = seg(rise, 0, 0.82) * (td - 0.06);
+          const tt = seg(rise, 0, 0.93) * (td - 0.06);
           if (!tVid.seeking && Math.abs((tVid.currentTime || 0) - tt) > 0.02) { try { tVid.currentTime = tt; } catch (e) {} }
         }
       }
@@ -1192,8 +1186,10 @@ class Component extends DCLogic {
       const essSec = essSecEl;
       let ep = 0;
       if (essSec) {
-        const pinRange = Math.max(1, essSec.offsetHeight - H);
-        ep = clamp01((window.scrollY - essSec.offsetTop) / pinRange);
+        // progress across the pinned hold (wrapper = section + hold spacer)
+        const pin = essSec.parentElement && essSec.parentElement.id === 'alt-essence-pin' ? essSec.parentElement : essSec;
+        const pinRange = Math.max(1, pin.offsetHeight - H);
+        ep = clamp01((window.scrollY - pin.offsetTop) / pinRange);
       }
       if (essImg) { essImg.style.opacity = 1; }
       // gentle camera-settle parallax as the section moves into place; scale stays ≥1 so it always fills.
@@ -1408,14 +1404,14 @@ class Component extends DCLogic {
       // POSITION-DRIVEN like hero → about: scrub + dissolve as the PLAYGROUND rises.
       const pr = pgSec.getBoundingClientRect();
       const rise = clamp01(1 - pr.top / H);          // 0 = playground below screen, 1 = filling
-      const fin = seg(rise, 0.0, 0.16);              // fade IN as playground starts entering
-      const fout = seg(rise, 0.80, 1.0);             // dissolve OUT as playground fills
+      const fin = seg(rise, 0.0, 0.05);              // quick fade IN as playground starts entering
+      const fout = seg(rise, 0.93, 1.0);             // quick dissolve once the playground fills
       wrap.style.opacity = Math.min(fin, 1 - fout);
       if (vid.duration > 0 && isFinite(vid.duration)) {
         if (!vid.paused) vid.pause();
         const seekable = vid.seekable && vid.seekable.length && vid.seekable.end(0) > 0.1;
         if (seekable) {
-          const tt = 0.04 + seg(rise, 0.04, 0.92) * (vid.duration - 0.08);
+          const tt = 0.04 + seg(rise, 0.02, 0.93) * (vid.duration - 0.08);
           const cur = vid.currentTime || 0;
           const next = cur + (tt - cur) * 0.24;      // smoothed scrub — same feel as hero → about
           if (!vid.seeking && Math.abs(next - cur) > 0.012) { try { vid.currentTime = next; } catch (e) {} }

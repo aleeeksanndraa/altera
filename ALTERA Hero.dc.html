@@ -584,7 +584,7 @@
     </div>
 
     <!-- showcase copy on the left (fades in during the sphere) -->
-    <div id="show-copy" style="position:absolute; left:60px; top:50%; transform:translateY(-50%); z-index:46; width:300px; opacity:0; will-change:opacity; color:#FFFCFC;">
+    <div id="show-copy" style="position:absolute; left:60px; top:50%; transform:translateY(-50%); z-index:2500; width:300px; opacity:0; will-change:opacity; color:#FFFCFC;">
       <div style="display:flex; align-items:center; gap:12px; font-size:12px; letter-spacing:.26em; color:#9a9a9f; margin-bottom:18px;"><span style="color:#E23B3E;">005</span><span style="width:22px; height:1px; background:#E23B3E;"></span>SHOWCASE</div>
       <h2 style="font-size:clamp(34px,4vw,64px); line-height:.98; font-weight:700; letter-spacing:.01em; text-transform:uppercase; color:#FFFCFC; margin:0;">Show<span style="font-family:'Pixelify Sans',monospace; font-weight:600; color:#E23B3E;">case</span></h2>
       <p style="font-size:12.5px; line-height:1.7; color:#b6b6ba; margin:20px 0 22px;">Fragments of the vision.<br>Pieces of the universe.</p>
@@ -609,7 +609,7 @@
     </div>
 
     <!-- entry / exit veils (light in, dark out — blend into the now-dark waitlist) -->
-    <div id="drop-veil-in" style="position:absolute; inset:0; background:#dadade; opacity:1; pointer-events:none; z-index:55;"></div>
+    <div id="drop-veil-in" style="position:absolute; inset:0; background:#dadade; opacity:0; pointer-events:none; z-index:55;"></div>
     <div id="drop-veil-out" style="position:absolute; inset:0; background:#070709; opacity:0; pointer-events:none; z-index:56;"></div>
     <!-- waterfall framing gradients: top blends with the light playground, bottom into the dark waitlist -->
     <div id="wf-grad-top" style="position:absolute; top:0; left:0; right:0; height:20%; z-index:4000; pointer-events:none; opacity:0; background:linear-gradient(to bottom, #e7e7ea, rgba(231,231,234,0));"></div>
@@ -1548,66 +1548,68 @@ class Component extends DCLogic {
   }
 
   // ---- HANDOFFS :: no-gap continuity ghosts (transform + opacity only) ----
-  // ENTRY: Playground character frame → first waterfall card (as Showcase pins).
-  // EXIT:  landed LOOK 01 card → Waitlist left image (as Waitlist rises).
-  // Both driven by section position so the motion starts the instant you scroll
-  // the boundary — no dead scroll, no cut.
+  // ENTRY: Playground character frame → LOOK 01 waterfall card (as Showcase pins).
+  // EXIT:  landed LOOK 01 card → Waitlist image (as Waitlist rises).
+  // The ghost starts EXACTLY on the live box of the element it replaces and ends EXACTLY
+  // on the live box of the element it becomes; both real elements are hidden while the
+  // ghost flies, so there is never a doubled image, a fade-through or a pop.
+  // Runs after the showcase loop each frame (registered later), so card boxes are current.
   _initHandoffs() {
     const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
     const showSec = document.getElementById('alt-showcase');
     const pgFrame = document.querySelector('#pg-model > div');
     const wl = document.getElementById('alt-waitlist');
-    const wlImg = document.getElementById('wl-image');
+    const wlBox = document.querySelector('#wl-image img[data-model]');
+    const wlPic = wlBox ? wlBox.parentElement : null;
+    const card = document.querySelector('#drop-stage .sph-tile');
     const gEntry = document.getElementById('ho-entry');
     const gExit = document.getElementById('ho-exit');
     if (!showSec || !gEntry || !gExit) return;
+    gEntry.style.mixBlendMode = 'normal';
     const seg = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
-    const smooth = (t) => t * t * (3 - 2 * t);
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);   // easeInOutCubic
     const lerp = (a, b, t) => a + (b - a) * t;
-    const place = (el, cx, cy, w, h, op) => {
-      el.style.width = w + 'px'; el.style.height = h + 'px';
-      el.style.transform = 'translate3d(' + (cx - w / 2).toFixed(1) + 'px,' + (cy - h / 2).toFixed(1) + 'px,0)';
-      el.style.opacity = op.toFixed(3);
+    const vis = (el, on) => { if (el && el._hoVis !== on) { el._hoVis = on; el.style.visibility = on ? '' : 'hidden'; } };
+    const fly = (g, A, B, t, posA, posB) => {
+      const x = lerp(A.left, B.left, t), y = lerp(A.top, B.top, t);
+      const w = lerp(A.width, B.width, t), h = lerp(A.height, B.height, t);
+      g.style.width = w.toFixed(1) + 'px'; g.style.height = h.toFixed(1) + 'px';
+      g.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+      g.style.objectPosition = 'center ' + lerp(posA, posB, t).toFixed(1) + '%';
+      g.style.opacity = '1';
     };
-    let raf = 0, parked = false;
+    let raf = 0;
     const near = this._near || {};
     const tick = () => {
       raf = requestAnimationFrame(tick);
-      if (mobile()) { gEntry.style.opacity = 0; gExit.style.opacity = 0; return; }
-      if (!near['alt-showcase'] && !near['alt-waitlist']) { if (!parked) { gEntry.style.opacity = 0; gExit.style.opacity = 0; parked = true; } return; }
-      parked = false;
-      const vh = window.innerHeight, vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const live = !mobile() && (near['alt-showcase'] || near['alt-waitlist']);
 
-      // ENTRY — playground frame → LOOK 01 waterfall slot, as the showcase enters+pins.
-      // Start from a FIXED on-screen home (the character's spot) and DESCEND into the
-      // lower waterfall slot, so the motion always reads downward.
-      const sc = showSec.getBoundingClientRect();
-      if (pgFrame && sc.top <= vh * 0.85 && sc.top > -vh * 0.05) {
-        const q = smooth(seg(sc.top, vh * 0.85, vh * 0.04));      // 0 entering … 1 pinned
-        const pf = pgFrame.getBoundingClientRect();
-        const sw = Math.max(pf.width, 220), sh = Math.max(pf.height, 300);
-        const startCx = 0.16 * vw, startCy = 0.40 * vh;           // character's home on screen
-        const tw = 104 * 0.86, th = 138 * 0.86;                   // waterfall card size
-        const tCx = 0.15 * vw, tCy = 0.60 * vh;                   // LOOK 01 slot (lower) → downward
-        const w = lerp(sw, tw, q), h = lerp(sh, th, q);
-        const cx = lerp(startCx, tCx, q), cy = lerp(startCy, tCy, q);
-        const op = Math.min(seg(q, 0.04, 0.16), 1 - seg(q, 0.82, 0.98));
-        place(gEntry, cx, cy, w, h, op);
-      } else gEntry.style.opacity = 0;
+      // ENTRY — playground frame → LOOK 01 card while the showcase rises into place
+      let entry = false;
+      if (live && pgFrame && card) {
+        const sc = showSec.getBoundingClientRect();
+        if (sc.top < vh * 0.9 && sc.top > vh * 0.02) {
+          entry = true;
+          fly(gEntry, pgFrame.getBoundingClientRect(), card.getBoundingClientRect(), ease(seg(sc.top, vh * 0.9, vh * 0.02)), 18, 8);
+        }
+      }
+      if (!entry) gEntry.style.opacity = '0';
 
-      // EXIT — landed LOOK 01 card → waitlist image, as the waitlist rises
-      const wr = wl.getBoundingClientRect();
-      if (wlImg && wr.top <= vh && wr.top > -vh * 0.4) {
-        const q2 = smooth(seg(wr.top, vh * 0.95, vh * 0.1));      // 0 rising … 1 seated
-        const startH = 0.66 * vh, startW = startH * (104 / 138);
-        const startCx = 0.225 * vw, startCy = 0.5 * vh;           // showcase CTA landing spot
-        const ir = wlImg.getBoundingClientRect();
-        const tCx = ir.left + ir.width / 2, tCy = ir.top + ir.height / 2;
-        const w = lerp(startW, ir.width, q2), h = lerp(startH, ir.height, q2);
-        const cx = lerp(startCx, tCx, q2), cy = lerp(startCy, tCy, q2);
-        const op = Math.min(seg(q2, 0.0, 0.12), 1 - seg(q2, 0.82, 1));
-        place(gExit, cx, cy, w, h, op);
-      } else gExit.style.opacity = 0;
+      // EXIT — landed LOOK 01 card → waitlist image while the waitlist rises
+      let exit = false;
+      if (live && wlPic && card) {
+        const wr = wl.getBoundingClientRect();
+        if (wr.top < vh * 0.98 && wr.top > vh * 0.08) {
+          exit = true;
+          fly(gExit, card.getBoundingClientRect(), wlPic.getBoundingClientRect(), ease(seg(wr.top, vh * 0.98, vh * 0.08)), 8, 10);
+        }
+      }
+      if (!exit) gExit.style.opacity = '0';
+
+      vis(pgFrame, !entry);
+      vis(card, !entry && !exit);
+      vis(wlBox, !exit);
     };
     tick();
     this._hoStop = () => cancelAnimationFrame(raf);
@@ -1755,16 +1757,25 @@ class Component extends DCLogic {
       // background / chrome — dark from the sphere all the way THROUGH into the dark waitlist
       // (no fade back to light at the end → seamless dark-to-dark, no separate black gap)
       const darkOn = seg(p, 0.15, 0.30);
-      if (bgDark) bgDark.style.opacity = String(darkOn);
-      if (grain) grain.style.opacity = String(darkOn * 0.5);
+      const iris = smooth(darkOn);
+      if (bgDark && bgDark._iris !== iris) {
+        bgDark._iris = iris;
+        bgDark.style.opacity = iris > 0 ? '1' : '0';
+        const r = (iris * 130).toFixed(1);
+        const m = iris >= 1 ? 'none' : 'radial-gradient(circle farthest-corner at 52% 50%, #000 ' + r + '%, transparent ' + (+r + 28).toFixed(1) + '%)';
+        bgDark.style.webkitMaskImage = m; bgDark.style.maskImage = m;
+      }
+      if (grain) grain.style.opacity = String(iris * 0.5);
       if (chrome) chrome.style.opacity = String(Math.max(0, seg(p, 0.15, 0.30) - seg(p, 0.66, 0.82)));
       if (copy) copy.style.opacity = String(smooth(seg(p, 0.30, 0.40)) * (1 - smooth(seg(p, 0.60, 0.70))));
-      if (veilIn) veilIn.style.opacity = String(1 - seg(p, 0.0, 0.06));
-      if (veilOut) veilOut.style.opacity = String(seg(p, 0.985, 1));
       // waterfall framing gradients — top (light) only during the light intro; bottom (dark) frames throughout
       const framing = 1 - sphereMix;
-      if (gradTop) gradTop.style.opacity = String((1 - darkOn) * framing);
-      if (gradBot) gradBot.style.opacity = String(framing);
+      if (gradTop) gradTop.style.opacity = String((1 - iris) * framing);
+      if (gradBot) {
+        gradBot.style.opacity = String(framing);
+        const gc = Math.round(lerp(222, 6, iris));
+        if (gradBot._gc !== gc) { gradBot._gc = gc; gradBot.style.background = 'linear-gradient(to top, rgb(' + gc + ',' + gc + ',' + (gc + 2) + '), rgba(' + gc + ',' + gc + ',' + (gc + 2) + ',0))'; }
+      }
       // % loader (top-right) — "archive loads to 100%" across the waterfall-in → sphere form,
       // then fades away while the sphere is showcased.
       if (loader) {
@@ -1827,7 +1838,7 @@ class Component extends DCLogic {
           op *= lerp(wf, 1, m);
           if (m < 0.02) {
             Cys -= Math.max(0, r.top);                              // pull into view during pre-pin
-            if (i === modelIdx) { op *= smooth(seg(p, 0.0, 0.06)); zi = 2200; }
+            if (i === modelIdx) zi = 2200;
           }
         }
         // waterfall-out: non-selected cards keep falling + fade out (cleared before the landing)

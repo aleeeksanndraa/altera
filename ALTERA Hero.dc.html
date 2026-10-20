@@ -6,6 +6,252 @@
 <script src="./support.js"></script>
 </head>
 <body>
+<!-- ============ INTRO :: boot loader that reveals the site (static, survives the dc boot) ============ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  html.alt-intro-on, html.alt-intro-on body{ overflow:hidden !important; }
+  html.alt-intro-on #alt-hero-video{ animation-play-state:paused !important; }
+  #alt-intro{ position:fixed; inset:0; z-index:100000; pointer-events:auto; font-family:'Space Mono',monospace; color:#FFFCFC; -webkit-font-smoothing:antialiased; }
+  #alt-intro .ai-strips{ position:absolute; inset:0; display:flex; flex-direction:column; }
+  #alt-intro .ai-strips i{ flex:1; background:#060608; margin:-1px 0; will-change:transform; }
+  #alt-intro .ai-scan{ position:absolute; inset:0; pointer-events:none; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.045) 0 1px, transparent 1px 3px); }
+  #alt-intro .ai-glow{ position:absolute; left:50%; top:50%; width:70vmax; height:70vmax; transform:translate(-50%,-50%); pointer-events:none; background:radial-gradient(circle, rgba(226,59,62,.16) 0%, rgba(226,59,62,0) 60%); opacity:0; animation:aiFade 1.4s .3s ease forwards; }
+  #alt-intro .ai-core{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; padding:0 22px; will-change:transform,opacity; }
+  #alt-intro .ai-corner{ position:absolute; font-size:11px; letter-spacing:.22em; color:#8a8a90; opacity:0; animation:aiFade .6s ease forwards; }
+  #alt-intro .ai-corner b{ color:#E23B3E; font-weight:400; }
+  #alt-intro .ai-tl{ top:30px; left:46px; animation-delay:.15s; } #alt-intro .ai-tr{ top:30px; right:46px; animation-delay:.25s; }
+  #alt-intro .ai-bl{ bottom:30px; left:46px; animation-delay:.35s; } #alt-intro .ai-br{ bottom:30px; right:46px; animation-delay:.45s; }
+  #alt-intro .ai-frame{ position:absolute; width:14px; height:14px; border-color:#E23B3E; border-style:solid; border-width:0; opacity:0; animation:aiFade .4s .1s ease forwards; }
+  #alt-intro .ai-f1{ top:18px; left:18px; border-top-width:2px; border-left-width:2px; } #alt-intro .ai-f2{ top:18px; right:18px; border-top-width:2px; border-right-width:2px; }
+  #alt-intro .ai-f3{ bottom:18px; left:18px; border-bottom-width:2px; border-left-width:2px; } #alt-intro .ai-f4{ bottom:18px; right:18px; border-bottom-width:2px; border-right-width:2px; }
+  #alt-intro .ai-logo{ position:relative; width:min(52vw,560px); aspect-ratio:771/223; }
+  #alt-intro .ai-logo img{ position:absolute; inset:0; width:100%; height:100%; display:block; image-rendering:pixelated; clip-path:inset(0 100% 0 0); animation:aiWipe .9s .35s steps(22,end) forwards; }
+  #alt-intro .ai-logo .ai-r{ filter:brightness(0) saturate(100%) invert(32%) sepia(83%) saturate(2900%) hue-rotate(345deg); opacity:.85; mix-blend-mode:screen; animation:aiWipe .9s .28s steps(22,end) forwards, aiGlitchR 2.4s 1.2s steps(1,end) infinite; }
+  #alt-intro .ai-logo .ai-c{ filter:brightness(0) saturate(100%) invert(80%) sepia(30%) saturate(900%) hue-rotate(165deg); opacity:.55; mix-blend-mode:screen; animation:aiWipe .9s .42s steps(22,end) forwards, aiGlitchC 2.4s 1.2s steps(1,end) infinite; }
+  #alt-intro .ai-logo .ai-m{ animation:aiWipe .9s .35s steps(22,end) forwards, aiJolt 2.4s 1.2s steps(1,end) infinite; }
+  #alt-intro .ai-tag{ font-family:'Pixelify Sans',monospace; font-weight:600; font-size:clamp(15px,1.5vw,20px); letter-spacing:.14em; color:#E23B3E; min-height:1.3em; text-align:center; }
+  #alt-intro .ai-bar{ position:relative; width:min(52vw,560px); height:9px; display:flex; gap:3px; }
+  #alt-intro .ai-bar span{ flex:1; background:rgba(255,255,255,.12); transition:background .12s; }
+  #alt-intro .ai-bar span.on{ background:#FFFCFC; } #alt-intro .ai-bar span.hot{ background:#E23B3E; }
+  #alt-intro .ai-meta{ width:min(52vw,560px); display:flex; justify-content:space-between; font-size:11px; letter-spacing:.2em; color:#b6b6ba; }
+  #alt-intro .ai-meta #ai-pct{ color:#FFFCFC; font-variant-numeric:tabular-nums; }
+  #alt-intro.ai-out .ai-scan, #alt-intro.ai-out .ai-glow, #alt-intro.ai-out .ai-corner, #alt-intro.ai-out .ai-frame{ transition:opacity .25s; opacity:0 !important; }
+  @keyframes aiFade{ to{ opacity:1; } }
+  @keyframes aiWipe{ to{ clip-path:inset(0 0 0 0); } }
+  @keyframes aiGlitchR{ 0%{ transform:translate(0,0); } 6%{ transform:translate(-7px,2px); } 9%{ transform:translate(4px,-1px); } 12%{ transform:translate(0,0); } 54%{ transform:translate(5px,0); } 57%{ transform:translate(0,0); } }
+  @keyframes aiGlitchC{ 0%{ transform:translate(0,0); } 6%{ transform:translate(7px,-2px); } 9%{ transform:translate(-3px,1px); } 12%{ transform:translate(0,0); } 54%{ transform:translate(-5px,0); } 57%{ transform:translate(0,0); } }
+  @keyframes aiJolt{ 0%{ clip-path:inset(0 0 0 0); } 6%{ clip-path:inset(38% 0 40% 0); transform:translateX(9px); } 9%{ clip-path:inset(0 0 0 0); transform:none; } 54%{ clip-path:inset(62% 0 18% 0); transform:translateX(-6px); } 57%{ clip-path:inset(0 0 0 0); transform:none; } }
+  @media (max-width:760px){
+    #alt-intro .ai-logo, #alt-intro .ai-bar, #alt-intro .ai-meta{ width:82vw; }
+    #alt-intro .ai-tl, #alt-intro .ai-bl{ left:22px; } #alt-intro .ai-tr, #alt-intro .ai-br{ right:22px; }
+    #alt-intro .ai-tr, #alt-intro .ai-bl{ display:none; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #alt-intro .ai-logo img{ animation:none !important; clip-path:none; }
+  }
+</style>
+<div id="alt-intro" aria-hidden="true">
+  <div class="ai-strips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="ai-glow"></div>
+  <div class="ai-scan"></div>
+  <span class="ai-frame ai-f1"></span><span class="ai-frame ai-f2"></span><span class="ai-frame ai-f3"></span><span class="ai-frame ai-f4"></span>
+  <div class="ai-corner ai-tl"><b>+</b> ALTERA SYSTEM</div>
+  <div class="ai-corner ai-tr">DROP 001 <b>//</b> 24SS</div>
+  <div class="ai-corner ai-bl">EARLY ACCESS OPEN</div>
+  <div class="ai-corner ai-br"><span id="ai-clock">00:00:00</span> <b>REC</b></div>
+  <div class="ai-core">
+    <div class="ai-logo"><img class="ai-r" src="altera/logo.svg" alt=""><img class="ai-c" src="altera/logo.svg" alt=""><img class="ai-m" src="altera/logo.svg" alt=""></div>
+    <div class="ai-tag" id="ai-tag"></div>
+    <div class="ai-bar" id="ai-bar"></div>
+    <div class="ai-meta"><span id="ai-status">LOADING ALTER EGO</span><span id="ai-pct">000%</span></div>
+  </div>
+</div>
+<script>
+(function () {
+  var root = document.documentElement, intro = document.getElementById('alt-intro');
+  if (!intro) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.classList.add('alt-intro-on');
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  window.scrollTo(0, 0);
+
+  var $ = function (id) { return document.getElementById(id); };
+  var bar = $('ai-bar'), pctEl = $('ai-pct'), statusEl = $('ai-status'), tagEl = $('ai-tag'), clockEl = $('ai-clock');
+  var N = 24, cells = [];
+  for (var i = 0; i < N; i++) { var s = document.createElement('span'); bar.appendChild(s); cells.push(s); }
+
+  // ---- text decode: random glyphs settle into the real letters ----
+  var GLYPHS = '#%&@$*+=/\\<>01ALTERXZ';
+  function decode(node, text, dur, done) {
+    var t0 = performance.now();
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), n = Math.floor(k * text.length), out = text.slice(0, n);
+      for (var j = n; j < text.length; j++) out += text[j] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      node.textContent = out;
+      if (k < 1) requestAnimationFrame(step); else if (done) done();
+    })(t0);
+  }
+  window.__altDecode = decode;
+  setTimeout(function () { decode(tagEl, 'EVERY VERSION OF YOU', 900); }, reduced ? 0 : 700);
+
+  var STATUS = ['LOADING ALTER EGO', 'SYNCING DROP 001', 'CALIBRATING SIGNAL', 'ENTERING ALTERA'];
+  var t0 = performance.now(), MIN = reduced ? 300 : 2300, MAX = 6500, shown = 0, ready = false, leaving = false;
+  function isReady() { return !!(window.__altMounted && (window.__altHeroReady || performance.now() - t0 > 3600)); }
+  function tick(now) {
+    if (leaving) return;
+    var el = now - t0;
+    ready = ready || isReady();
+    // time paces the counter; it can only pass 86% once the site is actually ready
+    var target = Math.min(1, el / MIN) * 100;
+    if (!ready && el < MAX) target = Math.min(target, 86 + 12 * Math.max(0, el - MIN) / (MAX - MIN));
+    shown += (target - shown) * 0.12;
+    if (target >= 100 && shown > 99.4) shown = 100;
+    var p = Math.round(shown);
+    pctEl.textContent = ('00' + p).slice(-3) + '%';
+    var on = Math.round(shown / 100 * N);
+    for (var c = 0; c < N; c++) cells[c].className = c < on ? (c === on - 1 && p < 100 ? 'hot' : 'on') : '';
+    statusEl.textContent = STATUS[Math.min(STATUS.length - 1, Math.floor(shown / 100 * STATUS.length))];
+    var secs = el / 1000; clockEl.textContent = '00:0' + Math.floor(secs) + ':' + ('0' + Math.floor((secs % 1) * 60)).slice(-2);
+    if (p >= 100 || el > MAX) { leave(); return; }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function finish() {
+    root.classList.remove('alt-intro-on');
+    root.classList.add('alt-intro-done');
+    window.__altIntroDone = true;
+    window.dispatchEvent(new Event('alt:intro-done'));
+  }
+  function leave() {
+    if (leaving) return; leaving = true;
+    pctEl.textContent = '100%'; statusEl.textContent = 'WELCOME';
+    cells.forEach(function (c) { c.className = 'on'; });
+    if (reduced || !intro.animate) {
+      intro.style.transition = 'opacity .35s'; intro.style.opacity = '0';
+      finish(); setTimeout(function () { intro.remove(); }, 400); return;
+    }
+    var core = intro.querySelector('.ai-core');
+    intro.classList.add('ai-out');
+    // core: quick RGB jolt, then collapses to a scanline
+    core.animate([
+      { transform: 'none', opacity: 1, filter: 'none' },
+      { transform: 'translateX(-10px) skewX(-6deg)', opacity: 1, filter: 'drop-shadow(6px 0 #E23B3E) drop-shadow(-6px 0 #78c8ff)', offset: 0.2 },
+      { transform: 'translateX(6px)', opacity: 1, filter: 'drop-shadow(-4px 0 #E23B3E) drop-shadow(4px 0 #78c8ff)', offset: 0.35 },
+      { transform: 'scaleY(1)', opacity: 1, filter: 'none', offset: 0.5 },
+      { transform: 'scale(1.08, 0.02)', opacity: 0, filter: 'brightness(3)' }
+    ], { duration: 520, easing: 'cubic-bezier(.6,0,.3,1)', fill: 'forwards' });
+    // shutter: strips slide out alternately, staggered from the centre
+    var strips = intro.querySelectorAll('.ai-strips i'), mid = (strips.length - 1) / 2, last = null;
+    for (var s = 0; s < strips.length; s++) {
+      last = strips[s].animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (s % 2 ? '' : '-') + '101%)' }],
+        { duration: 760, delay: 380 + Math.abs(s - mid) * 45, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
+    }
+    setTimeout(finish, 420);   // hero entrance starts while the shutter is still opening
+    setTimeout(function () { intro.remove(); }, 380 + mid * 45 + 800);
+  }
+})();
+</script>
+<script>
+// ============ ENTRANCES :: hero after the intro, sections as they scroll in ============
+// Web Animations only (opacity / transform / clip-path), so the inline styles the
+// scroll loops write every frame are never touched. Each animation is created paused
+// on its first frame and played once, then removed (fill:'backwards').
+(function () {
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EASE = 'cubic-bezier(.16,.84,.24,1)';
+  var GLYPHS = '#%&@$*+=/\\<>01ALTERXZ';
+
+  // decode every text node inside el (keeps spans / br / styling intact)
+  function scramble(el, dur) {
+    if (!el || reduced || el._scr) return; el._scr = true;
+    var nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    while (w.nextNode()) if (w.currentNode.nodeValue.trim()) nodes.push(w.currentNode);
+    var orig = nodes.map(function (n) { return n.nodeValue; }), total = orig.join('').length, t0 = performance.now();
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / (dur || 900)), keep = Math.floor(k * total), idx = 0;
+      nodes.forEach(function (n, i) {
+        var s = orig[i], out = '';
+        for (var j = 0; j < s.length; j++, idx++) out += (idx < keep || /\s/.test(s[j])) ? s[j] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        n.nodeValue = out;
+      });
+      if (k < 1) requestAnimationFrame(step); else nodes.forEach(function (n, i) { n.nodeValue = orig[i]; });
+    })(t0);
+  }
+  window.__altScramble = scramble;
+
+  function prep(els, frames, opt) {
+    var list = [];
+    Array.prototype.forEach.call(els, function (el, i) {
+      if (!el || !el.animate) return;
+      var a = el.animate(frames, { duration: opt.dur || 900, delay: (opt.delay || 0) + i * (opt.stagger || 0), easing: opt.ease || EASE, fill: 'backwards' });
+      a.pause(); list.push(a);
+    });
+    return { play: function () { list.forEach(function (a) { a.play(); }); } };
+  }
+  var q = function (s) { return document.querySelectorAll(s); };
+  var rise = function (y) { return [{ opacity: 0, transform: 'translateY(' + (y || 34) + 'px)' }, { opacity: 1, transform: 'none' }]; };
+  var slide = function (x) { return [{ opacity: 0, transform: 'translateX(' + x + 'px)' }, { opacity: 1, transform: 'none' }]; };
+  var wipe = function (from) { return [{ clipPath: from }, { clipPath: 'inset(0 0 0 0)' }]; };
+
+  function heroEntrance() {
+    if (reduced) return null;
+    var g = [
+      prep(q('#alt-nav > *'), [{ opacity: 0, transform: 'translateY(-26px)' }, { opacity: 1, transform: 'none' }], { dur: 800, delay: 260, stagger: 90 }),
+      prep(q('#alt-left > div:first-child > div:first-child'), slide(-30), { dur: 700, delay: 120 }),
+      prep(q('#alt-left h1'), [{ opacity: 0, transform: 'translateY(40px)', clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, transform: 'none', clipPath: 'inset(0 0 -20% 0)' }], { dur: 1000, delay: 180 }),
+      prep(q('#alt-left > div:first-child > div:nth-child(3)'), [{ transform: 'scaleX(0)', transformOrigin: 'left' }, { transform: 'scaleX(1)', transformOrigin: 'left' }], { dur: 900, delay: 420 }),
+      prep(q('#alt-left > div:first-child > p'), rise(20), { dur: 800, delay: 480 }),
+      prep(q('#alt-left .alt-btn'), rise(24), { dur: 800, delay: 580, stagger: 110 }),
+      prep(q('#alt-right > div'), slide(46), { dur: 900, delay: 300, stagger: 120 }),
+      prep(q('#alt-social > *'), rise(14), { dur: 600, delay: 760, stagger: 50 }),
+      prep(q('#alt-scroll > *'), rise(14), { dur: 700, delay: 880, stagger: 80 }),
+      prep(q('#alt-hero .alt-art'), [{ opacity: 0 }, { opacity: 1 }], { dur: 900, delay: 700, stagger: 25 })
+    ];
+    return function () {
+      g.forEach(function (x) { x.play(); });
+      var red = document.querySelector('#alt-left h1 span');
+      setTimeout(function () { scramble(red, 1000); }, 380);
+    };
+  }
+
+  function sectionReveals() {
+    if (reduced || !('IntersectionObserver' in window)) return;
+    var groups = [
+      ['#pg-model', [prep(q('#pg-model > div:first-child'), wipe('inset(100% 0 0 0)'), { dur: 1100, ease: 'cubic-bezier(.76,0,.24,1)' }),
+                     prep(q('#pg-model > div:nth-child(2)'), rise(18), { dur: 700, delay: 500 })]],
+      ['#pg-center', [prep(q('#pg-center > div > *'), rise(30), { dur: 850, delay: 120, stagger: 90 })], '#pg-center h2'],
+      ['#pg-sections', [prep(q('#pg-sections > *'), slide(40), { dur: 850, delay: 220, stagger: 110 })]],
+      ['#wl-grid', [prep(q('#wl-image'), wipe('inset(0 0 100% 0)'), { dur: 1100, ease: 'cubic-bezier(.76,0,.24,1)' })]],
+      ['#wl-copy', [prep(q('#wl-copy > *'), rise(30), { dur: 850, delay: 160, stagger: 90 })], '#wl-copy h2'],
+      ['#ft-top', [prep(q('#ft-top > *'), rise(24), { dur: 800, stagger: 120 })]],
+      ['#ft-logo-wrap', [prep(q('#ft-logo'), [{ clipPath: 'inset(0 100% 0 0)', opacity: .4 }, { clipPath: 'inset(0 0 0 0)', opacity: 1 }], { dur: 1300, ease: 'steps(26,end)' })]]
+    ];
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (e) {
+        // play when it enters, or straight away if it is already above the viewport
+        if (!e.isIntersecting && e.boundingClientRect.bottom > 0) return;
+        io.unobserve(e.target);
+        var g = e.target._rv; if (!g) return;
+        g[0].forEach(function (x) { x.play(); });
+        if (g[1]) setTimeout(function () { scramble(document.querySelector(g[1]), 1100); }, 250);
+      });
+    }, { threshold: 0.18 });
+    groups.forEach(function (g) { var el = document.querySelector(g[0]); if (el) { el._rv = [g[1], g[2]]; io.observe(el); } });
+  }
+
+  var started = false;
+  function start() {
+    if (started) return; started = true;
+    var playHero = heroEntrance();
+    sectionReveals();
+    var go = function () { if (playHero) playHero(); };
+    if (window.__altIntroDone) go(); else window.addEventListener('alt:intro-done', go, { once: true });
+  }
+  if (window.__altMounted) start(); else window.addEventListener('alt:mounted', start, { once: true });
+})();
+</script>
 <x-dc>
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -939,6 +1185,8 @@ class Component extends DCLogic {
   componentDidMount() {
     const hero = document.getElementById('alt-hero');
     if (!hero) return;
+    window.__altMounted = true;                              // intro loader waits for this
+    window.dispatchEvent(new Event('alt:mounted'));
     const fig = document.getElementById('alt-figure');
     const arts = Array.from(hero.querySelectorAll('.alt-art'));
     const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
@@ -956,6 +1204,7 @@ class Component extends DCLogic {
       if (!vid) return;
       vid.muted = true; vid.playsInline = true; vid.setAttribute('muted', '');
       if (mobile()) {                         // mobile has no cursor -> just play/loop
+        window.__altHeroReady = true;
         vid.loop = true; const p = vid.play(); if (p && p.catch) p.catch(() => {}); return;
       }
       // desktop: do NOT play on its own. Hold a frame; the cursor scrubs it.
@@ -966,11 +1215,11 @@ class Component extends DCLogic {
       fetch(vid.currentSrc || vid.getAttribute('src'))
         .then((res) => res.blob())
         .then((b) => {
-          vid.addEventListener('loadeddata', seed, { once: true });
+          vid.addEventListener('loadeddata', () => { seed(); window.__altHeroReady = true; }, { once: true });
           vid.src = URL.createObjectURL(b);
           vid.load();
         })
-        .catch(() => { if (vid.readyState >= 1) seed(); else vid.addEventListener('loadedmetadata', seed, { once: true }); });
+        .catch(() => { window.__altHeroReady = true; if (vid.readyState >= 1) seed(); else vid.addEventListener('loadedmetadata', seed, { once: true }); });
     };
     initVideo();
 
@@ -1122,6 +1371,7 @@ class Component extends DCLogic {
     const revealEss = () => {
       if (essRevealed) return; essRevealed = true;
       reveals.forEach((el, i) => { setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 120 + i * 85); });
+      setTimeout(() => { if (window.__altScramble) window.__altScramble(essSecEl && essSecEl.querySelector('h2'), 1100); }, 260);
     };
     const essSecEl = document.getElementById('alt-essence');
     if (essSecEl) {

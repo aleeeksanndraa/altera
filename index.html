@@ -130,7 +130,7 @@
   <div id="alt-figure-wrap" style="position: absolute; left: 0; top: 0; transform: none; width: 100%; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden">
     <div style="width:100%; height:100%; animation:idleFloat 9s ease-in-out infinite;">
       <div id="alt-figure" style="width:100%; height:100%; will-change:transform;">
-        <video id="alt-hero-video" src="altera/hero-video.mp4" autoplay="" muted="" loop="" playsinline="" preload="auto" aria-label="ALTERA hero video" style="width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode:multiply; animation:heroIntro 1.8s cubic-bezier(.16,.7,.2,1) both; pointer-events:none;"></video>
+        <video id="alt-hero-video" src="altera/hero-video.mp4" muted="" loop="" playsinline="" preload="none" aria-label="ALTERA hero video" style="width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode:multiply; animation:heroIntro 1.8s cubic-bezier(.16,.7,.2,1) both; pointer-events:none;"></video>
       </div>
     </div>
   </div>
@@ -140,7 +140,7 @@
 
   <!-- ============ VIGNETTE / FISHEYE / SCANLINES (non-interactive) ============ -->
   <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(115% 100% at 50% 46%, transparent 52%, rgba(10,10,12,.55) 86%, rgba(6,6,8,.92) 100%);"></div>
-  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; mix-blend-mode:overlay; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);"></div>
+  <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);"></div>
   <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(60% 50% at 50% 44%, rgba(255,255,255,.10), transparent 70%);"></div>
 
   <!-- ============ PIXEL ARTIFACTS ============ -->
@@ -192,8 +192,7 @@
   </div>
 
   <!-- ============ GLOBAL TV-SCANLINE TEXTURE (over everything) ============ -->
-  <div id="alt-scanlines" style="position:fixed; inset:0; z-index:118; pointer-events:none; mix-blend-mode:overlay; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, rgba(0,0,0,.10) 1px 3px);"></div>
-  <div id="alt-scanflicker" style="position:fixed; inset:0; z-index:117; pointer-events:none; mix-blend-mode:overlay; opacity:.06; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0 2px, transparent 2px 6px); will-change:transform; animation:tvRoll .5s steps(3) infinite;"></div>
+  <div id="alt-scanlines" style="position:fixed; inset:0; z-index:118; pointer-events:none; opacity:.5; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, rgba(0,0,0,.07) 1px 3px);"></div>
 
   <!-- ============ LEFT CONTENT BLOCK ============ -->
   <div id="alt-left" class="alt-side" style="position:absolute; left:46px; top:112px; z-index:6; width:min(33vw,400px);">
@@ -296,10 +295,10 @@
 <!-- ====== TRANSITION VIDEO :: hero -> essence (camera move) ========= -->
 <!-- Fixed full-viewport clip that fades in mid-scroll and scrubs with progress -->
 <div id="alt-transition" style="position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0; background:radial-gradient(120% 95% at 50% 42%, #cfcfd1 0%, #9a9a9d 26%, #545457 56%, #28282b 80%, #131315 100%);">
-  <video id="alt-transition-video" src="altera/transition.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA transition" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; filter: brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode: multiply"></video>
+  <video id="alt-transition-video" src="altera/transition.mp4" muted="" playsinline="" preload="none" aria-label="ALTERA transition" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; filter: brightness(1.18) contrast(1.1) saturate(0.92); mix-blend-mode: multiply"></video>
   <!-- vignette + pixel branding kept ON over the transition so the treatment never drops out -->
   <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%)"></div>
-  <div style="position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: .3; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px)"></div>
+  <div style="position: absolute; inset: 0; pointer-events: none; opacity: .3; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)"></div>
   <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
   <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
   <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
@@ -316,7 +315,7 @@
 
   <!-- texture: vignette + scanlines -->
   <div style="position:absolute; inset:0; z-index:2; pointer-events:none; background:radial-gradient(120% 110% at 32% 46%, transparent 50%, rgba(0,0,0,.7) 100%);"></div>
-  <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay; opacity: .32; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px)"></div>
+  <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .32; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)"></div>
 
   <!-- pixel artifacts (branding only) -->
   <div id="ess-artifacts" style="position: absolute; inset: 0; z-index: 3; pointer-events: none">
@@ -328,7 +327,7 @@
   <!-- ============ FULL-SECTION BACKGROUND :: looping campaign video (no box) ============ -->
   <div id="essence-image" style="position: absolute; inset: 0; z-index: 0; overflow: hidden; width: 100%; height: 100%; background:#0a0a0c; will-change:transform;">
     <!-- full-bleed campaign video: covers the whole section edge-to-edge, adaptable to any screen -->
-    <video id="essence-blink-video" src="altera/about-blink.mp4" muted="" loop="" playsinline="" preload="auto" poster="altera/closeup-girl-sm.jpg" aria-label="ALTERA campaign loop" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:brightness(.95) contrast(1.1) saturate(0.92); display:block;"></video>
+    <video id="essence-blink-video" src="altera/about-blink.mp4" muted="" loop="" playsinline="" preload="none" poster="altera/closeup-girl-sm.jpg" aria-label="ALTERA campaign loop" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:brightness(.95) contrast(1.1) saturate(0.92); display:block;"></video>
   </div>
   <!-- legibility + blend overlays — fade in AFTER the closeup has settled into place -->
   <div id="essence-overlays" style="position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; will-change: opacity">
@@ -412,10 +411,10 @@
 <!-- the playground fills — position-driven, so there is NO empty scroll -->
 <!-- gap and it feels like one continuous video. -->
 <div id="alt-pgt" style="position:fixed; inset:0; z-index:31; pointer-events:none; opacity:0; background:radial-gradient(120% 95% at 50% 42%, #cfcfd1 0%, #9a9a9d 26%, #545457 56%, #28282b 80%, #131315 100%);">
-  <video id="pgt-video" src="altera/pg-transition.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA transition" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(.92); mix-blend-mode:multiply;"></video>
+  <video id="pgt-video" src="altera/pg-transition.mp4" muted="" playsinline="" preload="none" aria-label="ALTERA transition" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 28%; display:block; filter:brightness(1.18) contrast(1.1) saturate(.92); mix-blend-mode:multiply;"></video>
   <!-- same treatment as hero → about: vignette + scanlines + pixel branding, always on -->
   <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(118% 92% at 50% 44%, transparent 36%, rgba(20,20,22,.4) 70%, rgba(12,12,14,.92) 100%);"></div>
-  <div style="position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay; opacity:.3; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);"></div>
+  <div style="position:absolute; inset:0; pointer-events:none; opacity:.3; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);"></div>
   <span style="position:absolute; top:14%; left:9%; width:11px; height:11px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
   <span style="position:absolute; top:72%; left:13%; width:9px; height:9px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
   <span style="position:absolute; top:24%; right:11%; width:10px; height:10px; background:linear-gradient(#E23B3E,#E23B3E) center/100% 32% no-repeat, linear-gradient(#E23B3E,#E23B3E) center/32% 100% no-repeat;"></span>
@@ -445,9 +444,9 @@
         <!-- the model render (framed card, like the reference) -->
         <!-- 360° model turntable :: drag horizontally (or scroll sideways) to scrub.
              The video is the DEFAULT look; any other selection overlays its still. -->
-        <video id="pg-model-video" src="altera/pg-model.mp4" muted="" playsinline="" preload="auto" aria-label="ALTERA look preview — drag to rotate" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; will-change:transform; cursor:ew-resize;"></video>
+        <video id="pg-model-video" src="altera/pg-model.mp4" muted="" playsinline="" preload="none" aria-label="ALTERA look preview — drag to rotate" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; will-change:transform; cursor:ew-resize;"></video>
         <sc-if value="{{ showModelImage }}" hint-placeholder-val="{{ false }}">
-          <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply;">
+          <img decoding="async" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply;">
         </sc-if>
         <!-- marker ON the image, left edge (like the reference) -->
         <div id="pg-marker" style="position:absolute; left:12px; top:18px; z-index:4; display:flex; flex-direction:column; align-items:center; gap:12px; font-size:11px; letter-spacing:.26em; color:#f2f2f4;">
@@ -532,7 +531,7 @@
                   <span style="position:absolute; top:6px; right:6px; z-index:2; display:flex; align-items:center; justify-content:center; width:15px; height:15px; background:#E23B3E; color:#fff; font-size:9px; letter-spacing:0;">+</span>
                 </sc-if>
                 <div style="{{ o.imgWrap }}">
-                  <img data-thumb="{{ o.thumb }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="{{ o.label }}" style="{{ o.imgStyle }}">
+                  <img decoding="async" data-thumb="{{ o.thumb }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="{{ o.label }}" style="{{ o.imgStyle }}">
                 </div>
                 <span style="{{ o.labelStyle }}">{{ o.label }}</span>
               </div>
@@ -570,7 +569,7 @@
     <div id="show-bg-light" style="position:absolute; inset:0; z-index:1; background:radial-gradient(120% 120% at 50% 42%, #f3f3f5 0%, #e7e7ea 55%, #dededf 100%);"></div>
     <div id="show-bg-dark" style="position:absolute; inset:0; z-index:2; opacity:0; background:radial-gradient(120% 130% at 58% 44%, #1b1b1f 0%, #101012 46%, #050506 100%); will-change:opacity;"></div>
     <!-- subtle grain -->
-    <div id="show-grain" style="position:absolute; inset:0; z-index:3; opacity:0; mix-blend-mode:overlay; pointer-events:none; background-image:repeating-radial-gradient(rgba(255,255,255,.05) 0 1px, transparent 1px 2px); background-size:3px 3px; will-change:opacity;"></div>
+    <div id="show-grain" style="position:absolute; inset:0; z-index:3; opacity:0; pointer-events:none; background-image:repeating-radial-gradient(rgba(255,255,255,.035) 0 1px, transparent 1px 2px); background-size:3px 3px; will-change:opacity;"></div>
 
     <!-- header + marker + corner ticks (fade in with the dark showcase) -->
     <div id="show-chrome" style="position:absolute; inset:0; z-index:45; pointer-events:none; opacity:0; will-change:opacity;">
@@ -597,10 +596,10 @@
       <sc-for list="{{ sphereTiles }}" as="t" hint-placeholder-count="14">
         <div class="sph-tile" style="{{ t.style }}">
           <sc-if value="{{ t.isModel }}" hint-placeholder-val="{{ false }}">
-            <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 8%; display:block;">
+            <img decoding="async" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 8%; display:block;">
           </sc-if>
           <sc-if value="{{ t.img }}" hint-placeholder-val="{{ false }}">
-            <img data-img="{{ t.img }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 12%; display:block;">
+            <img decoding="async" data-img="{{ t.img }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center 12%; display:block;">
           </sc-if>
           <sc-if value="{{ t.hasLabel }}" hint-placeholder-val="{{ false }}">
             <span style="{{ t.labelStyle }}">{{ t.label }}</span>
@@ -629,8 +628,8 @@
 <!-- waterfall card as the Showcase pins. ho-exit: the landed LOOK 01 card -->
 <!-- continues into the Waitlist image as that section rises. Both are     -->
 <!-- driven by section position (transform+opacity only) → no scroll gap.  -->
-<img id="ho-entry" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; border:1px solid #E23B3E; will-change:transform,opacity;">
-<img id="ho-exit" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 12%; border:1px solid #E23B3E; will-change:transform,opacity;">
+<img decoding="async" id="ho-entry" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 18%; mix-blend-mode:multiply; border:1px solid #E23B3E; will-change:transform,opacity;">
+<img decoding="async" id="ho-exit" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" style="position:fixed; left:0; top:0; z-index:70; pointer-events:none; opacity:0; object-fit:cover; object-position:center 12%; border:1px solid #E23B3E; will-change:transform,opacity;">
 
 <!-- ================================================================= -->
 <!-- ==== SECTION 05 :: WAITLIST CTA ================================= -->
@@ -653,7 +652,7 @@
       <span style="position:absolute; bottom:-1px; right:-1px; width:14px; height:14px; border-bottom:2px solid #E23B3E; border-right:2px solid #E23B3E;"></span>
       <div style="position:relative; flex:1; overflow:hidden; border:1px solid #2c2c32; background:#1c1c20; display:flex; align-items:center; justify-content:center;">
         <!-- FUTURE: replace this model render with altera/look-01.jpg -->
-        <img data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 10%;">
+        <img decoding="async" data-model="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Selected look" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 10%;">
         <span style="position:absolute; left:10px; bottom:10px; font-size:9px; letter-spacing:.16em; color:#c8c8cc; background:rgba(10,10,12,.6); padding:3px 7px;">FINAL CTA IMAGE / SELECTED LOOK</span>
       </div>
       <div style="display:flex; justify-content:space-between; gap:8px; font-size:10px; letter-spacing:.08em;">
@@ -744,21 +743,21 @@ class Component extends DCLogic {
   _pgCats = [
     { key: 'top',     label: 'TOPS',       slot: 'TOP',
       opts: [
-        { code: 'cami',   name: 'Lace Cami',    thumb: 'altera/pg/top_cami.png' },
-        { code: 'corset', name: 'Rose Corset',  thumb: 'altera/pg/top_corset.png' },
-        { code: 'bell',   name: 'Lace Bell Top',thumb: 'altera/pg/top_bell.png' },
+        { code: 'cami',   name: 'Lace Cami',    thumb: 'altera/pg/top_cami.webp' },
+        { code: 'corset', name: 'Rose Corset',  thumb: 'altera/pg/top_corset.webp' },
+        { code: 'bell',   name: 'Lace Bell Top',thumb: 'altera/pg/top_bell.webp' },
       ] },
     { key: 'bottom',  label: 'BOTTOMS',    slot: 'BOTTOM',
       opts: [
-        { code: 'redjean', name: 'Star Denim',   thumb: 'altera/pg/bottom_redjean.png' },
-        { code: 'skirt',   name: 'Ruffle Skirt', thumb: 'altera/pg/bottom_skirt.png' },
-        { code: 'flare',   name: 'Lace Flare',   thumb: 'altera/pg/bottom_flare.png' },
+        { code: 'redjean', name: 'Star Denim',   thumb: 'altera/pg/bottom_redjean.webp' },
+        { code: 'skirt',   name: 'Ruffle Skirt', thumb: 'altera/pg/bottom_skirt.webp' },
+        { code: 'flare',   name: 'Lace Flare',   thumb: 'altera/pg/bottom_flare.webp' },
       ] },
     { key: 'glasses', label: 'SUNGLASSES', slot: 'SUNGLASSES',
       opts: [
-        { code: 'chrome', name: 'Red Chrome',   thumb: 'altera/pg/glasses_chrome.png' },
-        { code: 'star',   name: 'Star Shield',  thumb: 'altera/pg/glasses_star.png' },
-        { code: 'spike',  name: 'Silver Spike', thumb: 'altera/pg/glasses_spike.png' },
+        { code: 'chrome', name: 'Red Chrome',   thumb: 'altera/pg/glasses_chrome.webp' },
+        { code: 'star',   name: 'Star Shield',  thumb: 'altera/pg/glasses_star.webp' },
+        { code: 'spike',  name: 'Silver Spike', thumb: 'altera/pg/glasses_spike.webp' },
       ] },
   ];
 
@@ -767,7 +766,7 @@ class Component extends DCLogic {
     const top = this._pgCats[0].opts[t].code;
     const bot = this._pgCats[1].opts[b].code;
     const gl = this._pgCats[2].opts[g].code;
-    return 'altera/pg/model_' + top + '_' + bot + '_' + gl + '.png';
+    return 'altera/pg/model_' + top + '_' + bot + '_' + gl + '.webp';
   }
 
   _pgPick(cat, j) {
@@ -884,7 +883,7 @@ class Component extends DCLogic {
   }
   glitch(top, left, w, op) {
     return { wrap: this.wrap(top, left, w, 2),
-      inner: { width:'100%', height:'100%', background:'rgba(255,255,255,'+op+')', mixBlendMode:'overlay' } };
+      inner: { width:'100%', height:'100%', background:'rgba(255,255,255,'+(op * 0.6).toFixed(3)+')' } };
   }
 
   // ~56 artifacts scattered everywhere; JS gives each a constant random drift velocity.
@@ -950,7 +949,12 @@ class Component extends DCLogic {
     if (!hero) return;
     const fig = document.getElementById('alt-figure');
     const arts = Array.from(hero.querySelectorAll('.alt-art'));
-    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
+
+    // ---- PERF: every loop below only animates sections that are on (or near) the screen ----
+    const near = this._near = {};
+    const nearObs = new IntersectionObserver((ents) => { ents.forEach((en) => { near[en.target.id] = en.isIntersecting; }); }, { rootMargin: '50% 0px 50% 0px' });
+    ['alt-hero', 'alt-essence', 'alt-playground', 'alt-showcase', 'alt-waitlist', 'alt-footer'].forEach((id) => { const el = document.getElementById(id); if (el) nearObs.observe(el); });
 
     // ---- HERO VIDEO: plays forward when idle, scrubs with vertical cursor movement ----
     // idle -> plays forward (always visible)   cursor up -> scrub forward   down -> scrub backward
@@ -1005,12 +1009,12 @@ class Component extends DCLogic {
         v.load();
       }).catch(() => {});
     };
-    blobLoad(essVid, true);
+    this._whenNear('alt-essence', () => blobLoad(essVid, true));
     if (essVid) {
       const essSection = document.getElementById('alt-essence');
       essObs = new IntersectionObserver((entries) => {
         entries.forEach((en) => {
-          if (en.isIntersecting) { const q = essVid.play(); if (q && q.catch) q.catch(() => {}); }
+          if (en.isIntersecting) { if (essVid.src.indexOf('blob:') === 0) { const q = essVid.play(); if (q && q.catch) q.catch(() => {}); } }
           else essVid.pause();
         });
       }, { threshold: 0.02 });
@@ -1185,7 +1189,7 @@ class Component extends DCLogic {
       if (essOverlays) essOverlays.style.opacity = String(seg(rise, 0.4, 0.75));
       if (essMarker) essMarker.style.opacity = String(seg(rise, 0.4, 0.75));
       // ---- ABOUT SECTION (fixed stage): local progress 0→1 across the section's scroll ----
-      const essSec = document.getElementById('alt-essence');
+      const essSec = essSecEl;
       let ep = 0;
       if (essSec) {
         const pinRange = Math.max(1, essSec.offsetHeight - H);
@@ -1230,10 +1234,12 @@ class Component extends DCLogic {
       }
     };
     const tick = () => {
-      applyTransition();   // scroll-driven hero -> essence transition
+      raf = requestAnimationFrame(tick);
+      const heroZone = near['alt-hero'] || near['alt-essence'];
+      if (heroZone) applyTransition();   // scroll-driven hero -> essence transition
       // hero video: SCROLL-driven scrub while pinned — scrolling plays the clip FORWARD
       // (full scrub completes within the first viewport-height of scroll, before the transition)
-      if (vid && !mobile() && vid.duration > 0 && isFinite(vid.duration)) {
+      if (heroZone && vid && !mobile() && vid.duration > 0 && isFinite(vid.duration)) {
         const dur = vid.duration;
         if (!vid.paused) vid.pause();
         const seekable = vid.seekable && vid.seekable.length && vid.seekable.end(0) > 0.1;
@@ -1243,12 +1249,11 @@ class Component extends DCLogic {
         }
       }
 
-      stepSet(P, W, H, mx, my);            // hero particles
-      stepSet(essP, eW, eH, emx, emy);     // about-section particles (fly everywhere too)
-      stepSet(pgP, pW, pH, pmx, pmy);      // playground particles
-      if (showSet) stepSet(showSet.P, showSet.W, showSet.H, showSet.mx, showSet.my);   // showcase
-      if (wlSet) stepSet(wlSet.P, wlSet.W, wlSet.H, wlSet.mx, wlSet.my);               // waitlist
-      raf = requestAnimationFrame(tick);
+      if (near['alt-hero']) stepSet(P, W, H, mx, my);                // hero particles
+      if (near['alt-essence']) stepSet(essP, eW, eH, emx, emy);      // about-section particles
+      if (near['alt-playground']) stepSet(pgP, pW, pH, pmx, pmy);    // playground particles
+      if (showSet && near['alt-showcase']) stepSet(showSet.P, showSet.W, showSet.H, showSet.mx, showSet.my);   // showcase
+      if (wlSet && near['alt-waitlist']) stepSet(wlSet.P, wlSet.W, wlSet.H, wlSet.mx, wlSet.my);               // waitlist
     };
 
     hero.addEventListener('mousemove', onMove);
@@ -1268,28 +1273,37 @@ class Component extends DCLogic {
     this._cleanup = () => { cancelAnimationFrame(raf); hero.removeEventListener('mousemove', onMove); hero.removeEventListener('mouseleave', onLeave); window.removeEventListener('resize', onResize); window.removeEventListener('scroll', onScroll); if (essObs) essObs.disconnect(); if (this._typeStop) this._typeStop(); };
   }
 
+  // run cb once, the first time section #id comes within ~1.5 screens (lazy video loading)
+  _whenNear(id, cb) {
+    const el = document.getElementById(id);
+    if (!el) { cb(); return; }
+    const io = new IntersectionObserver((ents) => { if (ents.some((e) => e.isIntersecting)) { io.disconnect(); cb(); } }, { rootMargin: '150% 0px 150% 0px' });
+    io.observe(el);
+  }
+
   // ---- PLAYGROUND :: model turntable — drag horizontally / scroll sideways to scrub ----
   // The video is a 360° turn of the look; horizontal input maps to video time so the
   // model appears to rotate. Blob-loaded because progressive mp4 won't seek reliably here.
   _initModelTurntable() {
-    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
     const box = document.getElementById('pg-model');
     const vid = document.getElementById('pg-model-video');
     if (!box || !vid) return;
     vid.muted = true; vid.playsInline = true; vid.pause();
     let ready = false;
-    fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
+    const near = this._near || {};
+    this._whenNear('alt-playground', () => fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
       vid.src = URL.createObjectURL(b);
       vid.addEventListener('loadeddata', () => { ready = true; try { vid.currentTime = 0.001; } catch (e) {} }, { once: true });
       vid.load();
-    }).catch(() => {});
+    }).catch(() => {}));
 
     // target time chased smoothly each frame → buttery rotation
     let target = 0, cur = 0, dur = 0, raf = 0;
     const wrap = (t) => { const d = dur || (vid.duration || 1); return ((t % d) + d) % d; };
     const spin = () => {
       raf = requestAnimationFrame(spin);
-      if (!ready) return;
+      if (!ready || !near['alt-playground']) return;
       dur = vid.duration || 0;
       if (!dur) return;
       cur += (target - cur) * 0.18;
@@ -1338,9 +1352,9 @@ class Component extends DCLogic {
     const labels = { 4: 'DETAIL 01', 11: 'ARCHIVE', 17: 'LOOK 02', 23: 'DETAIL 02' };
     // real ALTERA PRODUCT photos (garments / sunglasses — not the model) cycled across cards
     const IMGS = [
-      'altera/pg/top_cami.png', 'altera/pg/bottom_redjean.png', 'altera/pg/glasses_chrome.png',
-      'altera/pg/top_corset.png', 'altera/pg/bottom_skirt.png', 'altera/pg/glasses_star.png',
-      'altera/pg/top_bell.png', 'altera/pg/bottom_flare.png', 'altera/pg/glasses_spike.png',
+      'altera/pg/top_cami.webp', 'altera/pg/bottom_redjean.webp', 'altera/pg/glasses_chrome.webp',
+      'altera/pg/top_corset.webp', 'altera/pg/bottom_skirt.webp', 'altera/pg/glasses_star.webp',
+      'altera/pg/top_bell.webp', 'altera/pg/bottom_flare.webp', 'altera/pg/glasses_spike.webp',
     ];
     const N = 30;                     // enough panels to read as a real globe
     const tiles = [];
@@ -1368,24 +1382,28 @@ class Component extends DCLogic {
 
   // ---- TRANSITION :: about → playground (scroll-scrubbed video) ----
   _initPgTransition() {
-    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
     const wrap = document.getElementById('alt-pgt');
     const vid = document.getElementById('pgt-video');
     const pgSec = document.getElementById('alt-playground');
     if (!wrap || !vid || !pgSec) return;
     vid.muted = true; vid.playsInline = true; vid.pause();
     // blob-load: progressive mp4 doesn't seek reliably here (same as hero videos)
-    fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
+    this._whenNear('alt-playground', () => fetch(vid.getAttribute('src')).then((r) => r.blob()).then((b) => {
       vid.src = URL.createObjectURL(b);
       if (mobile()) { vid.loop = true; vid.addEventListener('loadeddata', () => { const q = vid.play(); if (q && q.catch) q.catch(() => {}); }, { once: true }); }
       vid.load();
-    }).catch(() => {});
+    }).catch(() => {}));
+    const near = this._near || {};
+    let parked = false;
     const seg = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
     const clamp01 = (v) => Math.max(0, Math.min(1, v));
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (mobile()) { wrap.style.opacity = 0; return; }
+      if (!near['alt-playground']) { if (!parked) { wrap.style.opacity = 0; parked = true; } return; }
+      parked = false;
       const H = window.innerHeight;
       // POSITION-DRIVEN like hero → about: scrub + dissolve as the PLAYGROUND rises.
       const pr = pgSec.getBoundingClientRect();
@@ -1435,10 +1453,12 @@ class Component extends DCLogic {
     // active-section highlight
     const links = Array.from(dock.querySelectorAll('a[data-dock]'));
     const secs = links.map((a) => document.getElementById(a.getAttribute('data-dock')));
-    let raf = 0;
+    let raf = 0, lastY = -1, lastIH = 0, lastActive = -1;
     const tick = () => {
       raf = requestAnimationFrame(tick);
       const y = window.scrollY || 0;
+      if (y === lastY && window.innerHeight === lastIH) return;
+      lastY = y; lastIH = window.innerHeight;
       // hidden on the hero; fades in once scrolled past it and stays through every transition
       const shown = y > 520;
       dock.style.opacity = shown ? '1' : '0';
@@ -1447,6 +1467,8 @@ class Component extends DCLogic {
       const mid = window.innerHeight * 0.5;
       let active = 0;
       secs.forEach((s, i) => { if (s) { const r = s.getBoundingClientRect(); if (r.top <= mid) active = i; } });
+      if (active === lastActive) return;
+      lastActive = active;
       links.forEach((a, i) => {
         a.style.color = i === active ? '#E23B3E' : '#c8c8cc';
       });
@@ -1475,8 +1497,10 @@ class Component extends DCLogic {
     };
     foot.addEventListener('mousemove', onMove);
     foot.addEventListener('mouseleave', () => { tgt = 0.12; });
+    const near = this._near || {};
     const tick = () => {
       raf = requestAnimationFrame(tick);
+      if (!near['alt-footer']) return;
       cur += (tgt - cur) * 0.10;
       const now = performance.now();
       // occasional quick blink (a Y2K signal flicker)
@@ -1529,7 +1553,7 @@ class Component extends DCLogic {
   // Both driven by section position so the motion starts the instant you scroll
   // the boundary — no dead scroll, no cut.
   _initHandoffs() {
-    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
     const showSec = document.getElementById('alt-showcase');
     const pgFrame = document.querySelector('#pg-model > div');
     const wl = document.getElementById('alt-waitlist');
@@ -1545,10 +1569,13 @@ class Component extends DCLogic {
       el.style.transform = 'translate3d(' + (cx - w / 2).toFixed(1) + 'px,' + (cy - h / 2).toFixed(1) + 'px,0)';
       el.style.opacity = op.toFixed(3);
     };
-    let raf = 0;
+    let raf = 0, parked = false;
+    const near = this._near || {};
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (mobile()) { gEntry.style.opacity = 0; gExit.style.opacity = 0; return; }
+      if (!near['alt-showcase'] && !near['alt-waitlist']) { if (!parked) { gEntry.style.opacity = 0; gExit.style.opacity = 0; parked = true; } return; }
+      parked = false;
       const vh = window.innerHeight, vw = window.innerWidth;
 
       // ENTRY — playground frame → LOOK 01 waterfall slot, as the showcase enters+pins.
@@ -1590,7 +1617,7 @@ class Component extends DCLogic {
   // All cards are projected in JS (manual perspective) so the net↔sphere morph
   // is one continuous space — no CSS preserve-3d, no cross-section hand-off.
   _initShowcase() {
-    const mobile = () => window.matchMedia('(max-width:760px)').matches;
+    const mobile = () => (window.__altMQ || (window.__altMQ = window.matchMedia('(max-width:760px)'))).matches;
     const sec = document.getElementById('alt-showcase');
     const stage = document.getElementById('drop-stage');
     if (!sec || !stage) return;
@@ -1664,6 +1691,7 @@ class Component extends DCLogic {
     window.addEventListener('resize', layout);
 
     let rot = 0, raf = 0;
+    const near = this._near || {};
     // drag-to-rotate: user can grab the sphere and spin it (adds to the scroll rotation).
     let dragRotY = 0, dragRotX = 0, dragging = false, lastX = 0, lastY = 0, spinV = 0;
     const stageEl = document.getElementById('show-sticky') || stage;
@@ -1687,7 +1715,7 @@ class Component extends DCLogic {
     stageEl.addEventListener('touchend', dUp);
     const tick = () => {
       raf = requestAnimationFrame(tick);
-      if (mobile()) return;
+      if (mobile() || !near['alt-showcase']) return;
       const vh = window.innerHeight;
       const r = sec.getBoundingClientRect();
       if (r.top > vh || r.bottom < 0) return;
@@ -1786,7 +1814,6 @@ class Component extends DCLogic {
         let a = lerp(ns * cs, aX, m), b = lerp(ns * sn, aY, m);
         let c = lerp(-ns * sn, cX, m), d = lerp(ns * cs, cY, m);
         let op = lerp(1, lerp(0.22, 1, depth), m);
-        let blur = (1 - depth) * 2.2 * m;
         let zi = 1000 + Math.round(Cz);
 
         // waterfall reveal + edge fade — cards fade up from transparency and fade at the
@@ -1810,13 +1837,13 @@ class Component extends DCLogic {
           const targSc = (H * 0.66) / dm.h;
           Cxs = lerp(Cxs, W * 0.225, cta); Cys = lerp(Cys, H * 0.5, cta);
           a = lerp(a, targSc, cta); d = lerp(d, targSc, cta); b = lerp(b, 0, cta); c = lerp(c, 0, cta);
-          op = 1; blur = 0; zi = 3000;
+          op = 1; zi = 3000;
         }
 
         el.style.transform = 'translate(' + (Cxs - dm.w / 2).toFixed(1) + 'px,' + (Cys - dm.h / 2).toFixed(1) + 'px) matrix(' + a.toFixed(4) + ',' + b.toFixed(4) + ',' + c.toFixed(4) + ',' + d.toFixed(4) + ',0,0)';
         el.style.opacity = op.toFixed(3);
-        el.style.filter = blur > 0.05 ? 'blur(' + blur.toFixed(2) + 'px)' : 'none';
-        el.style.zIndex = String(zi);
+        // depth reads through opacity alone: a per-card blur filter re-rasterised all 30 cards every frame
+        if (el._zi !== zi) { el._zi = zi; el.style.zIndex = String(zi); }
       }
     };
     tick();

@@ -383,6 +383,28 @@
       #ft-top > div:last-child{ align-items:flex-start !important; text-align:left !important; }
       #ft-bottom{ flex-direction:column; align-items:flex-start !important; gap:10px !important; }
     }
+
+    /* ---- AWWWARDS SPRINT 1 (Oct 2026) ---- */
+    /* no stray text ever falls back to Times */
+    body{ font-family:'Space Mono',monospace; }
+    /* one clear type scale: a display size for the hero, one size for every section headline */
+    #alt-hero h1{ font-size:clamp(30px,4.2vw,64px) !important; line-height:1 !important; }
+    @media (min-width:761px){ #alt-left{ width:min(40vw,540px) !important; } #alt-left p{ max-width:400px; } }
+    #alt-essence h2, #alt-playground h2, #alt-waitlist h2{ font-size:clamp(30px,3.4vw,52px) !important; }
+    /* calmer noise behind reading text: particles stay, at a lower level */
+    .ess-art, .wl-art{ opacity:.4 !important; }
+    @media (max-width:760px){
+      /* header on one line: logo left, waitlist right; the bottom dock is the menu on phones */
+      #alt-hero nav{ flex-wrap:nowrap !important; justify-content:space-between !important; padding:18px 18px 6px !important; gap:12px !important; }
+      #alt-hero nav > div:first-child{ display:none !important; }
+      #alt-hero nav > a{ order:0; }
+      #alt-hero nav > a img{ height:26px !important; }
+      #alt-hero nav > div:last-child{ order:1; flex:0 0 auto !important; gap:0 !important; }
+      #alt-hero nav > div:last-child a[href="#alt-showcase"]{ display:none !important; }
+      #alt-hero nav > div:last-child a[href="#alt-waitlist"]{ font-size:11px !important; padding:9px 12px !important; border:1px solid rgba(226,59,62,.8) !important; }
+      #alt-hero h1{ font-size:clamp(30px,9vw,40px) !important; }
+      #alt-essence h2{ font-size:clamp(28px,8vw,36px) !important; }
+    }
   </style>
 </helmet>
 
